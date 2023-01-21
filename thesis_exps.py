@@ -165,7 +165,7 @@ def single_cone_example():
     print(min_elems, len(min_elems))
     
 # random_sets_exps()
-single_sumset([0, 7, 8, 9, 10, 11, 12, 13, 14, 15])
+single_sumset([0,5,6,7,8,9,10,40,41])
 
 """
  Idea 1
@@ -176,16 +176,27 @@ single_sumset([0, 7, 8, 9, 10, 11, 12, 13, 14, 15])
  calculus analogy: if you want to find the length of a curve, it depends on the derivative. 
 
 First: fixing const c = b - mk
- Conjectures:
+ Simple observations:
  - -inf < c <= 1
- - if c=1 then 1 \in A
- - must have at least two long enough progression (1) one starting with smallest element, and (2) the other
- ending at the largest element m? NOT QUITE but CLOSE
- - [0, n, n+1,...,m] => c = -n + 2 if n <= ceiling(m/2). More complicated if n > ceiling(m/2) but I think possible
- to get closed form solution. So if n=2 and m >= 3 then c = 0. Q: are there any other examples of sets with c=0
+ - if c=1 then 1 \in A, and similarly, if c=0 then 1 or 2 \in A, etc.
+
+Conjectures on c: TODO: verify first with computer simulations and then try to prove
+ - [0, n, n+1,...,m] => c = -n + 2 if n <= ceiling(m/2). More complicated if n > ceiling(m/2) but I maybe possible
+ to get closed form solution. So if n=2 and m >= 3 then c = 0. Q: are there any other examples of sets with c=0?
+ - previous point gives an upper bound on constant c is c <= -min(A)+2
+ -sufficient condition for c attaining the upper bound above:
+    + Is comprised of exactly two long enough chains, one starting with min(A) and the other
+    ending at m.
+    + The first chain has at least min(A) elements and the second chain has at least 3 elements, or
+    + The first chain has at least min(A)+1 elements and the second chain has at least 2 elements
+    TODO: try to come up with an example set A s.t. c=0 but does not satisfy this sufficient condition.
+
+ - if [0, i,i+1,...,i+j,i+j+r, i+j+r+1,...,m]'s sumset had constant c then 
+ [0, i, i+1,...,i+j,i+j+r,i+j+r+1,...,m,m+1], and [0, i, i+1,...,i+j,i+j+1,i+j+r,i+j+r+1,...,m,m+1] also have constant c
+ and  [0, i, i+1,...,i+j,i+j+1,i+j+r,i+j+r+1,...,m] 'almost' also has constant c
 
 
- Idea 2 about raking d+3 elements in d dimensions to d+1 dimensions.
- try to put second element in tuple in first tuple - 1 (or maybe just duplicate: a -> (a,a) if that gives linear ind.)
+ Idea 2 about raking d+3 elements in d dimensions to d+1 dimensions:
+ Try to put second element in tuple in first tuple - 1 (or maybe just duplicate: a -> (a,a) if that gives linear ind.)
  What if we project into a random line after augmenting dimension rather than y axis
  """
