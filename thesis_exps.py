@@ -55,9 +55,10 @@ def generate_multiples_of_number_and_prime_lists(number, m):
     assert len(prime_list) == len(multiples_of_two_list)
     return prime_list, multiples_of_two_list
 
-def run_exps(sets):
+def run_exps(sets, show_steps=False):
     res_data = []
     for curr_set in sets:
+        m = max(curr_set)
         results = [curr_set]
         n_set = curr_set
         double_flag = False
@@ -66,14 +67,16 @@ def run_exps(sets):
             n_set = sum_sets(n_set, curr_set)
             results.append(n_set)
             curr_diff = len(n_set) - prev_size
-            if curr_diff == max(curr_set):
+            if show_steps:
+                print(n_set)
+                print(f'difference: {m - curr_diff}')
+            if curr_diff == m:
                 if double_flag:
                     break
                 else:
                     double_flag = True
-        assert len(sum_sets(n_set, curr_set)) - len(n_set) == max(curr_set)
+        assert len(sum_sets(n_set, curr_set)) - len(n_set) == m
 
-        m = max(curr_set)
         size_A = len(curr_set)
         # predicted_threshold = m - size_A + 2
         b = len(results[-3])
@@ -132,9 +135,9 @@ def prime_and_evens_exps():
 def random_sets_exps():
     random_sets = []
     max_m = 20 
-    for i in range(500):
-        m = np.random.randint(4, max_m)
-        max_size = np.random.randint(2, m)
+    for i in range(1000):
+        m = np.random.randint(5, max_m)
+        max_size = np.random.randint(4, m)
         random_sets.append(random_set(m, max_size))
 
     all_results = run_exps(random_sets)
@@ -150,9 +153,9 @@ def random_sets_exps():
     for const, results in results_by_const.items():
         write_to_csv(f'random_sets_const={const}.csv', results)
 
-def single_sumset(A):
+def single_sumset(A, show_steps=False):
     print("m, A, |A|, b, k, ~k")
-    print(run_exps([A]))
+    print(run_exps([A], show_steps))
 
 def single_cone_example():
     A = [0,1,5,6,9]
@@ -165,7 +168,9 @@ def single_cone_example():
     print(min_elems, len(min_elems))
     
 # random_sets_exps()
-single_sumset([0,5,6,7,8,9,10,40,41])
+# single_sumset([0,4,5,6,7], show_steps=False)
+for i in range(7, 80):
+    single_sumset([0,3,4,5] + [i,i+1,i+2,i+3])
 
 """
  Idea 1
@@ -175,21 +180,29 @@ single_sumset([0,5,6,7,8,9,10,40,41])
 
  calculus analogy: if you want to find the length of a curve, it depends on the derivative. 
 
-First: fixing const c = b - mk
+First: study classes of sets with a fixed constant c = b - mk
+Let n = min(A\{0}) and m=max(A). Then
+
  Simple observations:
  - -inf < c <= 1
  - if c=1 then 1 \in A, and similarly, if c=0 then 1 or 2 \in A, etc.
+ - c <= -n+2
 
-Conjectures on c: TODO: verify first with computer simulations and then try to prove
- - [0, n, n+1,...,m] => c = -n + 2 if n <= ceiling(m/2). More complicated if n > ceiling(m/2) but I maybe possible
- to get closed form solution. So if n=2 and m >= 3 then c = 0. Q: are there any other examples of sets with c=0?
- - previous point gives an upper bound on constant c is c <= -min(A)+2
- -sufficient condition for c attaining the upper bound above:
-    + Is comprised of exactly two long enough chains, one starting with min(A) and the other
-    ending at m.
-    + The first chain has at least min(A) elements and the second chain has at least 3 elements, or
-    + The first chain has at least min(A)+1 elements and the second chain has at least 2 elements
-    TODO: try to come up with an example set A s.t. c=0 but does not satisfy this sufficient condition.
+Conjectures:
+ -[Sufficient Conditions] Note that the set A contains two chains (contiguous sequence of elements),
+ one starting with n and the other ending at m.
+ Let d = n-k if n>k else 0. Then
+    + If A = [0,n,n+1,...,m] then c=-n-d+2 (this implies that for any set A, c is bounded by -n+2)
+    + If A = [0,n,n+1,...,n+k,m-1,m] and m-1 > n(n+k), then c=-n-d+2 if m-1 != 0 mod n+k+1 or c=-n-d+1 otherwise. Similarly,
+    + If A = [0,n,n+1,...,n+k,m-2,m-1,m] and m-2 > n(n+k), then c=-n-d+2 if m-2 != -1 mod n+k+2 or c=XXX otherwise. 
+    + If A = [0,n,n+1,...,n+k,m-3,m-2,m-1,m] and m-2 > n(n+k), then c=-n-d+2 if m-3 != -2 mod n+k+3 or c=XXX otherwise. 
+    General case:
+    + If A = [0,n,n+1,...,n+k,m-r,...,m-1,m] and m-r > n(n+k), then c=-n-d+2 if m-r != -r+1 mod n+k+r or c=XXX otherwise. 
+
+
+    TODO: Find out what XXX (value of constant on the degenerate residue class) is for the 2,3, and general case
+    TODO: Find out what happens if we stick elements in between the short and long chain.
+    TODO: Try to come up with an example set A that reaches its upper bound c=-n+2 but does not satisfy this sufficient condition.
 
  - if [0, i,i+1,...,i+j,i+j+r, i+j+r+1,...,m]'s sumset had constant c then 
  [0, i, i+1,...,i+j,i+j+r,i+j+r+1,...,m,m+1], and [0, i, i+1,...,i+j,i+j+1,i+j+r,i+j+r+1,...,m,m+1] also have constant c
@@ -200,3 +213,9 @@ Conjectures on c: TODO: verify first with computer simulations and then try to p
  Try to put second element in tuple in first tuple - 1 (or maybe just duplicate: a -> (a,a) if that gives linear ind.)
  What if we project into a random line after augmenting dimension rather than y axis
  """
+
+"""
+    + The first chain has at least n+1 elements and the second chain has at least 2 elements
+    TODO: try to come up with an example set A that satisfies these conditions but s.t. c != 0
+        single_sumset([0,2,3,4,20,21])
+"""
