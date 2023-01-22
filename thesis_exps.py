@@ -33,7 +33,6 @@ def find_gcd(s):
     x = reduce(gcd, s)
     return x
 
-
 # Want to generate two lists of same size that have the same maximal element m. 
 # One is multiples of 2 and the other is primes only.
 def primes(n):
@@ -168,13 +167,15 @@ def single_cone_example():
     print(min_elems, len(min_elems))
     
 # random_sets_exps()
-# single_sumset([0,4,5,6,7], show_steps=False)
-for i in range(7, 80):
-    single_sumset([0,3,4,5] + [i,i+1,i+2,i+3])
+# single_sumset([0,3,4,5,19,20], show_steps=False)
+for i in range(7, 29):
+    # single_sumset([0,3,4,5] + [i,i+1] + [17,18])
+    single_sumset([0,3,4,5] + [i] + [30,31])
+
 
 """
  Idea 1
- rather than starting with a set and gneerating number. what if we started with fixed b and k. 
+ rather than starting with a set and generating number. what if we started with fixed b and k. 
  which sets have b=1,2,whatever. can you generate sets that have this? do they have anything in common.
  maybe b doesn't have to do with A, but with something like A-A. things like this.
 
@@ -195,18 +196,19 @@ Conjectures:
     + If A = [0,n,n+1,...,m] then c=-n-d+2 (this implies that for any set A, c is bounded by -n+2)
     + If A = [0,n,n+1,...,n+k,m-1,m] and m-1 > n(n+k), then c=-n-d+2 if m-1 != 0 mod n+k+1 or c=-n-d+1 otherwise. Similarly,
     + If A = [0,n,n+1,...,n+k,m-2,m-1,m] and m-2 > n(n+k), then c=-n-d+2 if m-2 != -1 mod n+k+2 or c=XXX otherwise. 
-    + If A = [0,n,n+1,...,n+k,m-3,m-2,m-1,m] and m-2 > n(n+k), then c=-n-d+2 if m-3 != -2 mod n+k+3 or c=XXX otherwise. 
+    + If A = [0,n,n+1,...,n+k,m-3,m-2,m-1,m] and m-3 > n(n+k), then c=-n-d+2 if m-3 != -2 mod n+k+3 or c=XXX otherwise. 
     General case:
     + If A = [0,n,n+1,...,n+k,m-r,...,m-1,m] and m-r > n(n+k), then c=-n-d+2 if m-r != -r+1 mod n+k+r or c=XXX otherwise. 
+    TODO: Find counterexample for condition m-r>n(n+k). There is a correct threshold but not sure this is the one.
 
+    Q1: Can we keep the same c value while appending to the first chain and/or prepending to the second chain?
+        + Yes. Seems to still obey previous conjecture pretty well.
+    Q2: Find out what happens if we stick elements in between the short and long chain.
+        + TODO: answer this question for a chain witha single element, then with multiples elements, then for multiples chains with multiples elements. 
 
     TODO: Find out what XXX (value of constant on the degenerate residue class) is for the 2,3, and general case
-    TODO: Find out what happens if we stick elements in between the short and long chain.
-    TODO: Try to come up with an example set A that reaches its upper bound c=-n+2 but does not satisfy this sufficient condition.
-
- - if [0, i,i+1,...,i+j,i+j+r, i+j+r+1,...,m]'s sumset had constant c then 
- [0, i, i+1,...,i+j,i+j+r,i+j+r+1,...,m,m+1], and [0, i, i+1,...,i+j,i+j+1,i+j+r,i+j+r+1,...,m,m+1] also have constant c
- and  [0, i, i+1,...,i+j,i+j+1,i+j+r,i+j+r+1,...,m] 'almost' also has constant c
+    TODO: [Finding Necessary Conditions] Try to come up with an example set A that reaches its upper bound c=-n+2 but does not satisfy
+    this sufficient condition.
 
 
  Idea 2 about raking d+3 elements in d dimensions to d+1 dimensions:
