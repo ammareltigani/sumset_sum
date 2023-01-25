@@ -167,70 +167,9 @@ def single_cone_example():
     print(min_elems, len(min_elems))
     
 # random_sets_exps()
-single_sumset([0,2,3,6,7,8,9,12,15,16,17],show_steps=False)
-#for i in range(4, 29):
-#    single_sumset([0,1,2,3] + [i,i+1] + [30,31],show_steps=False)
+# single_sumset([0,2,3,6,7,8,9,12,15,16,17],show_steps=False)
+# for i in range(4, 28):
+#     single_sumset([0,1,2,3] + [i] + [28,29],show_steps=False)
+for i in range(4, 30):
+    single_sumset([0,1] + [i],show_steps=False)
 
-
-"""
-Leo-
-Idea 1
-rather than starting with a set and generating number. what if we started with fixed b and k. 
-which sets have b=1,2,whatever. can you generate sets that have this? do they have anything in common.
-maybe b doesn't have to do with A, but with something like A-A. things like this.
-
-calculus analogy: if you want to find the length of a curve, it depends on the derivative. 
-"""
-
-"""
-Ammar-
-Studying classes of sets with a fixed constant c (where p(h) = m(h-k) + b, valid for h>=k. So c = b-mk)
-Assume only working with nonnegative integers, 0 \in A, and A-A generates Z. Also let n = min(A\{0}) and m=max(A).
-
-Conjecture1:
-[Bound] For any set A, c <= -n+2. So, in particular, -inf < c <= 1 since 1 is the smallest n we can have, and for a set with
- c, there exist an element x \in A s.t. x <= 2-c
-
-Conjecture2:
-Note that the set A contains two chains (contiguous sequence of elements), one starting with n (call this one the first chain) and 
-the other ending at m (call this one the last chain). They may coincide. Let d = n-k if n>k else d=0. Then
-    + If A = [0,n,n+1,...,n+k(=m)] then c=-n-d+2. TODO: prove this easy case first.
-    + If A = [0,n,n+1,...,n+k,m-1,m] and m-1 > n(n+k), then c=-n-d+2 if m-1 != 0 mod n+k+1 or c=-n-d+1 otherwise. Similarly,
-    + If A = [0,n,n+1,...,n+k,m-2,m-1,m] and m-2 > n(n+k), then c=-n-d+2 if m-2 != -1 mod n+k+2 or c=XXX otherwise. 
-    + If A = [0,n,n+1,...,n+k,m-3,m-2,m-1,m] and m-3 > n(n+k), then c=-n-d+2 if m-3 != -2 mod n+k+3 or c=XXX otherwise. 
-General case:
-    + If A = [0,n,n+1,...,n+k,m-r,...,m-1,m] and m-r > n(n+k), then c=-n-d+2 if m-r != -r+1 mod n+k+r or c=XXX otherwise. 
-
-Remarks:
-    - [Almost-Invariant] This implies that the c value is unchanged after appending to the first chain and/or prepending to the last
-        chain (so long as the mod case is still the first).
-    - TODO: Find counterexample for condition m-r>n(n+k). I suspect that there is a correct threshold but not sure this is the one.
-    - TODO: Find out what XXX (value of constant on the degenerate residue class) is for the 2,3, and general case
-    - Q: What happens if we stick elements in between the first and last chain.
-        + For a single chain with a single element the explicit pattern is hard to recognize, but heuristically, whenever the inserted
-            element is small (close to the first chain) the constant is as if the insertd element was part of the first chain and
-            whenever it is large (close to the last chain) the constant is as if the inserted element was part of the last chain.
-            TODO: Find a threshold for what 'small' and 'large' means.
-         TODO: try to answer same question for a chain with with multiples elements, then for multiples chains with multiples elements. 
-    - To prove (1), have to show that there cannot be a set A s.t. c>-n+2. Can argue by looking at any arbitrary set A with
-        min(A\{0})=n and max(A)=m as an set with two chains and potentially stuff in it. Then problem reduces to proving that adding
-        stuff in the middle of the two chains can only decrease the constant or keep it fixed. 
-
-Conjecture3:
-+ Adding chains of elements (or just 'elements') in between the last chain only decreases the constant c or keeps it fixed
-=> This furnishes a proof for (3) since we have to show that there cannot be a set A s.t. c>-n+2. Can argue by looking at any arbitrary
-    set A with min(A\{0})=n and max(A)=m as an set with two chains and potentially stuff in it. 
-
-Conjecture4:
-+ [Sufficient] If A is comprised of exactly the two first and last chains described and satisfying the conditions above, then c=-n-d+2
-    (nothing new, this is just restating the previous conjecture).
-+ [Necessary] If c = -n-d+2 then A's first and last chains must satisfy the conditions described above.
-"""
-
-
-"""
-Leo-
-Idea 2 about raking d+3 elements in d dimensions to d+1 dimensions:
-Try to put second element in tuple in first tuple - 1 (or maybe just duplicate: a -> (a,a) if that gives linear ind.)
-What if we project into a random line after augmenting dimension rather than y axis
-"""
