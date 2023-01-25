@@ -167,9 +167,7 @@ def single_cone_example():
     print(min_elems, len(min_elems))
     
 # random_sets_exps()
-single_sumset([0,7,12,46],show_steps=False)
-# for i in range(4, 28):
-#     single_sumset([0,1,2,3] + [i] + [28,29],show_steps=False)
-# for i in range(4, 50):
-#     single_sumset([0] + [2,3] + [i,i+1,i+2],show_steps=False)
+# single_sumset([0,7,12,46],show_steps=False)
+for i in range(8, 50):
+    single_sumset([0] + [1,2,3,4,5,6,7] + [i,i+1,i+2],show_steps=False)
 
