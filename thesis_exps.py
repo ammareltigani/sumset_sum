@@ -133,8 +133,8 @@ def prime_and_evens_exps():
 
 def random_sets_exps():
     random_sets = []
-    max_m = 20 
-    for i in range(1000):
+    max_m = 50 
+    for i in range(2000):
         m = np.random.randint(5, max_m)
         max_size = np.random.randint(4, m)
         random_sets.append(random_set(m, max_size))
@@ -167,9 +167,9 @@ def single_cone_example():
     print(min_elems, len(min_elems))
     
 # random_sets_exps()
-# single_sumset([0,2,3,6,7,8,9,12,15,16,17],show_steps=False)
+single_sumset([0,7,12,46],show_steps=False)
 # for i in range(4, 28):
 #     single_sumset([0,1,2,3] + [i] + [28,29],show_steps=False)
-for i in range(4, 30):
-    single_sumset([0,1] + [i],show_steps=False)
+# for i in range(4, 50):
+#     single_sumset([0] + [2,3] + [i,i+1,i+2],show_steps=False)
 
