@@ -180,7 +180,7 @@ def single_cone_example():
     print(min_elems, len(min_elems))
 
 
-def all_subsets_moment(max_m, moment):
+def get_moments(max_m, moment):
     m_by_k_plus_one = [[]]
     for m in range(1,max_m+1):
         subsets = all_subsets(m)
@@ -196,9 +196,29 @@ def all_subsets_moment(max_m, moment):
     m_by_k_plus_one.pop(0)
     return m_by_k_plus_one
 
-# write_to_csv("statistical_experiments/m=15_variance.csv", all_subsets_moment(20,2), stats=True)
-# write_to_csv("statistical_experiments/m=15_skew.csv", all_subsets_moment(20,3), stats=True)
-# write_to_csv("statistical_experiments/m=15_kortosis.csv", all_subsets_moment(20,4), stats=True)
+
+moment_dict = {1: "mean", 2: "variance", "3": "skew", 4: "kortosis"}
+def plot_moment_data(m, moment):
+    with open(f'statistical_experiments/m={m}_{moment_dict[moment]}.csv', newline='') as f:
+        reader = csv.reader(f)
+        for i, row in enumerate(reader):
+            n = i+1
+            ks = np.arange(1,n)
+            moments = row[:n]
+            pass
+
+
+
+
+
+
+
+"""
+1) plot the raw data
+2) normalize to probabilities
+3) interpolate with scipy 2D interpolation
+"""
+
 
 # random_sets_exps()
 # single_sumset([0,2,3,22,23],show_steps=False)
