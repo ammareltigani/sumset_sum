@@ -193,12 +193,13 @@ def all_subsets_moment(max_m, moment):
             else:
                 mmt = round(stats.moment(constants, moment=moment), 2)
             m_by_k_plus_one[m].append(mmt)
+    m_by_k_plus_one.pop(0)
     return m_by_k_plus_one
 
-write_to_csv("statistical_experiments/m=15_mean.csv", all_subsets_moment(15,1), stats=True)
-write_to_csv("statistical_experiments/m=15_variance.csv", all_subsets_moment(15,2), stats=True)
-write_to_csv("statistical_experiments/m=15_skew.csv", all_subsets_moment(15,3), stats=True)
-write_to_csv("statistical_experiments/m=15_kortosis.csv", all_subsets_moment(15,4), stats=True)
+write_to_csv("statistical_experiments/m=8_mean.csv", all_subsets_moment(8,1), stats=True)
+# write_to_csv("statistical_experiments/m=15_variance.csv", all_subsets_moment(15,2), stats=True)
+# write_to_csv("statistical_experiments/m=15_skew.csv", all_subsets_moment(15,3), stats=True)
+# write_to_csv("statistical_experiments/m=15_kortosis.csv", all_subsets_moment(15,4), stats=True)
 
 # random_sets_exps()
 # single_sumset([0,2,3,22,23],show_steps=False)
