@@ -1,6 +1,7 @@
 from math import gcd
 from functools import reduce
 from itertools import combinations
+from scipy import stats
 
 import csv
 import numpy as np
@@ -129,10 +130,10 @@ def get_minimal_elements(m, cone_list):
 def add_height(A, h):
     return [(e, h) for e in A]
 
-def write_to_csv(fname, rows, avg=False):
+def write_to_csv(fname, rows, stats=False):
     with open(fname, 'a') as file:
         writer = csv.writer(file)
-        if not avg:
+        if not stats:
             writer.writerow(['m', 'A', '|A|', 'b', 'k', 'const'])
         writer.writerows(rows)
 
@@ -179,25 +180,27 @@ def single_cone_example():
     print(min_elems, len(min_elems))
 
 
-def all_subsets_avg(max_m):
+def all_subsets_moment(max_m, moment):
     m_by_k_plus_one = [[]]
     for m in range(1,max_m+1):
         subsets = all_subsets(m)
         m_by_k_plus_one.append([])
         for k in range(m):
             results = run_exps(subsets[k])
-            constants = list(zip(*results))[5]
-            avg = round(np.mean(constants), 2)
-            m_by_k_plus_one[m].append(avg)
-        cum_avg = round(np.mean(m_by_k_plus_one[m]), 2)
-        m_by_k_plus_one[m].append(cum_avg)
+            constants = np.array(list(zip(*results))[5])
+            if moment <= 1:
+                mmt = round(np.mean(constants), 2)
+            else:
+                mmt = round(stats.moment(constants, moment=moment), 2)
+            m_by_k_plus_one[m].append(mmt)
     return m_by_k_plus_one
 
+write_to_csv("statistical_experiments/m=15_mean.csv", all_subsets_moment(15,1), stats=True)
+write_to_csv("statistical_experiments/m=15_variance.csv", all_subsets_moment(15,2), stats=True)
+write_to_csv("statistical_experiments/m=15_skew.csv", all_subsets_moment(15,3), stats=True)
+write_to_csv("statistical_experiments/m=15_kortosis.csv", all_subsets_moment(15,4), stats=True)
 
-write_to_csv("averages_20.csv", all_subsets_avg(20), avg=True)
-
-    
 # random_sets_exps()
 # single_sumset([0,2,3,22,23],show_steps=False)
 # for i in range(4,21):
-#     single_sumset([0,2,3]+[i,i+1]+[22,23],show_steps=False
+#     single_sumset([0,2,3]+[i,i+1]+[22,23],show_steps=False)
