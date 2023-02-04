@@ -1,0 +1,15 @@
+"""
+Gaps with 1
+1,4: conj 2
+2,4: 0 (odd), -2 (even)
+3,4: -5,-11,-17,... => -5-6x
+5,4: -1 if m = 17 mod 24, 0 if m = 1 mod 24, -3 if m = 9 mod 24 (8s)
+6,4: -2 (constant)
+7,4: 0 if m = 21 mod 30, -1 if m = 1 mod 30, -2 if m = 11 mod 30 (10s)
+8,4: -1 if m = 23 mod 33, 0 if m = 1 mod 33, -2 if m = 12 mod 33 (11s)
+9,4: -2 (constant)
+10,4: 0 if m = 27 mod 39, -1 if m = 1 mod 39, -2 if m = 14 mod 39 (13s)
+11,4: -1 if m = 29 mod 42, 0 if m = 1 mod 42, -2 if m = 15 mod 42 (14s)
+12,4: -2 (constant)
+...
+"""

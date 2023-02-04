@@ -1,5 +1,6 @@
 from math import gcd
 from functools import reduce
+from itertools import combinations
 
 import csv
 import numpy as np
@@ -10,6 +11,7 @@ import matplotlib.pyplot as plt
 
 def sum_sets(set1, set2):
     return set((x+y for x in set1 for y in set2))
+
 
 def random_set(m, size):
     num_list = np.random.randint(0, m, size=size)
@@ -32,6 +34,15 @@ def normalize_set(input_set):
 def find_gcd(s):
     x = reduce(gcd, s)
     return x
+
+def all_subsets_of_size_k_plus_one(m,k):
+    origin_set = set(range(1,m+1))
+    all_subsets = combinations(origin_set, k)
+    return [set([0]).union(subset) for subset in all_subsets if find_gcd(subset) == 1]
+        
+def all_subsets(m):
+    return [all_subsets_of_size_k_plus_one(m,k) for k in range(1,m+1)]
+
 
 # Want to generate two lists of same size that have the same maximal element m. 
 # One is multiples of 2 and the other is primes only.
@@ -118,10 +129,11 @@ def get_minimal_elements(m, cone_list):
 def add_height(A, h):
     return [(e, h) for e in A]
 
-def write_to_csv(fname, rows):
+def write_to_csv(fname, rows, avg=False):
     with open(fname, 'a') as file:
         writer = csv.writer(file)
-        writer.writerow(['m', 'A', '|A|', 'b', 'k', 'const'])
+        if not avg:
+            writer.writerow(['m', 'A', '|A|', 'b', 'k', 'const'])
         writer.writerows(rows)
 
 def prime_and_evens_exps():
@@ -165,9 +177,27 @@ def single_cone_example():
     print("minimal elements")
     min_elems = get_minimal_elements(max(A), cone)
     print(min_elems, len(min_elems))
+
+
+def all_subsets_avg(max_m):
+    m_by_k_plus_one = [[]]
+    for m in range(1,max_m+1):
+        subsets = all_subsets(m)
+        m_by_k_plus_one.append([])
+        for k in range(m):
+            results = run_exps(subsets[k])
+            constants = list(zip(*results))[5]
+            avg = round(np.mean(constants), 2)
+            m_by_k_plus_one[m].append(avg)
+        cum_avg = round(np.mean(m_by_k_plus_one[m]), 2)
+        m_by_k_plus_one[m].append(cum_avg)
+    return m_by_k_plus_one
+
+
+write_to_csv("averages_20.csv", all_subsets_avg(20), avg=True)
+
     
 # random_sets_exps()
-# single_sumset([0,7,12,46],show_steps=False)
-for i in range(8, 50):
-    single_sumset([0] + [1,2,3,4,5,6,7] + [i,i+1,i+2],show_steps=False)
-
+# single_sumset([0,2,3,22,23],show_steps=False)
+# for i in range(4,21):
+#     single_sumset([0,2,3]+[i,i+1]+[22,23],show_steps=False
