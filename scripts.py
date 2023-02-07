@@ -197,30 +197,17 @@ def get_moments(max_m, moment):
     return m_by_k_plus_one
 
 
-moment_dict = {1: "mean", 2: "variance", "3": "skew", 4: "kortosis"}
+moment_dict = {1: "mean", 2: "variance", 3: "skew", 4: "kortosis"}
 def plot_moment_data(m, moment):
     with open(f'statistical_experiments/m={m}_{moment_dict[moment]}.csv', newline='') as f:
         reader = csv.reader(f)
-        for i, row in enumerate(reader):
-            n = i+1
-            ks = np.arange(1,n)
-            moments = row[:n]
-            pass
-
-
-
-
-
-
-
-"""
-1) plot the raw data
-2) normalize to probabilities
-3) interpolate with scipy 2D interpolation
-"""
-
-
-# random_sets_exps()
-# single_sumset([0,2,3,22,23],show_steps=False)
-# for i in range(4,21):
-#     single_sumset([0,2,3]+[i,i+1]+[22,23],show_steps=False)
+        last_row = [float(e) for e in list(reader)[-1]]
+        ks = np.arange(m)
+        fig = plt.figure()
+        ax = fig.add_subplot()
+        fig.suptitle(f'{moment_dict[moment]} constant for subsets of [m] of size k', fontsize=14, fontweight='bold')
+        ax.set_title(f'm={m}')
+        ax.set_xlabel('size of subsets k')
+        ax.set_ylabel(f'{moment_dict[moment]} constant c')
+        plt.bar(ks,last_row)
+        plt.show()
