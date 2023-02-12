@@ -166,8 +166,8 @@ def random_sets_exps():
         write_to_csv(f'random_sets_const={const}.csv', results)
 
 def single_sumset(A, show_steps=False):
-    print("m, A, |A|, b, k, ~k")
-    print(run_exps([A], show_steps))
+    # print("m, A, |A|, b, k, ~k")
+    return run_exps([A], show_steps)
 
 def single_cone_example():
     A = [0,1,5,6,9]
@@ -211,3 +211,23 @@ def plot_moment_data(m, moment):
         ax.set_ylabel(f'{moment_dict[moment]} constant c')
         plt.bar(ks,last_row)
         plt.show()
+
+
+# new example of set with large and negative constant: [0,n,n+1,m]
+
+# want to understands what happens when going from k=0 to k=1
+# for i in range(40):
+    # print(single_sumset([0,1,3+i]))
+    # print(single_sumset([0,1,2,3+i]))
+
+
+# want to understand what happens when going from r=0 to r=1
+for j in range(40):
+    if (5+j)%3 == 0:
+        continue
+    print(single_sumset([0,3,5+j]))
+    print(single_sumset([0,3,4+j,5+j]))
+    print()
+
+# once we can bound what happens in these transitions then we can just apply conjecture 2
+
