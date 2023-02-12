@@ -13,7 +13,6 @@ import matplotlib.pyplot as plt
 def sum_sets(set1, set2):
     return set((x+y for x in set1 for y in set2))
 
-
 def random_set(m, size):
     num_list = np.random.randint(0, m, size=size)
     num_set = set(num_list)
@@ -43,28 +42,6 @@ def all_subsets_of_size_k_plus_one(m,k):
         
 def all_subsets(m):
     return [all_subsets_of_size_k_plus_one(m,k) for k in range(1,m+1)]
-
-
-# Want to generate two lists of same size that have the same maximal element m. 
-# One is multiples of 2 and the other is primes only.
-def primes(n):
-    """ Returns  a list of primes < n """
-    sieve = [True] * n
-    for i in range(3,int(n**0.5)+1,2):
-        if sieve[i]:
-            sieve[i*i::2*i]=[False]*((n-i*i-1)//(2*i)+1)
-    return [2] + [i for i in range(3,n,2) if sieve[i]]
-
-# Works for m >= 7
-def generate_multiples_of_number_and_prime_lists(number, m):
-    prime_list = [0] + primes(m) + [m]
-    multiples_of_two_list = [number*i for i in range(m)]
-    multiples_of_two_list.insert(2, 3)
-    multiples_of_two_list = multiples_of_two_list[:len(prime_list)]
-    multiples_of_two_list[-1] = m
-
-    assert len(prime_list) == len(multiples_of_two_list)
-    return prime_list, multiples_of_two_list
 
 def run_exps(sets, show_steps=False):
     res_data = []
@@ -137,13 +114,6 @@ def write_to_csv(fname, rows, stats=False):
             writer.writerow(['m', 'A', '|A|', 'b', 'k', 'const'])
         writer.writerows(rows)
 
-def prime_and_evens_exps():
-    cum_data = []
-    for i in range(5, 40):
-        lists = list(set(l) for l in generate_multiples_of_number_and_prime_lists(4, i))
-        cum_data.extend(run_exps(lists, i))
-    write_to_csv('primes_and_multiples_of_two.csv', cum_data)
-
 def random_sets_exps():
     random_sets = []
     max_m = 50 
@@ -213,21 +183,33 @@ def plot_moment_data(m, moment):
         plt.show()
 
 
-# new example of set with large and negative constant: [0,n,n+1,m]
+# new example of set to look into: [0,n,n+1,n+2,...,n+k] where n gets large
 
+# For now, setup [0,n,...,n+k,m-r,...,m]
 # want to understands what happens when going from k=0 to k=1
-# for i in range(40):
-    # print(single_sumset([0,1,3+i]))
-    # print(single_sumset([0,1,2,3+i]))
+y = 5 
+for i in range(40):
+    print(single_sumset([0,y,y+1,y+2+i]))
+# at y=4,5 it seems like the consants are at a minium? Is this true? If yes then why?
 
 
 # want to understand what happens when going from r=0 to r=1
-for j in range(40):
-    if (5+j)%3 == 0:
-        continue
-    print(single_sumset([0,3,5+j]))
-    print(single_sumset([0,3,4+j,5+j]))
-    print()
+# x = 1 
+# for j in range(100):
+#     print(single_sumset([0,x,x+1+j,x+2+j]))
+# for x = 1, conjecture 2 says c = 1 if m is even else c = -m + 4
+# for x = 2, c is approx -0.5m
+# for x = 3, c is approx -0.66m if m = 2 mod 3 and -m if m = 0,1 mod 3
+# for x = 4, c is approx -m if m = 2,3 mod 4 and -1.5m if m = 0,1 mod 4
+# for x = 5, c is approx -1.15m if m = 2,3,4 mod 5 and -2m if m = 0,1 mod 5
+# for x = 6, c is approx -1.45m if m = 2,3,4,5 mod 6 and -2.5m if m = 0,1 mod 6
+# for x = 7, c is approx -1.625m if m = 2,3,4,5,6 mod 7 and -3m if m = 0,1 mod 7
+# for x = 8, c is approx -2m if m = 2,3,4,5,6,7 mod 8 and -3.5m if m = 0,1 mod 8
+# for x = 9, c is approx -2.15m if m = 2,3,4,5,6,7,8 mod 9 and -4m if m = 0,1 mod 9
 
-# once we can bound what happens in these transitions then we can just apply conjecture 2
+# Empirical bound maybe? : for some fixed x > 1, -1/5xm < c < -1/2xm 
+# Once we can bound what happens in these transitions then we can just apply conjecture 2
+
+
+
 
