@@ -183,13 +183,17 @@ def plot_moment_data(m, moment):
         plt.show()
 
 
+
+
+
+
 # new example of set to look into: [0,n,n+1,n+2,...,n+k] where n gets large
 
 # For now, setup [0,n,...,n+k,m-r,...,m]
 # want to understands what happens when going from k=0 to k=1
-y = 5 
-for i in range(40):
-    print(single_sumset([0,y,y+1,y+2+i]))
+# y = 5 
+# for i in range(40):
+#     print(single_sumset([0,y,y+1,y+2+i]))
 # at y=4,5 it seems like the consants are at a minium? Is this true? If yes then why?
 
 
