@@ -62,9 +62,9 @@ def single_sumset(A, iterations=None, slice=None, plot=False):
                 n = j // 2
                 hull = ConvexHull(points_arry[j+slice[0]])
                 points = np.array(points_arry[j+slice[0]])
-                axis[n,m].plot(points[:,0], points[:,1], 'o', markersize=3)
+                axis[n,m].plot(points[:,0], points[:,1], 'o', markersize=4)
                 for simplex in hull.simplices:
-                    axis[n,m].plot(points[simplex, 0], points[simplex, 1], 'k-')
+                    axis[n,m].plot(points[simplex, 0], points[simplex, 1], 'k--')
                 axis[n,m].set_title(f'iter = {j+slice[0]}')
                 axis[n,m].grid(color = 'gray', linestyle = '--', linewidth = 0.5)
 
@@ -97,7 +97,7 @@ def run_exps(curr_set, iterations):
     k = None
     real_m = None
     i = 0
-    # while True and (iterations is not None and i < iterations):
+    once = False
     while True:
         if iterations is not None and i >= iterations+3:
             break
@@ -109,14 +109,19 @@ def run_exps(curr_set, iterations):
             d13 = lengths_arry[i] - lengths_arry[i-1]
             d21 = d12 - d11
             d22 = d13 - d12
-            print(d22-d21)
+            # print(d22-d21)
             if d22 - d21 == 0:
-                if d21 != 2*m:
-                    real_m = d21 / 2
-                if k is None:
-                    k = i-2
-                if iterations is None:
-                    break
+                if once:
+                    if d21 != 2*m:
+                        real_m = d21 / 2
+                    if k is None:
+                        k = i-3
+                    if iterations is None:
+                        break
+                else:
+                    once = True
+            else:
+                once = False
         last_three.append(n_set)
         lengths_arry.append(len(n_set))
         i+=1
@@ -168,14 +173,20 @@ def random_primitive_triangles():
 # single_sumset([(0,0), (2,0), (0,2), (1,0), (0,1), (1,1)], iterations=4, plot=True)
 # single_sumset([(0,0), (3,0), (0,3), (1,0), (0,1)], iterations=4, plot=True)
 
+# single_sumset([(0,0), (4,0), (2,2), (2,1), (1,1), (3,1)], iterations=20, slice=(0,6), plot=True)
+single_sumset([(0,0), (1,0), (4,0), (3,1), (1,1), (2,2), (3,0)], iterations=8, slice=(0,6), plot=True)
+# single_sumset([(0,0), (4,0), (2,2), (2,1), (3,1)], iterations=20, slice=(0,6), plot=True) # symmetric to the last one
+# single_sumset([(0,0), (4,0), (2,2), (1,1), (3,1)], iterations=20, slice=(0,6), plot=True) # half as many points in the core, less dense
+
 # Random Experiements
 
-# single_sumset(random_set(10,4), iterations=None, plot=True)
+# single_sumset(random_set(10,5), iterations=None, plot=True)
 # single_sumset([(0,0), (4,1), (6,7), (9,8)], iterations=None, slice=(34,38), plot=True) #primitive k >= 36
 # single_sumset([(0,0), (3,1), (7,1), (9,4)], iterations=17, slice=(14,18), plot=True) #primitive k>=16
 # single_sumset([(0,0), (5,2), (9,2), (9,8)], iterations=25, slice=(20, 26), plot=True) #not primitive (missing factor of 2 in second dimension) k >= 24
 # single_sumset([(0,0), (2,2), (2,3), (8,3)], iterations=12, slice=(8, 12), plot=True) #not primitive (missing factor of 2 in first dimension) k >= 6
-single_sumset([(0,0), (5,8), (7,0), (9,3)], iterations=75, slice=(0,8), plot=False) #primitive k >= 75 (takes a while to stabilize)
+# single_sumset([(0,0), (5,8), (7,0), (9,3)], iterations=75, slice=(0,8), plot=False) #primitive k >= 75 (takes a while to stabilize)
+
 
 
 # IDEA: before stabilizing, the examples I've seen seem to always have a polynomials whose 3rd derivative is 1 (until it becomes 0
@@ -225,6 +236,10 @@ the set if not primitive the core will have some holes and the fringes will have
 
 III - Generate random sets by simply throwing it out and trying again if the second derivative
 is not twice the volume. 
+
+
+
+What are the points that you can't remove from a complete generating set?
 
 
 """
