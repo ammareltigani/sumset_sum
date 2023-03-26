@@ -5,6 +5,7 @@ from scipy.spatial import ConvexHull, convex_hull_plot_2d
 # from scipy import stats
 
 # import csv
+import math
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -157,34 +158,82 @@ def random_set_exp():
     pass
 
 
-def random_primitive_triangles():
-    generator = np.array([[1,1], [1,0]])
-    current = generator.copy()
-    for _ in range(15):
-        a,b,c,d = current[0,0], current[1,0], current[0,1], current[1,1] 
-        single_sumset([(0,0), (a,b), (c,d)], iterations=10, plot=False)
-        current = np.matmul(current, generator)
+def random_primitive_triangle(max_iterations):
+    # generators for SL_2(Z)
+    gens = [np.array([[1,1], [1,0]]), np.array([[0,-1], [1,0]])]
+    
+    # `word` is a random sequence of 0s and 1s of length <= max_iters
+    iters = np.random.randint(1, max_iterations)
+    word = np.random.randint(0,2, size=iters)
+
+    # generate
+    current = np.identity(2)
+    for i in word:
+        current = np.matmul(current, gens[i])
+
+    # add third element to make it d+2
+    a,b,c,d = current[0,0], current[1,0], current[0,1], current[1,1] 
+    max_element_range = 2.72 * math.factorial((iters //  2) + 1)
+    x = tuple(np.random.randint(0, max_element_range, size=2))
+    rtn =  [(0,0), (int(a),int(b)), (int(c),int(d))]
+    while x in rtn:
+        x = tuple(np.random.randint(0, max_element_range, size=2))
+    rtn.append(x)
+
+    print(rtn)
+
+    # translate if not in quadrant I
+    xs, ys = list(zip(*rtn))
+    # vertically first
+    if np.min(ys) < 0:
+        ymin_arg = np.argmin(ys)
+        yoffset = (- rtn[ymin_arg][0], - rtn[ymin_arg][1])
+        rtn = [(e[0] + yoffset[0], e[1] + yoffset[1]) for e in rtn]
+    #  then horixontally
+    print(rtn)
+    if np.min(xs) < 0:
+        xmin_arg = np.argmin(xs)
+        print(xmin_arg)
+        xoffset = (- rtn[xmin_arg][0], - rtn[xmin_arg][1])
+        print(xoffset)
+        rtn = [(e[0] + xoffset[0], e[1] + xoffset[1]) for e in rtn]
+
+    return rtn
+
+print(random_primitive_triangle(6))
+
+
+def stirling(n,k):
+    n1=n
+    k1=k
+    if n<=0:
+        return 1
+    elif k<=0:
+        return 0
+    elif (n==0 and k==0):
+        return -1
+    elif n!=0 and n==k:
+        return 1
+    elif n<k:
+        return 0
+    else:
+        temp1=stirling(n1-1,k1)
+        temp1=k1*temp1
+        return (k1*(stirling(n1-1,k1)))+stirling(n1-1,k1-1)
 
 
 # Carefully Created Experiements
 
-# random_primitive_triangles()
-# single_sumset([(0,0), (1,0), (0,1)], iterations=4, plot=True)
-# single_sumset([(0,0), (2,0), (0,2), (1,0), (0,1), (1,1)], iterations=4, plot=True)
-# single_sumset([(0,0), (3,0), (0,3), (1,0), (0,1)], iterations=4, plot=True)
+# single_sumset([(0,0),(2,1), (0,2), (2,0), (3,2)], iterations=10, slice=(0,4), plot=True)
+# single_sumset([(0,0), (0,2), (2,1), (3,2)], iterations=10, slice=(0,4), plot=True)
 
-# single_sumset([(0,0), (4,0), (2,2), (2,1), (1,1), (3,1)], iterations=20, slice=(0,6), plot=True)
-single_sumset([(0,0), (1,0), (4,0), (3,1), (1,1), (2,2), (3,0)], iterations=8, slice=(0,6), plot=True)
-# single_sumset([(0,0), (4,0), (2,2), (2,1), (3,1)], iterations=20, slice=(0,6), plot=True) # symmetric to the last one
-# single_sumset([(0,0), (4,0), (2,2), (1,1), (3,1)], iterations=20, slice=(0,6), plot=True) # half as many points in the core, less dense
 
 # Random Experiements
 
+# random_primitive_triangles()
 # single_sumset(random_set(10,5), iterations=None, plot=True)
 # single_sumset([(0,0), (4,1), (6,7), (9,8)], iterations=None, slice=(34,38), plot=True) #primitive k >= 36
 # single_sumset([(0,0), (3,1), (7,1), (9,4)], iterations=17, slice=(14,18), plot=True) #primitive k>=16
 # single_sumset([(0,0), (5,2), (9,2), (9,8)], iterations=25, slice=(20, 26), plot=True) #not primitive (missing factor of 2 in second dimension) k >= 24
 # single_sumset([(0,0), (2,2), (2,3), (8,3)], iterations=12, slice=(8, 12), plot=True) #not primitive (missing factor of 2 in first dimension) k >= 6
 # single_sumset([(0,0), (5,8), (7,0), (9,3)], iterations=75, slice=(0,8), plot=False) #primitive k >= 75 (takes a while to stabilize)
-
-"""
