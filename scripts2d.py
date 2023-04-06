@@ -4,7 +4,7 @@ from scipy.spatial import ConvexHull, convex_hull_plot_2d
 # from itertools import combinations
 # from scipy import stats
 
-# import csv
+import csv
 import math
 import numpy as np
 import matplotlib.pyplot as plt
@@ -69,8 +69,6 @@ def single_sumset(A, iterations=None, slice=None, plot=False):
                 axis[n,m].set_title(f'iter = {j+slice[0]}')
                 axis[n,m].grid(color = 'gray', linestyle = '--', linewidth = 0.5)
 
-                # plt.savefig(f"2d_figures/4_416798/{slice[0]}-{slice[1]}.png", bbox_inches='tight', format="png", dpi=1200)
-
     
     plt.show()
                 
@@ -110,8 +108,16 @@ def run_exps(curr_set, iterations):
             d13 = lengths_arry[i] - lengths_arry[i-1]
             d21 = d12 - d11
             d22 = d13 - d12
-            # print(d22-d21)
-            if d22 - d21 == 0:
+
+            d31 = d22 - d21
+
+            # if i >= 4:
+            #     d10 = lengths_arry[i-3] - lengths_arry[i-4]
+            #     d20 = d11 - d10
+            #     d30 = d21 - d20
+            #     print(d31 - d30)
+
+            if d31 == 0:
                 if once:
                     if d21 != 2*m:
                         real_m = d21 / 2
@@ -152,88 +158,76 @@ def random_set(m, size):
         points = np.unique(np.insert(points, 0, [0,0], axis=0), axis=0)
     return points
 
-def random_set_exp():
-    #TODO: get random and check if primitive, if yes then proceed to plot, else throw out and
-    # try again.
-    pass
 
+def write_to_csv(fname, rows):
+    with open(fname, 'a') as file:
+        writer = csv.writer(file)
+        writer.writerow(('b' , 'c', 'k', 'A'))
+        writer.writerows(rows)
 
-def random_primitive_triangle(max_iterations):
+def primitive_triangle_basis(max_iterations):
     # generators for SL_2(Z)
     gens = [np.array([[1,1], [1,0]]), np.array([[0,-1], [1,0]])]
-    
     # `word` is a random sequence of 0s and 1s of length <= max_iters
     iters = np.random.randint(1, max_iterations)
     word = np.random.randint(0,2, size=iters)
-
     # generate
     current = np.identity(2)
     for i in word:
         current = np.matmul(current, gens[i])
-
     # add third element to make it d+2
     a,b,c,d = current[0,0], current[1,0], current[0,1], current[1,1] 
-    max_element_range = 2.72 * math.factorial((iters //  2) + 1)
-    x = tuple(np.random.randint(0, max_element_range, size=2))
-    rtn =  [(0,0), (int(a),int(b)), (int(c),int(d))]
-    while x in rtn:
-        x = tuple(np.random.randint(0, max_element_range, size=2))
-    rtn.append(x)
+    return [(0,0), (int(a),int(b)), (int(c),int(d))]
 
-    print(rtn)
 
+def random_primitive_dPn(n, max_iterations):
+    rtn = primitive_triangle_basis(max_iterations) 
     # translate if not in quadrant I
     xs, ys = list(zip(*rtn))
     # vertically first
     if np.min(ys) < 0:
         ymin_arg = np.argmin(ys)
-        yoffset = (- rtn[ymin_arg][0], - rtn[ymin_arg][1])
-        rtn = [(e[0] + yoffset[0], e[1] + yoffset[1]) for e in rtn]
+        yoffset = - rtn[ymin_arg][1]
+        rtn = [(e[0], e[1] + yoffset) for e in rtn]
     #  then horixontally
-    print(rtn)
     if np.min(xs) < 0:
         xmin_arg = np.argmin(xs)
-        print(xmin_arg)
-        xoffset = (- rtn[xmin_arg][0], - rtn[xmin_arg][1])
-        print(xoffset)
-        rtn = [(e[0] + xoffset[0], e[1] + xoffset[1]) for e in rtn]
+        xoffset = - rtn[xmin_arg][0]
+        rtn = [(e[0] + xoffset, e[1]) for e in rtn]
 
+    max_element_range = max_iterations * np.amax(rtn)
+    for _ in range(n-1):
+        x = tuple(np.random.randint(0, max_element_range, size=2))
+        while x in rtn:
+            x = tuple(np.random.randint(0, max_element_range, size=2))
+        rtn.append(x)
     return rtn
 
-print(random_primitive_triangle(6))
+
+def random_primitive_dPn_exps(n, maxx, iters):
+    results = set()
+    for _, A in enumerate([random_primitive_dPn(n, maxx) for i in range(iters)]):
+        print(A)
+        m, mm, b, c, k, _, lengths_arry, _ =  run_exps(A, None)
+        if m != mm:
+            continue
+        res = (b,c,k,tuple(sorted(A)))
+        print(lengths_arry[0])
+        results.add(res)
+    write_to_csv(f'random_2d_exps/privimite_{2+n}gons_{maxx}_{iters}.csv', results)
 
 
-def stirling(n,k):
-    n1=n
-    k1=k
-    if n<=0:
-        return 1
-    elif k<=0:
-        return 0
-    elif (n==0 and k==0):
-        return -1
-    elif n!=0 and n==k:
-        return 1
-    elif n<k:
-        return 0
-    else:
-        temp1=stirling(n1-1,k1)
-        temp1=k1*temp1
-        return (k1*(stirling(n1-1,k1)))+stirling(n1-1,k1-1)
+def magnitue_grows_with_linear_term_dP2():
+    for i in range(20):
+        A, _ = primitive_triangle_basis(6)
+        print(f"\ni = {i}")
+        for j in range(8):
+            print(single_sumset(A + [(j+3, j+3)]))
 
 
-# Carefully Created Experiements
-
-# single_sumset([(0,0),(2,1), (0,2), (2,0), (3,2)], iterations=10, slice=(0,4), plot=True)
-# single_sumset([(0,0), (0,2), (2,1), (3,2)], iterations=10, slice=(0,4), plot=True)
+# single_sumset([(0, 2), (1, 0), (1, 1), (9, 8), (11, 11)]) TODO: Why is this not primitive?
+single_sumset([(0, 0), (0, 4), (1, 0), (1, 1), (3, 3)], iterations=6, slice=(0,4), plot=True)
 
 
-# Random Experiements
-
-# random_primitive_triangles()
-# single_sumset(random_set(10,5), iterations=None, plot=True)
-# single_sumset([(0,0), (4,1), (6,7), (9,8)], iterations=None, slice=(34,38), plot=True) #primitive k >= 36
-# single_sumset([(0,0), (3,1), (7,1), (9,4)], iterations=17, slice=(14,18), plot=True) #primitive k>=16
-# single_sumset([(0,0), (5,2), (9,2), (9,8)], iterations=25, slice=(20, 26), plot=True) #not primitive (missing factor of 2 in second dimension) k >= 24
-# single_sumset([(0,0), (2,2), (2,3), (8,3)], iterations=12, slice=(8, 12), plot=True) #not primitive (missing factor of 2 in first dimension) k >= 6
-# single_sumset([(0,0), (5,8), (7,0), (9,3)], iterations=75, slice=(0,8), plot=False) #primitive k >= 75 (takes a while to stabilize)
+# random_primitive_dPn_exps(2, 7, 20)
+# random_primitive_dPn_exps(3, 6, 10)
