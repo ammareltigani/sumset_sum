@@ -1,6 +1,7 @@
 # from math import gcd
 # from functools import reduce
 from scipy.spatial import ConvexHull, convex_hull_plot_2d
+from collections import Counter
 # from itertools import combinations
 # from scipy import stats
 
@@ -29,7 +30,48 @@ def sum_sets(set1, set2):
     return np.unique(np.array([np.add(e1, e2) for e1 in set1 for e2 in set2]), axis=0)
 
 
-def single_sumset(A, iterations=None, slice=None, plot=False):
+def intersection(basis, translations, iters):
+    rtn = []
+    # get all dilations
+    basis_dilations = [[(0,0)], basis]
+    curr_basis = basis.copy()
+    for _ in range(iters):
+        curr_basis = sum_sets(curr_basis, basis)
+        basis_dilations.append(curr_basis)
+
+    for h in range(iters):
+        points_list = set()
+        intersections = []
+        # i'th dilation
+        for i in range(h+1,-1,-1):
+            dilation = basis_dilations[i]
+            # want all partitions of i. So j*1st trans, and (i-j)*2nd trans
+            if len(translations) == 2:
+                for j in range(h+1-i, -1, -1):
+                    tdilation = [(e[0] + j * translations[0][0], e[1] + j * translations[0][1]) for e in dilation]
+                    tdilation = [(e[0] + (h+1-i-j) * translations[1][0], e[1] + (h+1-i-j) * translations[1][1]) for e in tdilation]
+                    for e in tdilation:
+                        if e in points_list:
+                            intersections.append(e)
+                    points_list.update(tdilation)
+            elif len(translations) == 1:
+                tdilation = [(e[0] + (h+1-i) * translations[0][0], e[1] + (h+1-i) * translations[0][1]) for e in dilation]
+                for e in tdilation:
+                    if e in points_list:
+                        intersections.append(e)
+                points_list.update(tdilation)
+            else:
+                assert False
+        rtn.append(np.array(intersections))
+    return rtn
+
+
+def single_sumset(A, iterations=None, slice=None, plot=False, show_intersections=False, basis=None, translations=None):
+    if show_intersections is not False:
+        assert basis is not None
+        assert translations is not None
+        assert iterations is not None
+
     print(f'A = {A}')
     A = process(A) if type(A) == list else A
     m, mm, b, c, k, nA, lenghts_arry, points_arry =  run_exps(A, iterations)
@@ -54,6 +96,9 @@ def single_sumset(A, iterations=None, slice=None, plot=False):
                 axis[1].plot(points[simplex, 0], points[simplex, 1], 'k-')
             axis[1].set_title("nA")
         else:
+            intersections = intersection(basis, translations, iterations)
+            # print(intersections)
+
             assert slice[1] <= iterations + 1
             iterations = slice[1] - slice[0]
             a = int(np.ceil(iterations / 2))
@@ -61,15 +106,22 @@ def single_sumset(A, iterations=None, slice=None, plot=False):
             for j in range(iterations):
                 m = 1 if j % 2 == 1 else 0
                 n = j // 2
+
                 hull = ConvexHull(points_arry[j+slice[0]])
                 points = np.array(points_arry[j+slice[0]])
+                first_intersections = np.array(intersections[j+slice[0]])
+                u, cc = np.unique(first_intersections, axis=0, return_counts=True)
+                second_intersections = u[cc > 1]
                 axis[n,m].plot(points[:,0], points[:,1], 'o', markersize=4)
+                if first_intersections.size != 0:
+                    axis[n,m].plot(first_intersections[:,0], first_intersections[:,1], 's', markersize=3)
+                    if second_intersections.size != 0:
+                        axis[n,m].plot(second_intersections[:,0], second_intersections[:,1], 'v', color='black', markersize=4)
                 for simplex in hull.simplices:
                     axis[n,m].plot(points[simplex, 0], points[simplex, 1], 'k--')
                 axis[n,m].set_title(f'iter = {j+slice[0]}')
                 axis[n,m].grid(color = 'gray', linestyle = '--', linewidth = 0.5)
 
-    
     plt.show()
                 
 
@@ -91,7 +143,7 @@ def volume_of_convex_hull(points):
 def run_exps(curr_set, iterations):
     m = volume_of_convex_hull(curr_set)
     n_set = np.copy(curr_set)
-    last_three = [np.copy(n_set)]
+    points_list = [np.copy(n_set)]
     lengths_arry = [len(n_set)]
     k = None
     real_m = None
@@ -106,16 +158,8 @@ def run_exps(curr_set, iterations):
             d11 = lengths_arry[i-2] - lengths_arry[i-3]
             d12 = lengths_arry[i-1] - lengths_arry[i-2]
             d13 = lengths_arry[i] - lengths_arry[i-1]
-            d21 = d12 - d11
-            d22 = d13 - d12
-
+            d21, d22 = d12 - d11, d13 - d12
             d31 = d22 - d21
-
-            # if i >= 4:
-            #     d10 = lengths_arry[i-3] - lengths_arry[i-4]
-            #     d20 = d11 - d10
-            #     d30 = d21 - d20
-            #     print(d31 - d30)
 
             if d31 == 0:
                 if once:
@@ -129,7 +173,7 @@ def run_exps(curr_set, iterations):
                     once = True
             else:
                 once = False
-        last_three.append(n_set)
+        points_list.append(n_set)
         lengths_arry.append(len(n_set))
         i+=1
 
@@ -140,7 +184,7 @@ def run_exps(curr_set, iterations):
     b = (lengths_arry[k] - lengths_arry[k-1]) - (mm*((2*(k))+1))
     c = lengths_arry[k-1] - (mm*((k)**2)) - (b*(k))
                 
-    return  m, mm, b, c, k, deprocess(last_three[-3]), lengths_arry, last_three 
+    return  m, mm, b, c, k, deprocess(points_list[-3]), lengths_arry, points_list 
 
 
 def same_line(points):
@@ -225,9 +269,40 @@ def magnitue_grows_with_linear_term_dP2():
             print(single_sumset(A + [(j+3, j+3)]))
 
 
+"""------------------------WORKPSPACE----------------------------"""
+
+
 # single_sumset([(0, 2), (1, 0), (1, 1), (9, 8), (11, 11)]) TODO: Why is this not primitive?
-single_sumset([(0, 0), (0, 4), (1, 0), (1, 1), (3, 3)], iterations=6, slice=(0,4), plot=True)
 
 
-# random_primitive_dPn_exps(2, 7, 20)
-# random_primitive_dPn_exps(3, 6, 10)
+# the n'th degree intersection is self similar to the sumset itself in both d+2 and d+3 cases!
+
+# single_sumset(
+#     [(0, 0), (1, 0), (1, 1), (0,6), (3, 3)],
+#     iterations=30,
+#     slice=(4,8),
+#     plot=True,
+#     show_intersections=True,
+#     basis=[(0,0), (1,0), (1,1)],
+#     translations=[(0,6), (3,3)]
+#     )
+
+# single_sumset(
+#     [(0, 0), (1, 0), (1, 1), (3, 3)],
+#     iterations=17,
+#     slice=(10,14),
+#     plot=True,
+#     show_intersections=True,
+#     basis=[(0,0), (1,0), (1,1)],
+#     translations=[(3,3)]
+#     )
+
+# single_sumset(
+#     [(0, 0), (1, 0), (1, 1), (1, 2)],
+#     iterations=9,
+#     slice=(0,6),
+#     plot=True,
+#     show_intersections=True,
+#     basis=[(0,0), (1,0), (1,1)],
+#     translations=[(1,2)]
+#     )
