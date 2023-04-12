@@ -65,6 +65,10 @@ def intersection(basis, translations, iters):
         rtn.append(np.array(intersections))
     return rtn
 
+def second_intersection(first_intersections):
+    u, cc = np.unique(first_intersections, axis=0, return_counts=True)
+    return u[cc > 1]
+
 
 def single_sumset(A, iterations=None, slice=None, plot=False, show_intersections=False, basis=None, translations=None):
     if show_intersections is not False:
@@ -96,31 +100,47 @@ def single_sumset(A, iterations=None, slice=None, plot=False, show_intersections
                 axis[1].plot(points[simplex, 0], points[simplex, 1], 'k-')
             axis[1].set_title("nA")
         else:
-            intersections = intersection(basis, translations, iterations)
-            # print(intersections)
+            if show_intersections:
+                intersections = intersection(basis, translations, iterations)
+                # print(intersections)
 
-            assert slice[1] <= iterations + 1
-            iterations = slice[1] - slice[0]
-            a = int(np.ceil(iterations / 2))
-            _, axis = plt.subplots(a,2)
-            for j in range(iterations):
-                m = 1 if j % 2 == 1 else 0
-                n = j // 2
+                assert slice[1] <= iterations + 1
+                iterations = slice[1] - slice[0]
+                a = int(np.ceil(iterations / 2))
+                _, axis = plt.subplots(a,2)
+                for j in range(iterations):
+                    m = 1 if j % 2 == 1 else 0
+                    n = j // 2
 
-                hull = ConvexHull(points_arry[j+slice[0]])
-                points = np.array(points_arry[j+slice[0]])
-                first_intersections = np.array(intersections[j+slice[0]])
-                u, cc = np.unique(first_intersections, axis=0, return_counts=True)
-                second_intersections = u[cc > 1]
-                axis[n,m].plot(points[:,0], points[:,1], 'o', markersize=4)
-                if first_intersections.size != 0:
-                    axis[n,m].plot(first_intersections[:,0], first_intersections[:,1], 's', markersize=3)
-                    if second_intersections.size != 0:
-                        axis[n,m].plot(second_intersections[:,0], second_intersections[:,1], 'v', color='black', markersize=4)
-                for simplex in hull.simplices:
-                    axis[n,m].plot(points[simplex, 0], points[simplex, 1], 'k--')
-                axis[n,m].set_title(f'iter = {j+slice[0]}')
-                axis[n,m].grid(color = 'gray', linestyle = '--', linewidth = 0.5)
+                    hull = ConvexHull(points_arry[j+slice[0]])
+                    points = np.array(points_arry[j+slice[0]])
+                    first_intersections = np.array(intersections[j+slice[0]])
+                    second_intersections = second_intersection(first_intersections)
+                    axis[n,m].plot(points[:,0], points[:,1], 'o', markersize=4)
+                    if first_intersections.size != 0:
+                        axis[n,m].plot(first_intersections[:,0], first_intersections[:,1], 's', markersize=3)
+                        if second_intersections.size != 0:
+                            axis[n,m].plot(second_intersections[:,0], second_intersections[:,1], 'v', color='black', markersize=4)
+                    for simplex in hull.simplices:
+                        axis[n,m].plot(points[simplex, 0], points[simplex, 1], 'k--')
+                    axis[n,m].set_title(f'iter = {j+slice[0]}')
+                    axis[n,m].grid(color = 'gray', linestyle = '--', linewidth = 0.5)
+            else:
+                a = int(np.ceil(iterations / 2))
+                _, axis = plt.subplots(a,2)
+                for j in range(iterations):
+                    m = 1 if j % 2 == 1 else 0
+                    n = j // 2
+                    hull = ConvexHull(points_arry[j+slice[0]])
+                    points = np.array(points_arry[j+slice[0]])
+                    axis[n,m].plot(points[:,0], points[:,1], 'o', markersize=4)
+                    for simplex in hull.simplices:
+                        axis[n,m].plot(points[simplex, 0], points[simplex, 1], 'k--')
+                    axis[n,m].set_title(f'iter = {j+slice[0]}')
+                    axis[n,m].grid(color = 'gray', linestyle = '--', linewidth = 0.5)
+                
+                
+
 
     plt.show()
                 
@@ -239,18 +259,21 @@ def random_primitive_dPn(n, max_iterations):
         xoffset = - rtn[xmin_arg][0]
         rtn = [(e[0] + xoffset, e[1]) for e in rtn]
 
+    basis = rtn.copy()
+    translations = []
     max_element_range = max_iterations * np.amax(rtn)
     for _ in range(n-1):
         x = tuple(np.random.randint(0, max_element_range, size=2))
         while x in rtn:
             x = tuple(np.random.randint(0, max_element_range, size=2))
+        translations.append(x)
         rtn.append(x)
-    return rtn
+    return rtn, basis, translations
 
 
 def random_primitive_dPn_exps(n, maxx, iters):
     results = set()
-    for _, A in enumerate([random_primitive_dPn(n, maxx) for i in range(iters)]):
+    for _, A in enumerate([random_primitive_dPn(n, maxx)[0] for i in range(iters)]):
         print(A)
         m, mm, b, c, k, _, lengths_arry, _ =  run_exps(A, None)
         if m != mm:
@@ -259,6 +282,69 @@ def random_primitive_dPn_exps(n, maxx, iters):
         print(lengths_arry[0])
         results.add(res)
     write_to_csv(f'random_2d_exps/privimite_{2+n}gons_{maxx}_{iters}.csv', results)
+    
+
+def has_unique_minimal_elements(A, basis, translations):
+    # mininal_elements_bound_factor (change this later)
+    # TODO: change m to the bound in paper and make lengths_arry large enough
+    m = 25 
+    _, _, _, _, _, _, lengths_arry, _ =  run_exps(A, m)
+    intersections = intersection(basis, translations, m)
+    first_intersections = [np.unique(e, axis=0) for e in intersections]
+    second_intersections = [second_intersection(e) for e in intersections]
+    # Has unique minimal elements of 1st and 2nd degree iff there is perfect self-similarity
+    # between the two degrees of intersection and the original points.
+    # x is the number of iterations until we see the first intersection
+    x, y = 0, 0
+    for i in range(len(first_intersections)):
+        if len(first_intersections[i]) != 0:
+            x = i+1
+            break
+    for i in range(len(second_intersections)):
+        if len(second_intersections[i]) != 0:
+            y = i+1
+            break
+        
+    # print(f'x={x}, y={y}')
+    # print(f'first_intersections={first_intersections}')
+    # print(f'second_intersections={second_intersections}')
+    # print(f'lengths_arry={lengths_arry}')
+
+    # formula that we want say that |intersections[i+x]| = lengths_arry[i]
+    # and |second_intersection(intersections[i+y])| = lengths_arry[i]
+    unique1 = True
+    unique2 = True
+    for i in range(len(first_intersections) - x):
+        # print(len(first_intersections[i+x]), lengths_arry[i])
+        if len(first_intersections[i+x]) != lengths_arry[i]:
+            # print(f'unique1 false at i={i+x}')
+            unique1 = False
+            break
+    for i in range(len(second_intersections) - y):
+        # print(len(second_intersections[i+y]), lengths_arry[i])
+        if len(second_intersections[i+y]) != lengths_arry[i]:
+            unique2 = False
+            # print(f'unique2 false at i={i+y}')
+            break
+    return unique1, unique2
+
+
+def filter_uniques_from_random(iters, basis_depth):
+    unique1s = []
+    unique2s = []
+    for _ in range(iters):
+        A, basis, translations = random_primitive_dPn(3, basis_depth)
+        unique1, unique2 = has_unique_minimal_elements(A, basis, translations)
+        if unique1:
+            unique1s.append((A, basis, translations))
+        if unique2:
+            if not unique1:
+                print("Second but not first!")
+                print((A, basis, translations))
+                assert False
+            unique2s.append((A, basis, translations))
+
+    return unique1s, unique2s 
 
 
 def magnitue_grows_with_linear_term_dP2():
@@ -268,41 +354,101 @@ def magnitue_grows_with_linear_term_dP2():
         for j in range(8):
             print(single_sumset(A + [(j+3, j+3)]))
 
+def area_thing(sets):
+    i = 0
+    for sett in sets:
+        print(i)
+        i += 1
+        single_sumset(sett[0][:-1])
+        single_sumset(sett[0][:-2] + sett[0][-1:])
+        single_sumset(sett[0])
+
 
 """------------------------WORKPSPACE----------------------------"""
 
 
 # single_sumset([(0, 2), (1, 0), (1, 1), (9, 8), (11, 11)]) TODO: Why is this not primitive?
 
+# unique on both intersections
+# single_sumset([(0, 0), (1, 0), (1, 1), (3, 3)], iterations=6, slice=(0,4), plot=True)
+# single_sumset([(0, 0), (1, 0), (1, 1), (0, 4)], iterations=6, slice=(0,4), plot=True) 
+# single_sumset([(0, 0), (1, 0), (1, 1), (0, 4), (3,3)], iterations=10, slice=(0,4), plot=True)
 
-# the n'th degree intersection is self similar to the sumset itself in both d+2 and d+3 cases!
+# non-unique on second intersection
+# single_sumset([(0, 0), (1, 0), (1, 1), (3, 3)], iterations=6, slice=(0,4), plot=True)
+# single_sumset([(0, 0), (1, 0), (1, 1), (0, 5)], iterations=6, slice=(0,4), plot=True) 
+# single_sumset([(0, 0), (1, 0), (1, 1), (0, 5), (3,3)], iterations=10, slice=(0,4), plot=True)
 
+# non-unique on first intersection
+# single_sumset([(0, 0), (1, 0), (1, 1), (4, 3)], iterations=6, slice=(0,4), plot=True)
+# single_sumset([(0, 0), (1, 0), (1, 1), (0, 4)], iterations=6, slice=(0,4), plot=True) 
+# single_sumset([(0, 0), (1, 0), (1, 1), (0, 4), (4,3)], iterations=10, slice=(0,4), plot=True)
+
+# non-unique on both intersection
+# single_sumset([(0, 0), (1, 0), (1, 1), (4, 3)], iterations=6, slice=(0,4), plot=True)
+# single_sumset([(0, 0), (1, 0), (1, 1), (0, 5)], iterations=6, slice=(0,4), plot=True) 
+# single_sumset([(0, 0), (1, 0), (1, 1), (0, 5), (4,3)], iterations=10, slice=(0,4), plot=True)
+
+# d-simplex doesn't play too nice. But maybe obeys something else. Maybe can fix.
+# single_sumset([(0, 0), (1, 0), (1, 1), (2,2), (3, 3)], iterations=6, slice=(0,4), plot=True)
+# single_sumset([(0, 0), (1, 0), (1, 1), (2,2), (2, 0)], iterations=6, slice=(0,4), plot=True)
+# Note: there are no d-simplices (in d=2 at least) with d+3 elements for which the d+3 rd element
+# is inside the interior of the convex hull and not the boundary. Need d+4 elements to insert an
+# element of the interior.
+
+# for one, two in [((0,3),(2,1)), ((1,2), (0,3)), ((3,3), (1,2)), ((0,1), (2,2))]:
+#     single_sumset(
+#         [(0, 0), (1, 0), (1, 1), one, two],
+#         iterations=10,
+#         slice=(0,6),
+#         plot=True,
+#         show_intersections=True,
+#         basis=[(0,0), (1,0), (1,1)],
+#         translations=[one, two]
+#         )
+
+
+# for e in filter_uniques_from_random(100, 4):
+#     print(e)
+
+
+# unique for both
+uniques12 = [([(1, 1), (0, 0), (0, 1), (3, 0), (3, 3)], [(1, 1), (0, 0), (0, 1)], [(3, 0), (3, 3)]), # paralellogram
+([(1, 1), (0, 0), (0, 1), (2, 2), (2, 0)], [(1, 1), (0, 0), (0, 1)], [(2, 2), (2, 0)]),              # trapezoid with paralell
+([(1, 0), (0, 1), (1, 1), (3, 1), (2, 2)], [(1, 0), (0, 1), (1, 1)], [(3, 1), (2, 2)]),              # paralellogram
+([(1, 1), (0, 1), (1, 0), (3, 1), (1, 2)], [(1, 1), (0, 1), (1, 0)], [(3, 1), (1, 2)]),              # symmetrical diamond shape
+([(1, 1), (0, 0), (0, 1), (3, 1), (2, 2)], [(1, 1), (0, 0), (0, 1)], [(3, 1), (2, 2)]),              # trapezoid with non-parallem
+([(0, 1), (0, 0), (1, 1), (3, 1), (3, 2)], [(0, 1), (0, 0), (1, 1)], [(3, 1), (3, 2)])]              # paralellogram
+
+# unique for the first degree intersection
+uniques1 = [([(0, 0), (2, 1), (1, 1), (6, 3), (1, 4)], [(0, 0), (2, 1), (1, 1)], [(6, 3), (1, 4)]),
+([(1, 1), (0, 1), (1, 0), (3, 2), (2, 3)], [(1, 1), (0, 1), (1, 0)], [(3, 2), (2, 3)]),
+([(1, 0), (1, 1), (0, 0), (2, 2), (0, 3)], [(1, 0), (1, 1), (0, 0)], [(2, 2), (0, 3)])]
+# + uniques12 since if unique on 2 then unique on 1
+
+#TODO: explain why in d+2 case the higher order intersections don't matter (get cancelled out)
+
+#TODO: how to compute the binomial basis polynomial for the uniques1 case. Can it also be done for
+# the uniques12 case?
+
+#TODO: confirm or deny the area thing on uniques12
+# --> doesn't hold for [(0, 1), (0, 0), (1, 1), (3, 1), (3, 2)]. what are its coefficients? How do they compare to
+# the coefficients of other uniques12 that do satisfy area thing
+
+# Seems like for 1st intersection to be unique we need d+1 simplices for which one of the basis
+# points is in the interior of the convex hull 
+#TODO: what makes the shapes in uniques12 and uniques1 different?
+
+
+# print(has_unique_minimal_elements([(0, 1), (0, 0), (1, 1), (3, 1), (3, 2)], [(0, 1), (0, 0), (1, 1)], [(3, 1), (3, 2)]))
 # single_sumset(
-#     [(0, 0), (1, 0), (1, 1), (0,6), (3, 3)],
-#     iterations=30,
-#     slice=(4,8),
-#     plot=True,
-#     show_intersections=True,
-#     basis=[(0,0), (1,0), (1,1)],
-#     translations=[(0,6), (3,3)]
-#     )
-
-# single_sumset(
-#     [(0, 0), (1, 0), (1, 1), (3, 3)],
-#     iterations=17,
-#     slice=(10,14),
-#     plot=True,
-#     show_intersections=True,
-#     basis=[(0,0), (1,0), (1,1)],
-#     translations=[(3,3)]
-#     )
-
-# single_sumset(
-#     [(0, 0), (1, 0), (1, 1), (1, 2)],
-#     iterations=9,
+#     [(1, 1), (0, 0), (0, 1), (3, 1), (3, 2)],  
+#     basis=[(1, 1), (0, 0), (0, 1)],
+#     translations=[(3, 1), (3, 2)],
+#     iterations=10,
 #     slice=(0,6),
 #     plot=True,
 #     show_intersections=True,
-#     basis=[(0,0), (1,0), (1,1)],
-#     translations=[(1,2)]
 #     )
+
+
