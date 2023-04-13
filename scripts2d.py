@@ -426,8 +426,6 @@ uniques1 = [([(0, 0), (2, 1), (1, 1), (6, 3), (1, 4)], [(0, 0), (2, 1), (1, 1)],
 ([(1, 0), (1, 1), (0, 0), (2, 2), (0, 3)], [(1, 0), (1, 1), (0, 0)], [(2, 2), (0, 3)])]
 # + uniques12 since if unique on 2 then unique on 1
 
-#TODO: explain why in d+2 case the higher order intersections don't matter (get cancelled out)
-
 #TODO: how to compute the binomial basis polynomial for the uniques1 case. Can it also be done for
 # the uniques12 case?
 
@@ -439,16 +437,18 @@ uniques1 = [([(0, 0), (2, 1), (1, 1), (6, 3), (1, 4)], [(0, 0), (2, 1), (1, 1)],
 # points is in the interior of the convex hull 
 #TODO: what makes the shapes in uniques12 and uniques1 different?
 
+#TODO: what happens for d-simplices?
+
 
 # print(has_unique_minimal_elements([(0, 1), (0, 0), (1, 1), (3, 1), (3, 2)], [(0, 1), (0, 0), (1, 1)], [(3, 1), (3, 2)]))
-# single_sumset(
-#     [(1, 1), (0, 0), (0, 1), (3, 1), (3, 2)],  
-#     basis=[(1, 1), (0, 0), (0, 1)],
-#     translations=[(3, 1), (3, 2)],
-#     iterations=10,
-#     slice=(0,6),
-#     plot=True,
-#     show_intersections=True,
-#     )
+single_sumset(
+    uniques12[0][0],
+    basis=uniques12[0][1],
+    translations=uniques12[0][2],
+    iterations=10,
+    slice=(0,8),
+    plot=True,
+    show_intersections=True,
+    )
 
 
