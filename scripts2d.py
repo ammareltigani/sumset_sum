@@ -1,7 +1,9 @@
 from scipy.spatial import ConvexHull
 from sympy import *
 
+import ast
 import csv
+import re
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -112,7 +114,7 @@ def plot_sumset(iterations, slice, points_arry=None, inters=None):
         axis[n,m].plot(points[:,0], points[:,1], 'o', markersize=4)
 
         if inters is not None:
-            colors = ['yellow', 'orange', 'red', 'black']
+            colors = ['yellow', 'orange', 'red', 'grey', 'black']
             for i in range(len(colors)):
                 ith_intersection = np.array(inters[j+slice[0]][i+1])
                 if ith_intersection.size != 0:
@@ -204,6 +206,14 @@ def write_to_csv(fname, rows, legend=('b' , 'c', 'k', 'A')):
         writer.writerow(legend)
         writer.writerows(rows)
 
+def read_rows_from_csv(fname):
+    rtn = []
+    with open(fname, "r") as f:
+        reader = csv.reader(f, delimiter="\t")
+        for row in reader:
+            rtn.append(row)
+    return rtn
+
 def primitive_triangle_basis(max_iterations):
     # generators for SL_2(Z)
     gens = [np.array([[1,1], [1,0]]), np.array([[0,-1], [1,0]])]
@@ -248,7 +258,10 @@ def random_primitive_dPn(n, max_iterations):
 
 def random_primitive_dPn_exps(n, maxx, maxk, iters):
     results = set()
+    j=0
     for _, basis, translations in [random_primitive_dPn(n, maxx) for _ in range(iters)]:
+        print(j)
+        j += 1
         m, mm, b, c, k, _, _, _ =  run_exps(basis + translations, maxk)
         if m != mm:
             continue
@@ -269,14 +282,19 @@ def satisfy_simple(basis, translations, maxk, c1=None, c2=None, m=None, b=None, 
     if c1 is None or c2 is None:
         inters = intersections(basis, translations, maxk)
         x, y = 0, 0
-        for i in range(len(inters[1])):
+        for i in range(maxk):
             if len(inters[i][1]) != 0:
                 x = i+1
                 break
-        for i in range(len(inters[2])):
-            if len(inters[i][2]) != 0:
-                y = i+1
-                break
+        # if the # of orange in inters[j][2] for j>=x is larger than the # of yellow in inters[j-x] then j contains a minimal element
+        if len(inters[x-1][1]) > 1:
+            y = x
+        else:
+            for j in range(x, maxk):
+                if any(len(inters[j][i+1]) > len(inters[j-x][i]) for i in range(maxk-1)):
+                    y = j+1
+                    break
+        
     x = c1 if c1 is not None else x
     y = c2 if c2 is not None else y
 
@@ -286,15 +304,21 @@ def satisfy_simple(basis, translations, maxk, c1=None, c2=None, m=None, b=None, 
     
 
 def filter_dP3_satisfy_simple(basis_depth, maxk, iters):
+    not_res = []
     res = []
     for m, b, c, k, basis, translations in random_primitive_dPn_exps(3, basis_depth, maxk, iters):
         basis = list(basis)
         translations = list(translations)
         satisfies, x, y, expected, actual = satisfy_simple(basis, translations, maxk, m=m, b=b, c=c)
         if not satisfies:
-            polystr = f'exptected: {expected}, for k >= {k}, actual: {actual}'
+            actualstr = f'{actual}'
+            expectedstr = f'{expected} for k >= {k}'
+            not_res.append((expectedstr, actualstr, x, y, basis+translations))
+        else:
+            polystr = f'{expected} for k >= {k}'
             res.append((polystr, x, y, basis+translations))
-    return res
+
+    return res, not_res
 
 
 def all_combinations_binexp(maxx):
@@ -305,6 +329,26 @@ def all_combinations_binexp(maxx):
     return res
 
 
+def view_plots_from_csv(fname, min_sets, max_sets):
+    for i, rowstr in enumerate(read_rows_from_csv(fname)):
+        if i == 0 or len(rowstr) == 0 or i <= min_sets:
+            continue
+        if i >= 2 * max_sets:
+            break
+
+        Astr = re.search('"(.*)"', rowstr[0]).group(1)
+        A = ast.literal_eval(Astr)
+        print(satisfy_simple(A[:3], A[3:], 16))
+        single_sumset(
+            A,
+            10,
+            basis=A[:3],
+            translations=A[3:],
+            slice=(0,8),
+            plot=True,
+            show_intersections=True,
+        )
+
 
 def magnitue_grows_with_linear_term_dP2():
     for i in range(20):
@@ -314,49 +358,91 @@ def magnitue_grows_with_linear_term_dP2():
             print(single_sumset(A + [(j+3, j+3)]))
 
 
-"""------------------------WORKPSPACE----------------------------"""
+"""------------------------Conjectures----------------------------"""
 
-# single_sumset([(0, 2), (1, 0), (1, 1), (9, 8), (11, 11)]) TODO: Why is this not primitive?
+# Conj1: For every d+3 elements set A, p(x) = BinExp(c1,c2) for some c1,c2 >= 2 where
+# BinExp(c1,c2) = choose(h+4,4)-choose(h-c1+4,4)-choose(h-c2+4,4)+choose(h-c1-c2+4,4) 
+# iff A has exactly 2 minimal elements
 
-# TODO: explain why p(x) = BinExp(c1,c2) where c1/c2 is the index of the first/second self-similarity 
-# for any of the sets in filter_dP3_simple_6_15_1000.csv
+# Conj2: Any d+3 set that has exactly 2 minimal elements must have a single basis element
+# in the interior of the convex hull.
+# FALSE. Counterexample: [(0, 0), (1, 0), (1, 1), (2, 2), (2, 0)]
+# Converse of Conj2 also FALSE. Counterexample: [(0, 0), (3, 2), (5, 3), (3, 4), (6, 0)]
+# Doesn't work even with two basis elements in the interior:  [(0, 0), (1, 1), (2, 1), (2, 8), (3, 0)],
 
-# TODO: explain why BinExp(3,6) does not work but BinExp(3,7) does for the following set
-# print(satisfy_simple([(0,0), (2,1), (1,1)], [(6,3), (1,4)], maxk=15, c1=3, c2=7))
+# TODO: how does this generalize?
+# Fact: 100% of sets with d+2 elements have exactly 1 minimal element
+# Conj3: 25% of sets with d+3 elements have exactly 2 minimal elements (i.e. satisfy BinExp form)
+# Conj4: In d dimensions if A has exactly d minimal elements then there is a generalized BinExp (continue the
+# inclusion exclusion) that describes the size of hA for sufficiently large h
+
+# TODO: what happens for d-simplices?
+# Conj5: d-simplices have exactly d minimal elements.
+# FALSE. Counterexample: [(0, 0), (2, 1), (1, 1), (1, 3), (3, 0)]
+# Conj5.5: d-simplices with no basis points as internal points have exactly d minimal elements
+
+# TODO: ask Leo why the structure theorem of Prop4.1 only works on A if it is a d-simplex?
+# Conj6: Conj4 implies structure theorem v2.0 where the same thm holds even if A is not a d-simplex but 
+# as long as A has exactly d minimal elements.
+
+# TODO: Why is the following set not primitive?
+# single_sumset([(0, 2), (1, 0), (1, 1), (9, 8), (11, 11)])
+
+"""------------------------Tasks----------------------------"""
+
+# Fixed code, conj, conj3, and conj4.
+# TODO: look at more sets where the mismatch with BinExp form is a constant
+# TODO: how does one go about computing virtual generators. The proof gives the case for d=1. How does this
+# generalize to d=2. Read sections 4 and 5 of the paper
+# TODO: how does one characterize the error of the virtual generator. Is it still finite for any d>1 and how to
+# find it given a virutal generator and a set of minimal elements it tries to virtualize
+# TODO: try to characterize the sets that yield exactly two minimal elements in d+3 case. start with Conj5.5
+# TODO: confirm/deny Conj4
+# TODO: improve bound on minimal elements
+
+
+"""------------------------Workspace----------------------------"""
+
+print(binexp(3,3))
+single_sumset(
+    [(0, 0), (2, 1), (1, 1), (3, 5), (2, 4)],
+    15,
+    basis=[(0, 0), (2, 1), (1, 1)],
+    translations=[(2, 5), (2, 4)],
+    slice=(0,6),
+    plot=True,
+    show_intersections=True,
+)
+
+# print(satisfy_simple([(0, 0), (1, 0), (2, 1)], [(1, 4), (4, 1)], 15))
 # single_sumset(
-#     [(0, 0), (2, 1), (1, 1), (6, 3), (1, 4)],
-#     16,
-#     basis=[(0, 0), (2, 1), (1, 1)],
-#     translations=[(6, 3), (1, 4)],
-#     slice=(0,10),
-#     plot=True,
-#     show_intersections=True,
-# )
-
-
-# TODO: Explain why no expression of the form BinExp(c1,c2) works for the following set
-# single_sumset(
-#     [(0, 0), (2, 1), (1, 1), (3, 5), (2, 4)],
+#     [(0, 0), (1, 0), (2, 1), (1, 4), (4, 1)],
 #     15,
-#     basis=[(0, 0), (2, 1), (1, 1)],
-#     translations=[(2, 5), (2, 4)],
-#     slice=(0,10),
+#     basis=[(0, 0), (1, 0), (2, 1)],
+#     translations=[(1, 4), (4, 1)],
+#     slice=(2,8),
 #     plot=True,
 #     show_intersections=True,
 # )
 
 # write_to_csv(f'random_2d_exps/privimite_{2+n}gons_{maxx}_{iters}.csv', random_primitive_dPn_exps(n,maxx,iters))
-# write_to_csv('random_2d_exps/filter_dP3_not_simple_6_15_10.csv', filter_dP3_satisfy_simple(6, 15, 10), legend=('P(h)', 'c_1', 'c_2', 'A'))
+# res, not_res = filter_dP3_satisfy_simple(6, 20, 1000)
+# write_to_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000.csv', not_res, legend=('Actual P(h)', 'Expected P(h)', 'c_1', 'c_2', 'A'))
+# write_to_csv('random_2d_exps/filter_dP3_simple_6_15_1000.csv', res, legend=('P(h)', 'c_1', 'c_2', 'A'))
 # write_to_csv('random_2d_exps/all_comb_binexp_30.csv', all_combinations_binexp(30), legend=('P(x)', 'c1', 'c2'))
 
-# Conj: For every d+3 elements set A, p(x) = BinExp(c1,c2) for some c1,c2 >= 2 where
-# BinExp(c1,c2) = choose(h+4,4)-choose(h-c1+4,4)-choose(h-c2+4,4)+choose(h-c1-c2+4,4) 
+# print("Simple")
+# view_plots_from_csv('random_2d_exps/filter_dP3_simple_6_15_1000.csv', 0, 90)
+# print("Not simple")
+# view_plots_from_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000.csv', 4, 20)
 
-# Seems like for 1st intersection to be unique we need d+1 simplices for which one of the basis
-# points is in the interior of the convex hull. There are only a few other cases if we have d+3
-# points: 1) d+1 simplex with all basis points on the boundary, 3) d-simplex with all basis points
-# the boundary and a translate in the interior, 4) d-simplex with all basis points on the boundary
-# and translate on the boundary. What is the difference between these?
-
-# Q: what happens for d-simplices?
-
+# print(satisfy_simple())
+# single_sumset(
+#     ,
+#     15,
+#     basis=,
+#     translations=,
+#     slice=(0,6),
+#     plot=True,
+#     show_intersections=True,
+# )

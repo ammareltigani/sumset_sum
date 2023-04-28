@@ -85,21 +85,20 @@ def cone_of_A(A, show=True, thresh=10):
     if show:
         ax = plt.axes()
         plt.scatter(*zip(*cone_list))
-        ax.set_xticks(range(50))
+        ax.set_xticks(range(thresh*(max(A)-1)))
         ax.set_yticks(range(thresh))
         plt.grid()
         plt.show()
     return cone_list
 
 def get_minimal_elements(m, cone_list):
-    minimal_elements = set() 
+    minimal_elements = [[] for _ in range(m)] 
     for residue in range(m):
         residue_class = [e for e in cone_list if e[0] % m == residue]
         # make sure the next line works as intended
-        min_elem = min(residue_class)
         for e in residue_class:
-            if e[1] <= min_elem[1] and e[0] != min_elem[0]:
-                minimal_elements.add(residue)
+            if tuple(np.subtract(e, (0,1))) not in cone_list and tuple(np.subtract(e, (m,1))) not in cone_list:
+                minimal_elements[residue].append(e)
     
     return minimal_elements
 
@@ -140,14 +139,32 @@ def single_sumset(A, show_steps=False):
     return run_exps([A], show_steps)
 
 def single_cone_example():
-    A = [0,1,5,6,9]
-    single_sumset(A)
+    # A = [0,1,10,12]
+    # m = max(A)
+    m = np.random.randint(10, 15)
+    max_size = np.random.randint(3, m)
+    A = random_set(m, max_size)
+    # single_sumset(A)
     # thresh = 2*max(A)-4
-    thresh = 7
+    thresh = 2*m 
     cone = cone_of_A(A, show=False, thresh=thresh)
-    print("minimal elements")
     min_elems = get_minimal_elements(max(A), cone)
-    print(min_elems, len(min_elems))
+    max_height = 0
+    max_index = None
+    for i, res_class in enumerate(min_elems):
+        # print(f'residue class = {i}')
+        # print(f'minimal_elemens = {res_class}')
+        height = sum(e[1] for e in res_class)
+        # print(f'total heights = {height}')
+        if height > max_height:
+            max_index = i
+            max_height = height
+    
+    if max_height > 2*m - 5:
+        print(A)
+        print(f'max total height = {max_height}')
+        print(f'min elems {min_elems[max_index]}')
+        print(f'b-1 = {max(A)-1}\n')
 
 
 def get_moments(max_m, moment):
@@ -185,6 +202,8 @@ def plot_moment_data(m, moment):
 
 
 
+for i in range(1000):
+    single_cone_example()
 
 
 # new example of set to look into: [0,n,n+1,n+2,...,n+k] where n gets large
