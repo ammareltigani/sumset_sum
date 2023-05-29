@@ -24,7 +24,8 @@ def deprocess(l):
 
 def sum_sets(set1, set2):
     assert np.shape(set1)[1] == np.shape(set2)[1]
-    return np.unique(np.array([np.add(e1, e2) for e1 in set1 for e2 in set2]), axis=0)
+    res = np.unique(np.array([np.add(e1, e2) for e1 in set1 for e2 in set2]), axis=0)
+    return res
 
 def intersections(basis, translations, iters):
     rtn = []
@@ -94,7 +95,7 @@ def single_sumset(A, iterations, slice=None, plot=False, show_intersections=Fals
             
 
 
-def plot_sumset(iterations, slice, points_arry=None, inters=None):
+def plot_sumset(iterations, slice, points_arry=None, inters=None, threeD=False):
     assert points_arry is not None or inters is not None
     assert points_arry is None or inters is None
     assert slice[1] <= iterations + 1
@@ -103,27 +104,45 @@ def plot_sumset(iterations, slice, points_arry=None, inters=None):
         points_arry = [e[0] for e in inters]
 
     iterations = slice[1] - slice[0]
-    a = int(np.ceil(iterations / 2))
-    _, axis = plt.subplots(a,2)
-    for j in range(iterations):
-        m = 1 if j % 2 == 1 else 0
-        n = j // 2
+    if threeD:
+        axis = plt.figure().add_subplot(projection='3d')
+        for j in range(iterations):
+            hull = ConvexHull(points_arry[j+slice[0]])
+            points = np.array(points_arry[j+slice[0]])
+            axis.plot(points[:,0], points[:,1], 'o', color='blue', zs=j, markersize=4, zdir='z')
+            for simplex in hull.simplices:
+                axis.plot(points[simplex, 0], points[simplex, 1], 'k--', zs=j, zdir='z', linewidth=1)
 
-        hull = ConvexHull(points_arry[j+slice[0]])
-        points = np.array(points_arry[j+slice[0]])
-        axis[n,m].plot(points[:,0], points[:,1], 'o', markersize=4)
+            if inters is not None:
+                colors = ['yellow', 'orange', 'red', 'grey', 'black']
+                for i in range(len(colors)):
+                    ith_intersection = np.array(inters[j+slice[0]][i+1])
+                    if ith_intersection.size != 0:
+                        axis.plot(ith_intersection[:,0], ith_intersection[:,1], 'o', color=colors[i], zs=j, zdir='z', markersize=4)
+    else:
+        a = int(np.ceil(iterations / 2))
+        _, axis = plt.subplots(a,2)
+        for j in range(iterations):
+            m = 1 if j % 2 == 1 else 0
+            n = j // 2
 
-        if inters is not None:
-            colors = ['yellow', 'orange', 'red', 'grey', 'black']
-            for i in range(len(colors)):
-                ith_intersection = np.array(inters[j+slice[0]][i+1])
-                if ith_intersection.size != 0:
-                    axis[n,m].plot(ith_intersection[:,0], ith_intersection[:,1], 'o', color=colors[i], markersize=4)
+            hull = ConvexHull(points_arry[j+slice[0]])
+            points = np.array(points_arry[j+slice[0]])
+            axis[n,m].plot(points[:,0], points[:,1], 'o', markersize=4)
 
-        for simplex in hull.simplices:
-            axis[n,m].plot(points[simplex, 0], points[simplex, 1], 'k--')
-        axis[n,m].set_title(f'iter = {j+slice[0]}')
-        axis[n,m].grid(color = 'gray', linestyle = '--', linewidth = 0.5)
+            if inters is not None:
+                colors = ['yellow', 'orange', 'red', 'grey', 'black']
+                for i in range(len(colors)):
+                    ith_intersection = np.array(inters[j+slice[0]][i+1])
+                    if ith_intersection.size != 0:
+                        axis[n,m].plot(ith_intersection[:,0], ith_intersection[:,1], 'o', color=colors[i], markersize=4)
+
+            for simplex in hull.simplices:
+                axis[n,m].plot(points[simplex, 0], points[simplex, 1], 'k--')
+            axis[n,m].set_title(f'iter = {j+slice[0]+1}')
+            axis[n,m].grid(color = 'gray', linestyle = '--', linewidth = 0.5)
+            print()
+
     plt.show()
 
                 
@@ -338,13 +357,15 @@ def view_plots_from_csv(fname, min_sets, max_sets):
 
         Astr = re.search('"(.*)"', rowstr[0]).group(1)
         A = ast.literal_eval(Astr)
+        print(f'A = {A}')
         print(satisfy_simple(A[:3], A[3:], 16))
+        print(f'deep minimal elements: {get_minimal_elements(A, 16)}')
         single_sumset(
             A,
-            10,
+            11,
             basis=A[:3],
             translations=A[3:],
-            slice=(0,8),
+            slice=(0,10),
             plot=True,
             show_intersections=True,
         )
@@ -356,6 +377,71 @@ def magnitue_grows_with_linear_term_dP2():
         print(f"\ni = {i}")
         for j in range(8):
             print(single_sumset(A + [(j+3, j+3)]))
+
+
+def get_cones(A, iters):
+    cones = []
+    inters = intersections(A[:3], A[3:], iters)
+    # keep only degree of intersection that we care about
+    for deg in range(iters):
+        points = [iteration[deg] for iteration in inters]
+        cone = set()
+        # add heights
+        for i, iteration in enumerate(points):
+            for j in range(len(iteration)):
+                # print(iteration[j])
+                cone.add((iteration[j][0], iteration[j][1], i+1))
+        cones.append(cone)
+    return cones
+
+def get_hull_points(A):
+    points = np.array(A)
+    hull_points = set()
+    hull = ConvexHull(A)
+    for simplex in hull.simplices:
+        point = (points[simplex, 0][0], points[simplex, 1][0], 1)
+        hull_points.add(point)
+    hull_points.add((0,0,1))
+    return [(e[0], e[1], 1) for e in A]
+    # return hull_points
+
+def get_minimal_elements(A, iters):
+    all_minimal_elements = [[]]
+    cones = get_cones(A, iters)
+    hull_points = list(get_hull_points(A))
+    print(f'hull points: {hull_points}')
+    for i in range(1, len(cones)):
+        cone = cones[i]
+        minimal_elements = []
+        for e in cone:
+            if all(tuple(np.subtract(e, vertex)) not in cone for vertex in hull_points):
+                minimal_elements.append(e)
+        all_minimal_elements.append(sorted(minimal_elements, key=lambda x: x[2]))
+    print(f'standard min elems: {all_minimal_elements[1]}')
+
+    all_filtered_minimal_elements = [all_minimal_elements[1]]
+    for i in range(2, len(all_minimal_elements)):
+        minimal_elements = all_minimal_elements[i]
+        filtered_minimal_elements = []
+        for e in minimal_elements:
+            # given definition of minimal element from paper
+            not_self_similar = all(tuple(np.subtract(e,vertex)) not in cones[i] for vertex in set(hull_points))
+
+            # generalize to multi-color by filtering similar minimal elements across colors
+            prev_translates = [j for i in [e for e in all_minimal_elements[:i]] for j in i]
+            prev_base = set(cones[i-1]).union(set(hull_points)).union(set(prev_translates))
+            not_self_similar = all(tuple(np.subtract(e,vertex)) not in prev_base for vertex in prev_translates) and not_self_similar
+
+            #TODO: filter points that come from two ('n' more generally) different minimal elements of one lighter color
+
+            if not_self_similar:
+                filtered_minimal_elements.append(e)
+        all_filtered_minimal_elements.append(sorted(filtered_minimal_elements, key=lambda x: x[2]))
+
+
+    return all_filtered_minimal_elements
+
+
 
 
 """------------------------Conjectures----------------------------"""
@@ -401,48 +487,72 @@ def magnitue_grows_with_linear_term_dP2():
 # TODO: improve bound on minimal elements
 
 
+# it seems like the original definition of minimal elements matches with 0th degree minimal elements but misses
+# the minimal elements that arise in further degree intersections. the original definition is sometimes not enough
+# to find the first two (any degree) minimal elements that produce BinExp in the case of a nice set (i.e there are nice
+# sets with the second minimal element not in the 0th degree intersection)
+
+# some nonzero degree minimal elements with the current filtering method for nice sets that are not the first two still
+# seem to be appearing (after filtering). But they are obvsiousely not relevant to the BinExp form as this is a nice set
+# (nice sets only depend on the heigh of the first two deep minmal elements). Do they become relevant in the case the set
+# is not nice?
+
+
+
+
 """------------------------Workspace----------------------------"""
 
-print(binexp(3,3))
-single_sumset(
-    [(0, 0), (2, 1), (1, 1), (3, 5), (2, 4)],
-    15,
-    basis=[(0, 0), (2, 1), (1, 1)],
-    translations=[(2, 5), (2, 4)],
-    slice=(0,6),
-    plot=True,
-    show_intersections=True,
-)
-
-# print(satisfy_simple([(0, 0), (1, 0), (2, 1)], [(1, 4), (4, 1)], 15))
+# print(satisfy_simple([(0, 0), (1, 0), (1, 1)], [(1, 4), (2, 7)], 20))
 # single_sumset(
-#     [(0, 0), (1, 0), (2, 1), (1, 4), (4, 1)],
+#     [(0, 0), (1, 0), (1, 1), (1, 4), (2, 7)],
 #     15,
-#     basis=[(0, 0), (1, 0), (2, 1)],
-#     translations=[(1, 4), (4, 1)],
-#     slice=(2,8),
+#     basis=[(0, 0), (1, 0), (1, 1)],
+#     translations=[(1, 4), (2, 7)],
+#     slice=(0,6),
 #     plot=True,
 #     show_intersections=True,
 # )
+
+
+# print(satisfy_simple([(0, 0), (1, 1), (3, 2)], [(1, 0), (5, 2)], 15))
+# single_sumset(
+#     [(0, 0), (1, 1), (3, 2), (1, 0), (5, 2)],
+#     15,
+#     basis=[(0, 0), (1, 1), (3, 2)],
+#     translations=[(1, 0), (5, 2)],
+#     slice=(0,8),
+#     plot=True,
+#     show_intersections=True,
+# )
+
+setss = [[(0, 0), (1, 1), (2, 1), (1, 0), (2, 2)],
+        [(0, 0), (1, 0), (1, 1), (0, 2), (3, 3)],]
+        # [(0, 0), (1, 1), (2, 1), (5, 3), (9, 1)],
+        # [(0, 0), (1, 0), (1, 1), (1, 9), (7, 4)],
+        # [(0, 0), (1, 0), (1, 1), (1, 4), (9, 1)],
+        # [(0, 0), (0, 1), (1, 1), (5, 1), (6, 9)],
+        # [(0, 0), (1, 0), (1, 1), (1, 7), (7, 6)]]
+
+for A in setss:
+    print(get_minimal_elements(A, 16))
+    print(satisfy_simple(A[:3], A[3:], 16))
+    single_sumset(
+        A,
+        16,
+        basis=A[:3],
+        translations=A[3:],
+        slice=(0,8),
+        plot=True,
+        show_intersections=True,
+    )
+
+
+
+# view_plots_from_csv('randomi_2d_exps/filter_dP3_not_simple_6_15_1000_sorted.csv', 0, 4)
+# view_plots_from_csv('random_2d_exps/filter_dP3_simple_6_15_1000.csv', 10, 20)
 
 # write_to_csv(f'random_2d_exps/privimite_{2+n}gons_{maxx}_{iters}.csv', random_primitive_dPn_exps(n,maxx,iters))
 # res, not_res = filter_dP3_satisfy_simple(6, 20, 1000)
 # write_to_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000.csv', not_res, legend=('Actual P(h)', 'Expected P(h)', 'c_1', 'c_2', 'A'))
 # write_to_csv('random_2d_exps/filter_dP3_simple_6_15_1000.csv', res, legend=('P(h)', 'c_1', 'c_2', 'A'))
 # write_to_csv('random_2d_exps/all_comb_binexp_30.csv', all_combinations_binexp(30), legend=('P(x)', 'c1', 'c2'))
-
-# print("Simple")
-# view_plots_from_csv('random_2d_exps/filter_dP3_simple_6_15_1000.csv', 0, 90)
-# print("Not simple")
-# view_plots_from_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000.csv', 4, 20)
-
-# print(satisfy_simple())
-# single_sumset(
-#     ,
-#     15,
-#     basis=,
-#     translations=,
-#     slice=(0,6),
-#     plot=True,
-#     show_intersections=True,
-# )

@@ -82,12 +82,13 @@ def cone_of_A(A, show=True, thresh=10):
         cone_list.extend(add_height(hA, h))
     cone_list.append((0,0))
 
+    import matplotlib.ticker as ticker
+
     if show:
         ax = plt.axes()
         plt.scatter(*zip(*cone_list))
-        ax.set_xticks(range(thresh*(max(A)-1)))
-        ax.set_yticks(range(thresh))
         plt.grid()
+        ax.xaxis.set_major_locator(ticker.MultipleLocator(5))
         plt.show()
     return cone_list
 
@@ -138,33 +139,57 @@ def single_sumset(A, show_steps=False):
     # print("m, A, |A|, b, k, ~k")
     return run_exps([A], show_steps)
 
-def single_cone_example():
-    # A = [0,1,10,12]
-    # m = max(A)
-    m = np.random.randint(10, 15)
-    max_size = np.random.randint(3, m)
-    A = random_set(m, max_size)
-    # single_sumset(A)
-    # thresh = 2*max(A)-4
-    thresh = 2*m 
-    cone = cone_of_A(A, show=False, thresh=thresh)
-    min_elems = get_minimal_elements(max(A), cone)
-    max_height = 0
-    max_index = None
-    for i, res_class in enumerate(min_elems):
-        # print(f'residue class = {i}')
-        # print(f'minimal_elemens = {res_class}')
-        height = sum(e[1] for e in res_class)
-        # print(f'total heights = {height}')
-        if height > max_height:
-            max_index = i
-            max_height = height
+def single_cone_example(A=None, rand=False):
+    # A = [0, 2, 9, 14]
+    # A = [0, 1, 10]
+    # A = [0, 1, 10, 18]
+    # A = [0, 2, 9, 11, 18]
+
+    # max_n_list = [0 for _ in range(16)]
+    if rand:
+        # setss = [[0,1,j//2 + 1,j] for j in range(34,52, 2)]
+        for _ in range(4000):
+            m = np.random.randint(5, 25)
+            max_size = np.random.randint(3, m)
+            A = random_set(m, max_size)
+        # for sett in setss:
+            # A = {0,1,3,4}
+            b = max(A)
+            cone = cone_of_A(A, show=False, thresh=b)
+            min_elems = get_minimal_elements(max(A), cone)
+            # heights = []
+            lengths = []
+            for i, res_class in enumerate(min_elems):
+                # height = sum(e[1] for e in res_class)
+                # heights.append((i, height))
+                lengths.append((i, len(res_class)))
     
-    if max_height > 2*m - 5:
-        print(A)
-        print(f'max total height = {max_height}')
-        print(f'min elems {min_elems[max_index]}')
-        print(f'b-1 = {max(A)-1}\n')
+
+            # sorted_heights = sorted(heights, key=lambda x: x[1], reverse=True)
+            sorted_lengths = sorted(lengths, key=lambda x: x[1], reverse=True)
+            # if sorted_heights[0][1] > b+1:
+            if sorted_lengths[0][1] > 2:
+                print(A)
+                for j, e in enumerate(sorted_lengths):
+                    if j > 6:
+                        break
+                    k, height = e
+                    print(f'{j+1}th largest residue class:')
+                    print(f'height = {height}')
+                    print(f'minimal elements = {min_elems[k]}')
+                    print(f'b = {b}')
+                print()
+
+            # for j in range(1, 16):
+            #     if any(e[1] == max(A)-j for e in min_elems[max_index]):
+            #         if max_n_list[j] < len(min_elems[max_index]):
+            #             max_n_list[j] = len(min_elems[max_index])
+                    # print(A)
+                    # print(f'max total height = {max_height}')
+                    # print(f'min elems {min_elems[max_index]}')
+                    # print(f'b-1 = {max(A)-1}\n')
+        # print(max_n_list)
+
 
 
 def get_moments(max_m, moment):
@@ -202,8 +227,7 @@ def plot_moment_data(m, moment):
 
 
 
-for i in range(1000):
-    single_cone_example()
+single_cone_example(rand=True)
 
 
 # new example of set to look into: [0,n,n+1,n+2,...,n+k] where n gets large
