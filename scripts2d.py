@@ -350,7 +350,7 @@ def all_combinations_binexp(maxx):
 
 def view_plots_from_csv(fname, min_sets, max_sets):
     for i, rowstr in enumerate(read_rows_from_csv(fname)):
-        if i == 0 or len(rowstr) == 0 or i <= min_sets:
+        if i == 0 or len(rowstr) == 0 or i < 2*min_sets:
             continue
         if i >= 2 * max_sets:
             break
@@ -493,9 +493,20 @@ def get_minimal_elements(A, iters):
 # sets with the second minimal element not in the 0th degree intersection)
 
 # some nonzero degree minimal elements with the current filtering method for nice sets that are not the first two still
-# seem to be appearing (after filtering). But they are obvsiousely not relevant to the BinExp form as this is a nice set
+# seem to be appearing (after filtering). e.g. [(0, 0, 1), (0, 1, 1), (1, 1, 1), (2, 1, 1), (2, 2, 1)]
+# But they are obvsiousely not relevant to the BinExp form as this is a nice set
 # (nice sets only depend on the heigh of the first two deep minmal elements). Do they become relevant in the case the set
 # is not nice?
+
+# there is also the case where a single minimal element has multiplicity 2. e.g. [(0, 0, 1), (0, 1, 1), (1, 1, 1), (2, 1, 1), (2, 2, 1)]
+# sets like these are considered nice though, it is just that the code that selects the first two minimal elements cannot
+# account for multipicities, so need to update it.
+
+# the set [[(0, 0), (1, 1), (2, 1), (1, 0), (2, 2)] is not nice but has a simple polynomial:
+# p(x) = choose(x+4,4) - 3*choose(x-2+4,4) + 2*choose(x-3+4,4)
+#TODO: continue to look into other not nice sets and try to see if there is a pattern for the polynomial in BinExp form.
+
+# Conjecture: only the first three 3 deep minimal elements matter in the binomial formula for non-nice sets
 
 
 
@@ -525,30 +536,45 @@ def get_minimal_elements(A, iters):
 #     show_intersections=True,
 # )
 
-setss = [[(0, 0), (1, 1), (2, 1), (1, 0), (2, 2)],
-        [(0, 0), (1, 0), (1, 1), (0, 2), (3, 3)],]
-        # [(0, 0), (1, 1), (2, 1), (5, 3), (9, 1)],
-        # [(0, 0), (1, 0), (1, 1), (1, 9), (7, 4)],
-        # [(0, 0), (1, 0), (1, 1), (1, 4), (9, 1)],
-        # [(0, 0), (0, 1), (1, 1), (5, 1), (6, 9)],
-        # [(0, 0), (1, 0), (1, 1), (1, 7), (7, 6)]]
-
-for A in setss:
-    print(get_minimal_elements(A, 16))
-    print(satisfy_simple(A[:3], A[3:], 16))
-    single_sumset(
-        A,
-        16,
-        basis=A[:3],
-        translations=A[3:],
-        slice=(0,8),
-        plot=True,
-        show_intersections=True,
-    )
+# sets1 = [[(0, 0), (1, 1), (2, 1), (1, 0), (2, 2)],
+#         [(0, 0), (1, 0), (1, 1), (0, 2), (3, 3)],]
+#         # [(0, 0), (1, 1), (2, 1), (5, 3), (9, 1)],
+#         # [(0, 0), (1, 0), (1, 1), (1, 9), (7, 4)],
+#         # [(0, 0), (1, 0), (1, 1), (1, 4), (9, 1)],
+#         # [(0, 0), (0, 1), (1, 1), (5, 1), (6, 9)],
+#         # [(0, 0), (1, 0), (1, 1), (1, 7), (7, 6)]]
 
 
+# TODO: investigate the following sets that all have the same polynomial with slightly differing deep minimal elements  
+# sets2 = [[(0, 0), (0, 1), (1, 1), (0, 2), (3, 4)],
+# [(0, 0), (0, 1), (1, 1), (2, 1), (7, 3)],
+# [(0, 0), (1, 0), (1, 1), (0, 3), (0, 6)],
+# [(0, 0), (1, 0), (1, 1), (2, 0), (5, 2)],
+# [(0, 0), (1, 0), (1, 1), (2, 1), (2, 4)],
+# [(0, 0), (1, 0), (1, 1), (2, 2), (5, 7)],
+# [(0, 0), (1, 0), (1, 1), (2, 2), (6, 7)],
+# [(0, 0), (1, 0), (1, 1), (3, 4), (3, 5)],
+# [(0, 0), (1, 0), (1, 1), (4, 2), (7, 3)],
+# [(0, 0), (1, 1), (2, 1), (0, 2), (3, 2)],
+# [(0, 0), (1, 1), (2, 1), (4, 2), (8, 5)],
+# [(0, 1), (0, 2), (1, 0), (0, 3), (1, 5)],
+# [(0, 2), (1, 0), (1, 1), (2, 2), (3, 3)]]
 
-# view_plots_from_csv('randomi_2d_exps/filter_dP3_not_simple_6_15_1000_sorted.csv', 0, 4)
+# for A in sets2:
+#     print(get_minimal_elements(A, 16))
+#     print(satisfy_simple(A[:3], A[3:], 16))
+#     single_sumset(
+#         A,
+#         16,
+#         basis=A[:3],
+#         translations=A[3:],
+#         slice=(0,8),
+#         plot=True,
+#         show_intersections=True,
+#     )
+
+
+# view_plots_from_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000_sorted.csv', 17, 21)
 # view_plots_from_csv('random_2d_exps/filter_dP3_simple_6_15_1000.csv', 10, 20)
 
 # write_to_csv(f'random_2d_exps/privimite_{2+n}gons_{maxx}_{iters}.csv', random_primitive_dPn_exps(n,maxx,iters))
