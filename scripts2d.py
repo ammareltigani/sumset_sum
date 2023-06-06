@@ -27,6 +27,9 @@ def sum_sets(set1, set2):
     res = np.unique(np.array([np.add(e1, e2) for e1 in set1 for e2 in set2]), axis=0)
     return res
 
+def mult_tuple(e, times):
+    return tuple(e[i] * times for i in range(len(e)))
+
 def intersections(basis, translations, iters):
     rtn = []
     # get all dilations
@@ -409,6 +412,7 @@ def get_minimal_elements(A, iters):
     all_minimal_elements = [[]]
     cones = get_cones(A, iters)
     hull_points = list(get_hull_points(A))
+    hull_set = set(hull_points)
     print(f'hull points: {hull_points}')
     for i in range(1, len(cones)):
         cone = cones[i]
@@ -424,18 +428,27 @@ def get_minimal_elements(A, iters):
         minimal_elements = all_minimal_elements[i]
         filtered_minimal_elements = []
         for e in minimal_elements:
+            # print(e)
             # given definition of minimal element from paper
-            not_self_similar = all(tuple(np.subtract(e,vertex)) not in cones[i] for vertex in set(hull_points))
+            not_self_similar = all(tuple(np.subtract(e,vertex)) not in cones[i] for vertex in hull_set)
 
             # generalize to multi-color by filtering similar minimal elements across colors
             prev_translates = [j for i in [e for e in all_minimal_elements[:i]] for j in i]
             prev_base = set(cones[i-1]).union(set(hull_points)).union(set(prev_translates))
             not_self_similar = all(tuple(np.subtract(e,vertex)) not in prev_base for vertex in prev_translates) and not_self_similar
 
-            #TODO: filter points that come from two ('n' more generally) different minimal elements of one lighter color
+            # similarity_set = set([min_elem for min_list in all_filtered_minimal_elements for min_elem in min_list])
+            # similarity_set = all_comb(similarity_set, e[2] - sim[2] - 1)
+            # print(f'similarity set {similarity_set}')
+            # not_self_similar = all(tuple(np.subtract(e,vertex)) not in cones[i] for vertex in hull_set)
+            # print(not_self_similar)
+            # not_self_similar = all(tuple(np.subtract(e,vertex)) not in cones[i-1] for vertex in similarity_set) and not_self_similar
+            # print(not_self_similar)
+
 
             if not_self_similar:
                 filtered_minimal_elements.append(e)
+        
         all_filtered_minimal_elements.append(sorted(filtered_minimal_elements, key=lambda x: x[2]))
 
 
@@ -448,134 +461,78 @@ def get_minimal_elements(A, iters):
 
 # Conj1: For every d+3 elements set A, p(x) = BinExp(c1,c2) for some c1,c2 >= 2 where
 # BinExp(c1,c2) = choose(h+4,4)-choose(h-c1+4,4)-choose(h-c2+4,4)+choose(h-c1-c2+4,4) 
-# iff A has exactly 2 minimal elements
+# iff A has exactly 2 minimal elements iff the heights of the first two minimal elements
+# product to the normalized volume of the convex hull of A
 
-# Conj2: Any d+3 set that has exactly 2 minimal elements must have a single basis element
-# in the interior of the convex hull.
-# FALSE. Counterexample: [(0, 0), (1, 0), (1, 1), (2, 2), (2, 0)]
-# Converse of Conj2 also FALSE. Counterexample: [(0, 0), (3, 2), (5, 3), (3, 4), (6, 0)]
-# Doesn't work even with two basis elements in the interior:  [(0, 0), (1, 1), (2, 1), (2, 8), (3, 0)],
+# Conj2: Every set can be written as p(x) = choose(x+d+2, d+2) + sum_{i \in I} choose(x-i+d+2,d+2) + sum_{j>max(I)} a_j choose(x-j+d+2,d+2) 
+# where each I is the set of heights of the generalized minimal elements of A
 
-# TODO: how does this generalize?
+# TODO: how does this generalize past sets of size d+3?
 # Fact: 100% of sets with d+2 elements have exactly 1 minimal element
 # Conj3: 25% of sets with d+3 elements have exactly 2 minimal elements (i.e. satisfy BinExp form)
 # Conj4: In d dimensions if A has exactly d minimal elements then there is a generalized BinExp (continue the
 # inclusion exclusion) that describes the size of hA for sufficiently large h
 
-# TODO: what happens for d-simplices?
 # Conj5: d-simplices have exactly d minimal elements.
 # FALSE. Counterexample: [(0, 0), (2, 1), (1, 1), (1, 3), (3, 0)]
-# Conj5.5: d-simplices with no basis points as internal points have exactly d minimal elements
 
-# TODO: ask Leo why the structure theorem of Prop4.1 only works on A if it is a d-simplex?
-# Conj6: Conj4 implies structure theorem v2.0 where the same thm holds even if A is not a d-simplex but 
-# as long as A has exactly d minimal elements.
-
-# TODO: Why is the following set not primitive?
-# single_sumset([(0, 2), (1, 0), (1, 1), (9, 8), (11, 11)])
+# Conjecture: only the first three 3 deep minimal elements matter in the binomial formula for non-nice sets
+# (i.e. non-nice sets that agree with their first 3 minimal elements have the same khovanskii polynomial)
+# FALSE. see ipad p.109 
 
 """------------------------Tasks----------------------------"""
-
-# Fixed code, conj, conj3, and conj4.
-# TODO: look at more sets where the mismatch with BinExp form is a constant
-# TODO: how does one go about computing virtual generators. The proof gives the case for d=1. How does this
-# generalize to d=2. Read sections 4 and 5 of the paper
-# TODO: how does one characterize the error of the virtual generator. Is it still finite for any d>1 and how to
-# find it given a virutal generator and a set of minimal elements it tries to virtualize
-# TODO: try to characterize the sets that yield exactly two minimal elements in d+3 case. start with Conj5.5
-# TODO: confirm/deny Conj4
-# TODO: improve bound on minimal elements
-
-
 # it seems like the original definition of minimal elements matches with 0th degree minimal elements but misses
 # the minimal elements that arise in further degree intersections. the original definition is sometimes not enough
 # to find the first two (any degree) minimal elements that produce BinExp in the case of a nice set (i.e there are nice
 # sets with the second minimal element not in the 0th degree intersection)
 
-# some nonzero degree minimal elements with the current filtering method for nice sets that are not the first two still
-# seem to be appearing (after filtering). e.g. [(0, 0, 1), (0, 1, 1), (1, 1, 1), (2, 1, 1), (2, 2, 1)]
+# also, some nonzero degree minimal elements with the current filtering method for nice sets that are not the first two still
+# seem to be appearing (after filtering). e.g. 
 # But they are obvsiousely not relevant to the BinExp form as this is a nice set
 # (nice sets only depend on the heigh of the first two deep minmal elements). Do they become relevant in the case the set
-# is not nice?
+# is not nice? A 'generalized' minimal element should resolve this issue
 
 # there is also the case where a single minimal element has multiplicity 2. e.g. [(0, 0, 1), (0, 1, 1), (1, 1, 1), (2, 1, 1), (2, 2, 1)]
 # sets like these are considered nice though, it is just that the code that selects the first two minimal elements cannot
 # account for multipicities, so need to update it.
 
-# the set [[(0, 0), (1, 1), (2, 1), (1, 0), (2, 2)] is not nice but has a simple polynomial:
-# p(x) = choose(x+4,4) - 3*choose(x-2+4,4) + 2*choose(x-3+4,4)
-#TODO: continue to look into other not nice sets and try to see if there is a pattern for the polynomial in BinExp form.
+# TODO: develop a definition for a 'generalized' minimal element that resolves all these issues.
+# TODO: try to generalize conjectures 1 and 2 to d+n?
+# TODO: try to improve bound on minimal elements by excluding the family of sets that give same height minimal
+# elements in d=1
 
-# Conjecture: only the first three 3 deep minimal elements matter in the binomial formula for non-nice sets
-
-
+# BIG TODO: PROVE CONJECTURES 1 and 2 in the general case. Think of how to do wihtout resorting to simplical case
 
 
 """------------------------Workspace----------------------------"""
+# nice sets that hve more than 2 minimal elements under our filteration method
+# sets1 = [[(0, 0), (1, 0), (1, 1), (0, 2), (3, 3)],
+#         [(0, 0), (1, 1), (2, 1), (5, 3), (9, 1)],
+#         [(0, 0), (1, 0), (1, 1), (1, 9), (7, 4)],
+#         [(0, 0), (1, 0), (1, 1), (1, 4), (9, 1)],
+#         [(0, 0), (0, 1), (1, 1), (5, 1), (6, 9)],
+#         [(0, 0), (1, 0), (1, 1), (1, 7), (7, 6)]]
 
-# print(satisfy_simple([(0, 0), (1, 0), (1, 1)], [(1, 4), (2, 7)], 20))
-# single_sumset(
-#     [(0, 0), (1, 0), (1, 1), (1, 4), (2, 7)],
-#     15,
-#     basis=[(0, 0), (1, 0), (1, 1)],
-#     translations=[(1, 4), (2, 7)],
-#     slice=(0,6),
-#     plot=True,
-#     show_intersections=True,
-# )
-
-
-# print(satisfy_simple([(0, 0), (1, 1), (3, 2)], [(1, 0), (5, 2)], 15))
-# single_sumset(
-#     [(0, 0), (1, 1), (3, 2), (1, 0), (5, 2)],
-#     15,
-#     basis=[(0, 0), (1, 1), (3, 2)],
-#     translations=[(1, 0), (5, 2)],
-#     slice=(0,8),
-#     plot=True,
-#     show_intersections=True,
-# )
-
-# sets1 = [[(0, 0), (1, 1), (2, 1), (1, 0), (2, 2)],
-#         [(0, 0), (1, 0), (1, 1), (0, 2), (3, 3)],]
-#         # [(0, 0), (1, 1), (2, 1), (5, 3), (9, 1)],
-#         # [(0, 0), (1, 0), (1, 1), (1, 9), (7, 4)],
-#         # [(0, 0), (1, 0), (1, 1), (1, 4), (9, 1)],
-#         # [(0, 0), (0, 1), (1, 1), (5, 1), (6, 9)],
-#         # [(0, 0), (1, 0), (1, 1), (1, 7), (7, 6)]]
+sets2 = [[(0, 0), (0, 1), (1, 1), (6, 2), (6, 3)],
+        [(0, 0), (1, 0), (1, 1), (0, 2), (3, 3)]]
 
 
-# TODO: investigate the following sets that all have the same polynomial with slightly differing deep minimal elements  
-# sets2 = [[(0, 0), (0, 1), (1, 1), (0, 2), (3, 4)],
-# [(0, 0), (0, 1), (1, 1), (2, 1), (7, 3)],
-# [(0, 0), (1, 0), (1, 1), (0, 3), (0, 6)],
-# [(0, 0), (1, 0), (1, 1), (2, 0), (5, 2)],
-# [(0, 0), (1, 0), (1, 1), (2, 1), (2, 4)],
-# [(0, 0), (1, 0), (1, 1), (2, 2), (5, 7)],
-# [(0, 0), (1, 0), (1, 1), (2, 2), (6, 7)],
-# [(0, 0), (1, 0), (1, 1), (3, 4), (3, 5)],
-# [(0, 0), (1, 0), (1, 1), (4, 2), (7, 3)],
-# [(0, 0), (1, 1), (2, 1), (0, 2), (3, 2)],
-# [(0, 0), (1, 1), (2, 1), (4, 2), (8, 5)],
-# [(0, 1), (0, 2), (1, 0), (0, 3), (1, 5)],
-# [(0, 2), (1, 0), (1, 1), (2, 2), (3, 3)]]
-
-# for A in sets2:
-#     print(get_minimal_elements(A, 16))
-#     print(satisfy_simple(A[:3], A[3:], 16))
-#     single_sumset(
-#         A,
-#         16,
-#         basis=A[:3],
-#         translations=A[3:],
-#         slice=(0,8),
-#         plot=True,
-#         show_intersections=True,
-#     )
+for A in sets2:
+    print(get_minimal_elements(A, 16))
+    print(satisfy_simple(A[:3], A[3:], 16))
+    single_sumset(
+        A,
+        16,
+        basis=A[:3],
+        translations=A[3:],
+        slice=(0,8),
+        plot=True,
+        show_intersections=True,
+    )
 
 
-# view_plots_from_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000_sorted.csv', 17, 21)
-# view_plots_from_csv('random_2d_exps/filter_dP3_simple_6_15_1000.csv', 10, 20)
+# view_plots_from_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000_sorted.csv', 10, 21)
+# view_plots_from_csv('random_2d_exps/filter_dP3_simple_6_15_1000.csv', 0, 30)
 
 # write_to_csv(f'random_2d_exps/privimite_{2+n}gons_{maxx}_{iters}.csv', random_primitive_dPn_exps(n,maxx,iters))
 # res, not_res = filter_dP3_satisfy_simple(6, 20, 1000)
