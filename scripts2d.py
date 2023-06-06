@@ -411,14 +411,14 @@ def get_hull_points(A):
 def get_minimal_elements(A, iters):
     all_minimal_elements = [[]]
     cones = get_cones(A, iters)
-    hull_points = list(get_hull_points(A))
-    hull_set = set(hull_points)
-    print(f'hull points: {hull_points}')
+    hull_set = set(get_hull_points(A))
+    print(f'hull points: {hull_set}')
     for i in range(1, len(cones)):
         cone = cones[i]
         minimal_elements = []
         for e in cone:
-            if all(tuple(np.subtract(e, vertex)) not in cone for vertex in hull_points):
+            # given definition of minimal element from paper
+            if all(tuple(np.subtract(e, vertex)) not in cone for vertex in hull_set):
                 minimal_elements.append(e)
         all_minimal_elements.append(sorted(minimal_elements, key=lambda x: x[2]))
     print(f'standard min elems: {all_minimal_elements[1]}')
@@ -428,14 +428,11 @@ def get_minimal_elements(A, iters):
         minimal_elements = all_minimal_elements[i]
         filtered_minimal_elements = []
         for e in minimal_elements:
-            # print(e)
-            # given definition of minimal element from paper
-            not_self_similar = all(tuple(np.subtract(e,vertex)) not in cones[i] for vertex in hull_set)
 
             # generalize to multi-color by filtering similar minimal elements across colors
             prev_translates = [j for i in [e for e in all_minimal_elements[:i]] for j in i]
-            prev_base = set(cones[i-1]).union(set(hull_points)).union(set(prev_translates))
-            not_self_similar = all(tuple(np.subtract(e,vertex)) not in prev_base for vertex in prev_translates) and not_self_similar
+            prev_base = set(cones[i-1]).union(hull_set).union(set(prev_translates))
+            not_self_similar = all(tuple(np.subtract(e,vertex)) not in prev_base for vertex in prev_translates)
 
             # similarity_set = set([min_elem for min_list in all_filtered_minimal_elements for min_elem in min_list])
             # similarity_set = all_comb(similarity_set, e[2] - sim[2] - 1)
@@ -492,7 +489,7 @@ def get_minimal_elements(A, iters):
 # (nice sets only depend on the heigh of the first two deep minmal elements). Do they become relevant in the case the set
 # is not nice? A 'generalized' minimal element should resolve this issue
 
-# there is also the case where a single minimal element has multiplicity 2. e.g. [(0, 0, 1), (0, 1, 1), (1, 1, 1), (2, 1, 1), (2, 2, 1)]
+# there is also the case where a single minimal element has multiplicity 2. e.g. [(0, 0), (0, 1), (1, 1), (2, 1), (2, 2)]
 # sets like these are considered nice though, it is just that the code that selects the first two minimal elements cannot
 # account for multipicities, so need to update it.
 
@@ -514,7 +511,9 @@ def get_minimal_elements(A, iters):
 #         [(0, 0), (1, 0), (1, 1), (1, 7), (7, 6)]]
 
 sets2 = [[(0, 0), (0, 1), (1, 1), (6, 2), (6, 3)],
-        [(0, 0), (1, 0), (1, 1), (0, 2), (3, 3)]]
+        [(0, 0), (1, 0), (1, 1), (0, 2), (3, 3)],
+        [(0, 0), (0, 1), (1, 1), (2, 1), (2, 2)],
+        [(0, 3), (1, 2), (2, 0), (1, 8), (5, 2)]]
 
 
 for A in sets2:
