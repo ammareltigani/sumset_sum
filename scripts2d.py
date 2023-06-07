@@ -406,48 +406,41 @@ def get_hull_points(A):
         hull_points.add(point)
     hull_points.add((0,0,1))
     return [(e[0], e[1], 1) for e in A]
-    # return hull_points
 
 def get_minimal_elements(A, iters):
     all_minimal_elements = [[]]
     cones = get_cones(A, iters)
-    hull_set = set(get_hull_points(A))
-    print(f'hull points: {hull_set}')
+    hull_points = get_hull_points(A)
+    # TODO: replace hull set (which is the 1-combination of hull points) with a set that has 1-combinations
+    # 2-combinations, 3-combinations, etc. Can do this by just running sumset n times on the hull set A^*
+    # and looking at the 0th cones
+    combinations = 2
+    hull_set = set(get_cones(hull_points, combinations)[0])
+    
+    print(f'hull points: {hull_points}')
+    print(f'hull set: {hull_set}')
     for i in range(1, len(cones)):
-        cone = cones[i]
         minimal_elements = []
-        for e in cone:
+        for e in cones[i]:
             # given definition of minimal element from paper
-            if all(tuple(np.subtract(e, vertex)) not in cone for vertex in hull_set):
+            if all(tuple(np.subtract(e, vertex)) not in cones[i] for vertex in hull_set):
                 minimal_elements.append(e)
         all_minimal_elements.append(sorted(minimal_elements, key=lambda x: x[2]))
     print(f'standard min elems: {all_minimal_elements[1]}')
 
+    # TODO: translate this filtering strategy to a mathematical definition of what these 'generalized' minimal
+    # elements are.
     all_filtered_minimal_elements = [all_minimal_elements[1]]
     for i in range(2, len(all_minimal_elements)):
         minimal_elements = all_minimal_elements[i]
         filtered_minimal_elements = []
         for e in minimal_elements:
-
-            # generalize to multi-color by filtering similar minimal elements across colors
             prev_translates = [j for i in [e for e in all_minimal_elements[:i]] for j in i]
-            prev_base = set(cones[i-1]).union(hull_set).union(set(prev_translates))
+            prev_base = set(hull_set).union(set(prev_translates))
             not_self_similar = all(tuple(np.subtract(e,vertex)) not in prev_base for vertex in prev_translates)
-
-            # similarity_set = set([min_elem for min_list in all_filtered_minimal_elements for min_elem in min_list])
-            # similarity_set = all_comb(similarity_set, e[2] - sim[2] - 1)
-            # print(f'similarity set {similarity_set}')
-            # not_self_similar = all(tuple(np.subtract(e,vertex)) not in cones[i] for vertex in hull_set)
-            # print(not_self_similar)
-            # not_self_similar = all(tuple(np.subtract(e,vertex)) not in cones[i-1] for vertex in similarity_set) and not_self_similar
-            # print(not_self_similar)
-
-
             if not_self_similar:
                 filtered_minimal_elements.append(e)
-        
         all_filtered_minimal_elements.append(sorted(filtered_minimal_elements, key=lambda x: x[2]))
-
 
     return all_filtered_minimal_elements
 
@@ -510,27 +503,27 @@ def get_minimal_elements(A, iters):
 #         [(0, 0), (0, 1), (1, 1), (5, 1), (6, 9)],
 #         [(0, 0), (1, 0), (1, 1), (1, 7), (7, 6)]]
 
-sets2 = [[(0, 0), (0, 1), (1, 1), (6, 2), (6, 3)],
-        [(0, 0), (1, 0), (1, 1), (0, 2), (3, 3)],
-        [(0, 0), (0, 1), (1, 1), (2, 1), (2, 2)],
-        [(0, 3), (1, 2), (2, 0), (1, 8), (5, 2)]]
+# sets2 = [[(0, 0), (0, 1), (1, 1), (6, 2), (6, 3)],
+#         [(0, 0), (1, 0), (1, 1), (0, 2), (3, 3)],
+#         [(0, 0), (0, 1), (1, 1), (2, 1), (2, 2)],
+#         [(0, 3), (1, 2), (2, 0), (1, 8), (5, 2)]]
 
 
-for A in sets2:
-    print(get_minimal_elements(A, 16))
-    print(satisfy_simple(A[:3], A[3:], 16))
-    single_sumset(
-        A,
-        16,
-        basis=A[:3],
-        translations=A[3:],
-        slice=(0,8),
-        plot=True,
-        show_intersections=True,
-    )
+# for A in sets2:
+#     print(get_minimal_elements(A, 16))
+#     print(satisfy_simple(A[:3], A[3:], 16))
+#     single_sumset(
+#         A,
+#         16,
+#         basis=A[:3],
+#         translations=A[3:],
+#         slice=(0,8),
+#         plot=True,
+#         show_intersections=True,
+#     )
 
 
-# view_plots_from_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000_sorted.csv', 10, 21)
+view_plots_from_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000_sorted.csv', 10, 21)
 # view_plots_from_csv('random_2d_exps/filter_dP3_simple_6_15_1000.csv', 0, 30)
 
 # write_to_csv(f'random_2d_exps/privimite_{2+n}gons_{maxx}_{iters}.csv', random_primitive_dPn_exps(n,maxx,iters))
