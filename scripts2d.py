@@ -392,7 +392,6 @@ def get_cones(A, iters):
         # add heights
         for i, iteration in enumerate(points):
             for j in range(len(iteration)):
-                # print(iteration[j])
                 cone.add((iteration[j][0], iteration[j][1], i+1))
         cones.append(cone)
     return cones
@@ -407,29 +406,36 @@ def get_hull_points(A):
     hull_points.add((0,0,1))
     return [(e[0], e[1], 1) for e in A]
 
+# TODO: reorganize this function so that it first computes all the deep minimal elements of any type of set
+# then, it computes the error anti- deep minimal elements for non-nice sets. 
 def get_minimal_elements(A, iters):
-    all_minimal_elements = [[]]
     cones = get_cones(A, iters)
+    #TODO: should this be only hull points or all points in A?
     hull_points = get_hull_points(A)
-    # TODO: replace hull set (which is the 1-combination of hull points) with a set that has 1-combinations
-    # 2-combinations, 3-combinations, etc. Can do this by just running sumset n times on the hull set A^*
-    # and looking at the 0th cones
-    combinations = 2
+    combinations = 4
     hull_set = set(get_cones(hull_points, combinations)[0])
-    
-    print(f'hull points: {hull_points}')
-    print(f'hull set: {hull_set}')
+
+    all_minimal_elements = [[]]
     for i in range(1, len(cones)):
         minimal_elements = []
         for e in cones[i]:
-            # given definition of minimal element from paper
-            if all(tuple(np.subtract(e, vertex)) not in cones[i] for vertex in hull_set):
+            basic_condition = all(tuple(np.subtract(e, vertex)) not in cones[i] for vertex in hull_set)
+            if not basic_condition:
+                continue
+            
+            if i == 1:
                 minimal_elements.append(e)
-        all_minimal_elements.append(sorted(minimal_elements, key=lambda x: x[2]))
-    print(f'standard min elems: {all_minimal_elements[1]}')
+            else:
+                #TODO: I think it should take into account deep minimal elements as well as standard ones. Come
+                # up with a counterexample of a non-nice set with real deep minimal element. If so then the next
+                # two lines should be generalized
+                if sum(tuple(np.subtract(e, vertex)) in all_minimal_elements[1] for vertex in hull_set) > i:
+                    minimal_elements.append(e)
 
-    # TODO: translate this filtering strategy to a mathematical definition of what these 'generalized' minimal
-    # elements are.
+
+        all_minimal_elements.append(sorted(minimal_elements, key=lambda x: x[2]))
+    return all_minimal_elements[1:]
+
     all_filtered_minimal_elements = [all_minimal_elements[1]]
     for i in range(2, len(all_minimal_elements)):
         minimal_elements = all_minimal_elements[i]
@@ -508,8 +514,15 @@ def get_minimal_elements(A, iters):
 #         [(0, 0), (0, 1), (1, 1), (2, 1), (2, 2)],
 #         [(0, 3), (1, 2), (2, 0), (1, 8), (5, 2)]]
 
+# sets3 = [[(0, 0), (0, 1), (1, 1), (0, 2), (3, 4)]]
 
-# for A in sets2:
+# single_sumset(
+#     [(0, 0), (0, 1), (1, 1), (0, 2), (3, 4), (5,10)],
+#     10,
+# )
+
+
+# for A in sets3:
 #     print(get_minimal_elements(A, 16))
 #     print(satisfy_simple(A[:3], A[3:], 16))
 #     single_sumset(
@@ -523,7 +536,7 @@ def get_minimal_elements(A, iters):
 #     )
 
 
-view_plots_from_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000_sorted.csv', 10, 21)
+view_plots_from_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000_sorted.csv', 50, 60)
 # view_plots_from_csv('random_2d_exps/filter_dP3_simple_6_15_1000.csv', 0, 30)
 
 # write_to_csv(f'random_2d_exps/privimite_{2+n}gons_{maxx}_{iters}.csv', random_primitive_dPn_exps(n,maxx,iters))
