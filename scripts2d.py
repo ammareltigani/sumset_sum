@@ -27,6 +27,35 @@ def sum_sets(set1, set2):
     res = np.unique(np.array([np.add(e1, e2) for e1 in set1 for e2 in set2]), axis=0)
     return res
 
+# only works when summing a set to itself once.
+# def sum_set_with_duplicates(set1):
+#     res = []
+#     for i in range(len(set1)):
+#         for j in range(i,len(set1)):
+#             first = set1[i]
+#             second = set1[j]
+#             res.append(tuple(first[z]+second[z] for z in range(len(first))))
+#     return res
+
+# print(sum_set_with_duplicates([(0, 0, 1), (0, 1, 1), (1, 1, 1), (6, 2, 1), (6, 3, 1)]))
+
+
+
+def sum_set_n_times(set1, n):
+    assert n > 0
+    res = set1
+    for _ in range(n-1):
+        res = sum_sets(res, set1)
+    return res
+
+def sum_set_n_times_and_save(set1, n):
+    assert n > 0
+    res = [set1]
+    for _ in range(n-1):
+        res.append(sum_sets(res[-1], set1))
+    return res
+
+
 def mult_tuple(e, times):
     return tuple(e[i] * times for i in range(len(e)))
 
@@ -396,6 +425,15 @@ def get_cones(A, iters):
         cones.append(cone)
     return cones
 
+
+def separate_iters_in_cone(cone):
+    l = max(e[2] for e in cone) + 1
+    res = [[] for _ in range(l)]
+    for e in cone:
+        res[e[2]].append(e)
+    return res
+
+# TODO: broken on [(0, 0), (0, 1), (1, 1), (6, 2), (6, 3)]. FIX!
 def get_hull_points(A):
     points = np.array(A)
     hull_points = set()
@@ -404,51 +442,62 @@ def get_hull_points(A):
         point = (points[simplex, 0][0], points[simplex, 1][0], 1)
         hull_points.add(point)
     hull_points.add((0,0,1))
-    return [(e[0], e[1], 1) for e in A]
+    return hull_points
 
 # TODO: reorganize this function so that it first computes all the deep minimal elements of any type of set
 # then, it computes the error anti- deep minimal elements for non-nice sets. 
 def get_minimal_elements(A, iters):
+    # TODO: should this be only hull points or all points in A?
+    # minimal_elements = get_hull_points(A)
+    minimal_elements = [(e[0], e[1], 1) for e in A]
+    minimal_elements_comb = sum_set_n_times_and_save(minimal_elements, iters)
+
     cones = get_cones(A, iters)
-    #TODO: should this be only hull points or all points in A?
-    hull_points = get_hull_points(A)
-    combinations = 4
-    hull_set = set(get_cones(hull_points, combinations)[0])
-
-    all_minimal_elements = [[]]
     for i in range(1, len(cones)):
-        minimal_elements = []
-        for e in cones[i]:
-            basic_condition = all(tuple(np.subtract(e, vertex)) not in cones[i] for vertex in hull_set)
-            if not basic_condition:
-                continue
-            
-            if i == 1:
-                minimal_elements.append(e)
-            else:
-                #TODO: I think it should take into account deep minimal elements as well as standard ones. Come
-                # up with a counterexample of a non-nice set with real deep minimal element. If so then the next
-                # two lines should be generalized
-                if sum(tuple(np.subtract(e, vertex)) in all_minimal_elements[1] for vertex in hull_set) > i:
-                    minimal_elements.append(e)
+        sorted_cone = sorted(cones[i], key=lambda x: x[2])
+        for e in sorted_cone:
+            print(e)
+            print(minimal_elements_comb[e[2]-2])
+            break
+            # if all(tuple(np.subtract(e, vertex)) not in cones[i] for vertex in minimal_elements_comb[e[2]-1]):
+            #     minimal_elements.append(e)
+            #     print(e)
+            #     minimal_elements_comb = sum_set_n_times_and_save(minimal_elements, iters)
 
 
-        all_minimal_elements.append(sorted(minimal_elements, key=lambda x: x[2]))
-    return all_minimal_elements[1:]
+    return sorted(minimal_elements, key=lambda x: x[2])
 
-    all_filtered_minimal_elements = [all_minimal_elements[1]]
-    for i in range(2, len(all_minimal_elements)):
-        minimal_elements = all_minimal_elements[i]
-        filtered_minimal_elements = []
-        for e in minimal_elements:
-            prev_translates = [j for i in [e for e in all_minimal_elements[:i]] for j in i]
-            prev_base = set(hull_set).union(set(prev_translates))
-            not_self_similar = all(tuple(np.subtract(e,vertex)) not in prev_base for vertex in prev_translates)
-            if not_self_similar:
-                filtered_minimal_elements.append(e)
-        all_filtered_minimal_elements.append(sorted(filtered_minimal_elements, key=lambda x: x[2]))
 
-    return all_filtered_minimal_elements
+
+# def get_minimal_elements(A, iters):
+#     cones = get_cones(A, iters)
+#     hull_points = get_hull_points(A)
+#     combinations = 1
+#     hull_set = set(get_cones(hull_points, combinations)[0])
+
+#     all_minimal_elements = [[]]
+#     for i in range(1, len(cones)):
+#         minimal_elements = []
+#         for e in cones[i]:
+#             if all(tuple(np.subtract(e, vertex)) not in cones[i] for vertex in hull_set):
+#                 minimal_elements.append(e)
+
+#         all_minimal_elements.append(sorted(minimal_elements, key=lambda x: x[2]))
+#     print(f'standard minimal elements {all_minimal_elements[1]}')
+
+#     all_filtered_minimal_elements = [all_minimal_elements[1]]
+#     for i in range(2, len(all_minimal_elements)):
+#         minimal_elements = all_minimal_elements[i]
+#         filtered_minimal_elements = []
+#         for e in minimal_elements:
+#             prev_translates = [j for i in [e for e in all_minimal_elements[:i]] for j in i]
+#             prev_base = set(hull_set).union(set(prev_translates))
+#             not_self_similar = all(tuple(np.subtract(e,vertex)) not in prev_base for vertex in prev_translates)
+#             if not_self_similar:
+#                 filtered_minimal_elements.append(e)
+#         all_filtered_minimal_elements.append(sorted(filtered_minimal_elements, key=lambda x: x[2]))
+
+#     return all_filtered_minimal_elements
 
 
 
@@ -509,12 +558,14 @@ def get_minimal_elements(A, iters):
 #         [(0, 0), (0, 1), (1, 1), (5, 1), (6, 9)],
 #         [(0, 0), (1, 0), (1, 1), (1, 7), (7, 6)]]
 
-# sets2 = [[(0, 0), (0, 1), (1, 1), (6, 2), (6, 3)],
-#         [(0, 0), (1, 0), (1, 1), (0, 2), (3, 3)],
-#         [(0, 0), (0, 1), (1, 1), (2, 1), (2, 2)],
-#         [(0, 3), (1, 2), (2, 0), (1, 8), (5, 2)]]
+sets2 = [[(0, 0), (0, 1), (1, 1), (6, 2), (6, 3)],
+        [(0, 0), (1, 0), (1, 1), (0, 2), (3, 3)],
+        [(0, 0), (0, 1), (1, 1), (2, 1), (2, 2)],
+        [(0, 3), (1, 2), (2, 0), (1, 8), (5, 2)]]
 
 # sets3 = [[(0, 0), (0, 1), (1, 1), (0, 2), (3, 4)]]
+
+# sets4 = [[(0, 0), (1, 0), (1, 1), (8, 5), (9, 4)]]
 
 # single_sumset(
 #     [(0, 0), (0, 1), (1, 1), (0, 2), (3, 4), (5,10)],
@@ -522,21 +573,21 @@ def get_minimal_elements(A, iters):
 # )
 
 
-# for A in sets3:
-#     print(get_minimal_elements(A, 16))
-#     print(satisfy_simple(A[:3], A[3:], 16))
-#     single_sumset(
-#         A,
-#         16,
-#         basis=A[:3],
-#         translations=A[3:],
-#         slice=(0,8),
-#         plot=True,
-#         show_intersections=True,
-#     )
+for A in sets2:
+    print(get_minimal_elements(A, 6))
+    print(satisfy_simple(A[:3], A[3:], 6))
+    single_sumset(
+        A,
+        16,
+        basis=A[:3],
+        translations=A[3:],
+        slice=(0,8),
+        plot=True,
+        show_intersections=True,
+    )
 
 
-view_plots_from_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000_sorted.csv', 50, 60)
+# view_plots_from_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000_sorted.csv', 50, 60)
 # view_plots_from_csv('random_2d_exps/filter_dP3_simple_6_15_1000.csv', 0, 30)
 
 # write_to_csv(f'random_2d_exps/privimite_{2+n}gons_{maxx}_{iters}.csv', random_primitive_dPn_exps(n,maxx,iters))
