@@ -43,6 +43,7 @@ def sum_sets(set1, set2):
 
 def sum_set_n_times(set1, n):
     assert n > 0
+    set1 = np.array(set1)
     res = set1
     for _ in range(n-1):
         res = sum_sets(res, set1)
@@ -50,7 +51,7 @@ def sum_set_n_times(set1, n):
 
 def sum_set_n_times_and_save(set1, n):
     assert n > 0
-    res = [set1]
+    res = [set([(0,0,0),]), set1]
     for _ in range(n-1):
         res.append(sum_sets(res[-1], set1))
     return res
@@ -380,21 +381,28 @@ def all_combinations_binexp(maxx):
     return res
 
 
-def view_plots_from_csv(fname, min_sets, max_sets):
+def view_plots_from_csv(fname, min_sets, max_sets=None):
+    # filtered = []
     for i, rowstr in enumerate(read_rows_from_csv(fname)):
         if i == 0 or len(rowstr) == 0 or i < 2*min_sets:
             continue
-        if i >= 2 * max_sets:
+        if max_sets is not None and i >= 2 * max_sets:
             break
 
         Astr = re.search('"(.*)"', rowstr[0]).group(1)
         A = ast.literal_eval(Astr)
         print(f'A = {A}')
-        print(satisfy_simple(A[:3], A[3:], 16))
-        print(f'deep minimal elements: {get_minimal_elements(A, 16)}')
+        print(satisfy_simple(A[:3], A[3:], 15))
+
+    #     if len(get_hull_points(A)) == 3:
+    #         filtered.append(rowstr)
+    # write_to_csv('random_2d_exps/simplex_filter_dp3_not_simple_6_15_1000.csv', filtered,('Actual P(h)','Expected P(h)','c_1','c_2','A'))
+        minimal_elements, inverse_minimal_elements = get_minimal_elements(A, 15)
+        print(f'deep minimal elements: {minimal_elements}')
+        print(f'inverse minimal elements: {inverse_minimal_elements}')
         single_sumset(
             A,
-            11,
+            10,
             basis=A[:3],
             translations=A[3:],
             slice=(0,10),
@@ -433,73 +441,69 @@ def separate_iters_in_cone(cone):
         res[e[2]].append(e)
     return res
 
-# TODO: broken on [(0, 0), (0, 1), (1, 1), (6, 2), (6, 3)]. FIX!
 def get_hull_points(A):
-    points = np.array(A)
-    hull_points = set()
-    hull = ConvexHull(A)
-    for simplex in hull.simplices:
-        point = (points[simplex, 0][0], points[simplex, 1][0], 1)
-        hull_points.add(point)
-    hull_points.add((0,0,1))
-    return hull_points
+    hull = ConvexHull(np.array(A))
+    hull_points = []
+    for v in hull.vertices:
+        point = A[v]
+        hull_points.append((point[0], point[1], 1))
+    return sorted(hull_points)
 
-# TODO: reorganize this function so that it first computes all the deep minimal elements of any type of set
-# then, it computes the error anti- deep minimal elements for non-nice sets. 
+
+def color(e, cones):
+    # computes the largest i for which cones[i] contains e
+    if type(e) != tuple:
+        e = tuple(e)
+    if e == (0,0,0):
+        return 0
+    for i, cone in enumerate(cones):
+        if e not in cone:
+            return i-1
+    
+
+#TODO: fix bug. small set that it doesn't work on is [(0, 0), (0, 1), (1, 1), (2, 1), (6, 3)] 
+#TODO: Is there any geometry for the deep minimal elements or the inverse minimal elements?
 def get_minimal_elements(A, iters):
-    # TODO: should this be only hull points or all points in A?
-    # minimal_elements = get_hull_points(A)
-    minimal_elements = [(e[0], e[1], 1) for e in A]
-    minimal_elements_comb = sum_set_n_times_and_save(minimal_elements, iters)
-
+    """
+    Refactor this method in the following way to find deep minimal elements.
+        0) Precompute len(iters) iterations of A
+        1) Compute shallow minimal elements using defn from Khovanski paper and set M := shallow
+        minimal elements.
+        2) Iterate over elements one sumset iteration k at a time
+        3) For each element e at height k, count the number of ways N_e one can get back to a
+        minimal element (or inverse minimal element) (a_i,b_i,c_i) using elements from (k-c_i)A. 
+        4) If (x,y,z) is such an element i.e., e - (x,y,z) = (a_i,b_i,c_i), then increment N_e
+        by color(x,y,z) if it minimal or decrement if it inverse-minimal.
+        5) Compare N_e the color(e). If color(e) == N, do nothing. 
+        If color(e) < N then this point is an inverse minimal element. If color(e) > N then 
+        this is a deep minimal element, so add it to M.
+    """
+    lift_of_A = [(e[0], e[1], 1) for e in A]
     cones = get_cones(A, iters)
-    for i in range(1, len(cones)):
-        sorted_cone = sorted(cones[i], key=lambda x: x[2])
-        for e in sorted_cone:
-            print(e)
-            print(minimal_elements_comb[e[2]-2])
-            break
-            # if all(tuple(np.subtract(e, vertex)) not in cones[i] for vertex in minimal_elements_comb[e[2]-1]):
-            #     minimal_elements.append(e)
-            #     print(e)
-            #     minimal_elements_comb = sum_set_n_times_and_save(minimal_elements, iters)
+    sums_of_A = sum_set_n_times_and_save(lift_of_A, iters)
+    minimal_elements = []
+    inverse_minimal_elements = []
 
+    for k, iteration in enumerate(sums_of_A):
+        for e in iteration:
+            e = tuple(e)
+            N = 0
+            for minimal_element in minimal_elements:
+                for vertex in sums_of_A[k-minimal_element[2]]:
+                    if tuple(np.subtract(e, vertex)) == minimal_element:
+                        N += (color(minimal_element, cones) + color(vertex, cones))
+            for inverse_minimal_element in inverse_minimal_elements:
+                for vertex in sums_of_A[k-inverse_minimal_element[2]]:
+                    if tuple(np.subtract(e, vertex)) == inverse_minimal_element:
+                        N += (color(inverse_minimal_element, cones) - color(vertex, cones))
 
-    return sorted(minimal_elements, key=lambda x: x[2])
-
-
-
-# def get_minimal_elements(A, iters):
-#     cones = get_cones(A, iters)
-#     hull_points = get_hull_points(A)
-#     combinations = 1
-#     hull_set = set(get_cones(hull_points, combinations)[0])
-
-#     all_minimal_elements = [[]]
-#     for i in range(1, len(cones)):
-#         minimal_elements = []
-#         for e in cones[i]:
-#             if all(tuple(np.subtract(e, vertex)) not in cones[i] for vertex in hull_set):
-#                 minimal_elements.append(e)
-
-#         all_minimal_elements.append(sorted(minimal_elements, key=lambda x: x[2]))
-#     print(f'standard minimal elements {all_minimal_elements[1]}')
-
-#     all_filtered_minimal_elements = [all_minimal_elements[1]]
-#     for i in range(2, len(all_minimal_elements)):
-#         minimal_elements = all_minimal_elements[i]
-#         filtered_minimal_elements = []
-#         for e in minimal_elements:
-#             prev_translates = [j for i in [e for e in all_minimal_elements[:i]] for j in i]
-#             prev_base = set(hull_set).union(set(prev_translates))
-#             not_self_similar = all(tuple(np.subtract(e,vertex)) not in prev_base for vertex in prev_translates)
-#             if not_self_similar:
-#                 filtered_minimal_elements.append(e)
-#         all_filtered_minimal_elements.append(sorted(filtered_minimal_elements, key=lambda x: x[2]))
-
-#     return all_filtered_minimal_elements
-
-
+            difference = N - color(e, cones)
+            if difference < 0:
+                minimal_elements += ([e] * (-1 * difference))
+            elif difference > 0:
+                inverse_minimal_elements += ([e] * difference)
+    
+    return minimal_elements, inverse_minimal_elements
 
 
 """------------------------Conjectures----------------------------"""
@@ -511,6 +515,10 @@ def get_minimal_elements(A, iters):
 
 # Conj2: Every set can be written as p(x) = choose(x+d+2, d+2) + sum_{i \in I} choose(x-i+d+2,d+2) + sum_{j>max(I)} a_j choose(x-j+d+2,d+2) 
 # where each I is the set of heights of the generalized minimal elements of A
+
+# Conj3: The coefficients on the binomial expansion of the khovanski polynomial are tuples (a_i,b_i) s.t.
+# p(x) = choose(x+4,4) + \sum_i a_i choose(x-b_i+4,4) where \sum_i a_i*b_i = 0. This is the case where we
+# have d+3 element sets but this should generalize to any n-element set just like con2.
 
 # TODO: how does this generalize past sets of size d+3?
 # Fact: 100% of sets with d+2 elements have exactly 1 minimal element
@@ -546,7 +554,7 @@ def get_minimal_elements(A, iters):
 # TODO: try to improve bound on minimal elements by excluding the family of sets that give same height minimal
 # elements in d=1
 
-# BIG TODO: PROVE CONJECTURES 1 and 2 in the general case. Think of how to do wihtout resorting to simplical case
+# BIG TODO: PROVE CONJECTURES 1,2, and 3  in the general case. Think of how to do wihtout resorting to simplical case
 
 
 """------------------------Workspace----------------------------"""
@@ -558,14 +566,16 @@ def get_minimal_elements(A, iters):
 #         [(0, 0), (0, 1), (1, 1), (5, 1), (6, 9)],
 #         [(0, 0), (1, 0), (1, 1), (1, 7), (7, 6)]]
 
-sets2 = [[(0, 0), (0, 1), (1, 1), (6, 2), (6, 3)],
-        [(0, 0), (1, 0), (1, 1), (0, 2), (3, 3)],
-        [(0, 0), (0, 1), (1, 1), (2, 1), (2, 2)],
-        [(0, 3), (1, 2), (2, 0), (1, 8), (5, 2)]]
+# sets2 = [[(0, 0), (0, 1), (1, 1), (6, 2), (6, 3)],
+#         [(0, 0), (1, 0), (1, 1), (0, 2), (3, 3)],
+#         [(0, 0), (0, 1), (1, 1), (2, 1), (2, 2)],
+#         [(0, 3), (1, 2), (2, 0), (1, 8), (5, 2)]]
 
 # sets3 = [[(0, 0), (0, 1), (1, 1), (0, 2), (3, 4)]]
 
 # sets4 = [[(0, 0), (1, 0), (1, 1), (8, 5), (9, 4)]]
+
+sets5 = [[(0, 0), (0, 1), (1, 1), (2, 1), (6, 3)]]
 
 # single_sumset(
 #     [(0, 0), (0, 1), (1, 1), (0, 2), (3, 4), (5,10)],
@@ -573,12 +583,12 @@ sets2 = [[(0, 0), (0, 1), (1, 1), (6, 2), (6, 3)],
 # )
 
 
-for A in sets2:
+for A in sets5:
     print(get_minimal_elements(A, 6))
     print(satisfy_simple(A[:3], A[3:], 6))
     single_sumset(
         A,
-        16,
+        10,
         basis=A[:3],
         translations=A[3:],
         slice=(0,8),
@@ -587,8 +597,10 @@ for A in sets2:
     )
 
 
-# view_plots_from_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000_sorted.csv', 50, 60)
-# view_plots_from_csv('random_2d_exps/filter_dP3_simple_6_15_1000.csv', 0, 30)
+# view_plots_from_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000_sorted.csv', 20, 30)
+# view_plots_from_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000.csv', 20, 30)
+# view_plots_from_csv('random_2d_exps/filter_dP3_simple_6_15_1000_sorted.csv', 0, 30)
+# view_plots_from_csv('random_2d_exps/simplex_filter_dp3_not_simple_6_15_1000.csv', 2)
 
 # write_to_csv(f'random_2d_exps/privimite_{2+n}gons_{maxx}_{iters}.csv', random_primitive_dPn_exps(n,maxx,iters))
 # res, not_res = filter_dP3_satisfy_simple(6, 20, 1000)
