@@ -27,19 +27,6 @@ def sum_sets(set1, set2):
     res = np.unique(np.array([np.add(e1, e2) for e1 in set1 for e2 in set2]), axis=0)
     return res
 
-# only works when summing a set to itself once.
-# def sum_set_with_duplicates(set1):
-#     res = []
-#     for i in range(len(set1)):
-#         for j in range(i,len(set1)):
-#             first = set1[i]
-#             second = set1[j]
-#             res.append(tuple(first[z]+second[z] for z in range(len(first))))
-#     return res
-
-# print(sum_set_with_duplicates([(0, 0, 1), (0, 1, 1), (1, 1, 1), (6, 2, 1), (6, 3, 1)]))
-
-
 
 def sum_set_n_times(set1, n):
     assert n > 0
@@ -104,11 +91,11 @@ def single_sumset(A, iterations, slice=None, plot=False, show_intersections=Fals
         assert translations is not None
         assert iterations is not None
 
-    print(f'A = {A}')
+    # print(f'A = {A}')
     A = process(A) if type(A) == list else A
     m, mm, b, c, k, _, lenghts_arry, points_arry =  run_exps(A, iterations)
-    print(f'p(x) = ({m}) {mm}x^2 + {b}x + {c}  for all k >= {k}')
-    print(f'Lengths Array: {lenghts_arry}\n')
+    # print(f'p(x) = ({m}) {mm}x^2 + {b}x + {c}  for all k >= {k}')
+    # print(f'Lengths Array: {lenghts_arry}\n')
 
     if plot:
         assert slice is not None
@@ -125,6 +112,8 @@ def single_sumset(A, iterations, slice=None, plot=False, show_intersections=Fals
                 slice,
                 points_arry=points_arry,
             )
+    
+    return f'{mm}*h^2 + {b}*h + {c}', lenghts_arry
             
 
 
@@ -327,6 +316,44 @@ def binexp(x,y):
     return expand(expr).evalf()
 
 
+def binomial_expr(both_heights, alpha):
+    positive_heights, negative_heights = both_heights
+    h = symbols('h')
+    pre_expr = binomial(h+alpha,alpha)
+    for x in positive_heights:
+        pre_expr += binomial(h+alpha-x, alpha)
+    for y in negative_heights:
+        pre_expr -= binomial(h+alpha-y, alpha)
+    expr = pre_expr
+    return expr.evalf()
+
+
+def get_khovanskii_binomial(A, d):
+    h = symbols('h')
+    k = len(A) - d
+    both_heights = [[], []]
+    actual_poly_str, lengths_arry = single_sumset(A, 30)
+    actual_poly = sympify(actual_poly_str)
+    expr = binomial_expr(both_heights, d+k-1)
+    last = 0
+    while(simplify(actual_poly - expr) != 0):
+        for i in range(last, len(lengths_arry)):
+            diff = lengths_arry[i] - expr.evalf(subs={h:i+1})
+            if diff > 0:
+                both_heights[0].append(i+1)
+                last = i
+                break
+            if diff < 0:
+                both_heights[1].append(i+1)
+                last = i
+                break
+        expr = binomial_expr(both_heights, d+k-1)
+    
+    both_heights[0].insert(0,0)
+    return len(both_heights[0]) + len(both_heights[1]), both_heights
+
+    
+
 def satisfy_simple(basis, translations, maxk, c1=None, c2=None, m=None, b=None, c=None):
     if any(e is None for e in [m,b,c]):
         m, _, b, c, _, _, _, _ = run_exps(basis+translations, maxk)
@@ -392,23 +419,24 @@ def view_plots_from_csv(fname, min_sets, max_sets=None):
         Astr = re.search('"(.*)"', rowstr[0]).group(1)
         A = ast.literal_eval(Astr)
         print(f'A = {A}')
-        print(satisfy_simple(A[:3], A[3:], 15))
+        print(get_khovanskii_binomial(A, 2))
+        # print(satisfy_simple(A[:3], A[3:], 12))
 
     #     if len(get_hull_points(A)) == 3:
     #         filtered.append(rowstr)
     # write_to_csv('random_2d_exps/simplex_filter_dp3_not_simple_6_15_1000.csv', filtered,('Actual P(h)','Expected P(h)','c_1','c_2','A'))
-        minimal_elements, inverse_minimal_elements = get_minimal_elements(A, 15)
-        print(f'deep minimal elements: {minimal_elements}')
-        print(f'inverse minimal elements: {inverse_minimal_elements}')
-        single_sumset(
-            A,
-            10,
-            basis=A[:3],
-            translations=A[3:],
-            slice=(0,10),
-            plot=True,
-            show_intersections=True,
-        )
+        # minimal_elements, inverse_minimal_elements = get_minimal_elements(A, 12)
+        # print(f'deep minimal elements: {minimal_elements}')
+        # print(f'inverse minimal elements: {inverse_minimal_elements}')
+        # single_sumset(
+        #     A,
+        #     10,
+        #     basis=A[:3],
+        #     translations=A[3:],
+        #     slice=(0,10),
+        #     plot=True,
+        #     show_intersections=True,
+        # )
 
 
 def magnitue_grows_with_linear_term_dP2():
@@ -422,15 +450,25 @@ def magnitue_grows_with_linear_term_dP2():
 def get_cones(A, iters):
     cones = []
     inters = intersections(A[:3], A[3:], iters)
-    # keep only degree of intersection that we care about
-    for deg in range(iters):
-        points = [iteration[deg] for iteration in inters]
+    max_color = max(len(iteration) for iteration in inters)
+
+    for h in range(max_color):
         cone = set()
+        points = []
+
+        # some heights might have darker colors than the height
+        for iteration in inters:
+            if h < len(iteration):
+                points.append(iteration[h])
+            else:
+                points.append([])
+
         # add heights
         for i, iteration in enumerate(points):
             for j in range(len(iteration)):
                 cone.add((iteration[j][0], iteration[j][1], i+1))
         cones.append(cone)
+
     return cones
 
 
@@ -450,18 +488,22 @@ def get_hull_points(A):
     return sorted(hull_points)
 
 
-def color(e, cones):
+def get_colors(cones):
+
     # computes the largest i for which cones[i] contains e
-    if type(e) != tuple:
-        e = tuple(e)
-    if e == (0,0,0):
-        return 0
-    for i, cone in enumerate(cones):
-        if e not in cone:
-            return i-1
+    def color(e):
+        for i, cone in enumerate(cones):
+            if e not in cone:
+                return i-1
+        return len(cones)-1
+
+    colors_dict = dict()
+    colors_dict[(0,0,0)] = 0
+    for e in cones[0]:
+        colors_dict[e] = color(e)
+    return colors_dict
     
 
-#TODO: fix bug. small set that it doesn't work on is [(0, 0), (0, 1), (1, 1), (2, 1), (6, 3)] 
 #TODO: Is there any geometry for the deep minimal elements or the inverse minimal elements?
 def get_minimal_elements(A, iters):
     """
@@ -483,21 +525,24 @@ def get_minimal_elements(A, iters):
     sums_of_A = sum_set_n_times_and_save(lift_of_A, iters)
     minimal_elements = []
     inverse_minimal_elements = []
+    colors = get_colors(cones)
 
     for k, iteration in enumerate(sums_of_A):
         for e in iteration:
             e = tuple(e)
+            color_e = colors[e]
             N = 0
             for minimal_element in minimal_elements:
                 for vertex in sums_of_A[k-minimal_element[2]]:
+                    vertex = tuple(vertex)
                     if tuple(np.subtract(e, vertex)) == minimal_element:
-                        N += (color(minimal_element, cones) + color(vertex, cones))
+                        N += colors[vertex] + 1
             for inverse_minimal_element in inverse_minimal_elements:
                 for vertex in sums_of_A[k-inverse_minimal_element[2]]:
+                    vertex = tuple(vertex)
                     if tuple(np.subtract(e, vertex)) == inverse_minimal_element:
-                        N += (color(inverse_minimal_element, cones) - color(vertex, cones))
-
-            difference = N - color(e, cones)
+                        N -= colors[vertex] + 1
+            difference = N - color_e
             if difference < 0:
                 minimal_elements += ([e] * (-1 * difference))
             elif difference > 0:
@@ -529,9 +574,6 @@ def get_minimal_elements(A, iters):
 # Conj5: d-simplices have exactly d minimal elements.
 # FALSE. Counterexample: [(0, 0), (2, 1), (1, 1), (1, 3), (3, 0)]
 
-# Conjecture: only the first three 3 deep minimal elements matter in the binomial formula for non-nice sets
-# (i.e. non-nice sets that agree with their first 3 minimal elements have the same khovanskii polynomial)
-# FALSE. see ipad p.109 
 
 """------------------------Tasks----------------------------"""
 # it seems like the original definition of minimal elements matches with 0th degree minimal elements but misses
@@ -539,22 +581,15 @@ def get_minimal_elements(A, iters):
 # to find the first two (any degree) minimal elements that produce BinExp in the case of a nice set (i.e there are nice
 # sets with the second minimal element not in the 0th degree intersection)
 
-# also, some nonzero degree minimal elements with the current filtering method for nice sets that are not the first two still
-# seem to be appearing (after filtering). e.g. 
-# But they are obvsiousely not relevant to the BinExp form as this is a nice set
-# (nice sets only depend on the heigh of the first two deep minmal elements). Do they become relevant in the case the set
-# is not nice? A 'generalized' minimal element should resolve this issue
-
-# there is also the case where a single minimal element has multiplicity 2. e.g. [(0, 0), (0, 1), (1, 1), (2, 1), (2, 2)]
-# sets like these are considered nice though, it is just that the code that selects the first two minimal elements cannot
-# account for multipicities, so need to update it.
-
-# TODO: develop a definition for a 'generalized' minimal element that resolves all these issues.
-# TODO: try to generalize conjectures 1 and 2 to d+n?
-# TODO: try to improve bound on minimal elements by excluding the family of sets that give same height minimal
-# elements in d=1
-
 # BIG TODO: PROVE CONJECTURES 1,2, and 3  in the general case. Think of how to do wihtout resorting to simplical case
+
+
+"""
+O) Write code for finding the khovanski polynomial for a set of arbitrary size in d=2. This should give a good
+idea of what the distribution of 'r', the total number of elementary elements for a given set A looks like.
+2) Try to write down a proof for d+3 case with exactly two minimal element that product to the volume of the
+convex hull.
+"""
 
 
 """------------------------Workspace----------------------------"""
@@ -566,39 +601,26 @@ def get_minimal_elements(A, iters):
 #         [(0, 0), (0, 1), (1, 1), (5, 1), (6, 9)],
 #         [(0, 0), (1, 0), (1, 1), (1, 7), (7, 6)]]
 
-# sets2 = [[(0, 0), (0, 1), (1, 1), (6, 2), (6, 3)],
-#         [(0, 0), (1, 0), (1, 1), (0, 2), (3, 3)],
-#         [(0, 0), (0, 1), (1, 1), (2, 1), (2, 2)],
-#         [(0, 3), (1, 2), (2, 0), (1, 8), (5, 2)]]
-
-# sets3 = [[(0, 0), (0, 1), (1, 1), (0, 2), (3, 4)]]
-
-# sets4 = [[(0, 0), (1, 0), (1, 1), (8, 5), (9, 4)]]
-
-sets5 = [[(0, 0), (0, 1), (1, 1), (2, 1), (6, 3)]]
-
-# single_sumset(
-#     [(0, 0), (0, 1), (1, 1), (0, 2), (3, 4), (5,10)],
-#     10,
-# )
+# sets5 = [[(0, 0), (1, 0), (1, 1), (8, 5), (9, 4)]]
 
 
-for A in sets5:
-    print(get_minimal_elements(A, 6))
-    print(satisfy_simple(A[:3], A[3:], 6))
-    single_sumset(
-        A,
-        10,
-        basis=A[:3],
-        translations=A[3:],
-        slice=(0,8),
-        plot=True,
-        show_intersections=True,
-    )
+# for A in sets1:
+    # print(get_minimal_elements(A, 10))
+    # single_sumset(
+    #     A,
+    #     10,
+    #     basis=A[:3],
+    #     translations=A[3:],
+    #     slice=(0,8),
+    #     plot=True,
+    #     show_intersections=True,
+    # )
+    #TODO: investigate why doesn't work with [(0, 0), (1, 1), (2, 1), (7, 8), (7, 9)]!
+    # print(get_khovanskii_binomial(A, 2))
 
 
 # view_plots_from_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000_sorted.csv', 20, 30)
-# view_plots_from_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000.csv', 20, 30)
+view_plots_from_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000.csv', 0, 30)
 # view_plots_from_csv('random_2d_exps/filter_dP3_simple_6_15_1000_sorted.csv', 0, 30)
 # view_plots_from_csv('random_2d_exps/simplex_filter_dp3_not_simple_6_15_1000.csv', 2)
 
