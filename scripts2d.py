@@ -217,10 +217,14 @@ def run_exps(curr_set, min_iterations):
 
     assert k is not None
     mm = m if real_m is None else real_m 
+    # if mm != m:
+    #     print(mm, m)
+    #     assert False
 
     # Calculate b and c
     b = (lengths_arry[k] - lengths_arry[k-1]) - (mm*((2*(k))+1))
     c = lengths_arry[k-1] - (mm*((k)**2)) - (b*(k))
+
                 
     return  m, mm, b, c, k, deprocess(points_list[-3]), lengths_arry, points_list 
 
@@ -255,52 +259,93 @@ def read_rows_from_csv(fname):
             rtn.append(row)
     return rtn
 
-def primitive_triangle_basis(max_iterations):
-    # generators for SL_2(Z)
-    gens = [np.array([[1,1], [1,0]]), np.array([[0,-1], [1,0]])]
-    # `word` is a random sequence of 0s and 1s of length <= max_iters
-    iters = np.random.randint(1, max_iterations)
-    word = np.random.randint(0,2, size=iters)
-    # generate
-    current = np.identity(2)
-    for i in word:
-        current = np.matmul(current, gens[i])
-    # add third element to make it d+2
-    a,b,c,d = current[0,0], current[1,0], current[0,1], current[1,1] 
-    return [(0,0), (int(a),int(b)), (int(c),int(d))]
+def get_SL_n_Z_gens(n):
+    u1 = np.zeros((n,n), dtype=int)
+    for i in range(n):
+        if i !=  n-1:
+            u1[i][i+1] = 1
+        else:
+            u1[i][0] = 1
+
+    u2 = np.zeros((n,n), dtype=int)
+    for i in range(n):
+        u2[i][i] = 1
+        if i ==  1:
+            u2[i][0] = 1
+
+    u3 = np.identity(n, dtype=int)
+    u3[0][0] = -1
+
+    u4 = np.identity(n, dtype=int)
+    u4[[0, 1]] = u4[[1, 0]]
+
+    return u1,u2,u3,u4
+
+    
 
 
-def random_primitive_dPn(n, max_iterations):
-    rtn = primitive_triangle_basis(max_iterations) 
-    # translate if not in quadrant I
-    xs, ys = list(zip(*rtn))
-    # vertically first
-    if np.min(ys) < 0:
-        ymin_arg = np.argmin(ys)
-        yoffset = - rtn[ymin_arg][1]
-        rtn = [(e[0], e[1] + yoffset) for e in rtn]
-    #  then horixontally
-    if np.min(xs) < 0:
-        xmin_arg = np.argmin(xs)
-        xoffset = - rtn[xmin_arg][0]
-        rtn = [(e[0] + xoffset, e[1]) for e in rtn]
+def primitive_triangle_basis(max_iterations, d=2):
+    if d == 2:
+        # generators for SL_2(Z)
+        gens = [np.array([[1,1], [1,0]]), np.array([[0,-1], [1,0]])]
+        # `word` is a random sequence of 0s and 1s of length <= max_iters
+        iters = np.random.randint(1, max_iterations)
+        word = np.random.randint(0,2, size=iters)
+        # generate
+        current = np.identity(2)
+        for i in word:
+            current = np.matmul(current, gens[i])
+        # add third element to make it d+2
+        a,b,c,d = current[0,0], current[1,0], current[0,1], current[1,1] 
+        return [(0,0), (int(a),int(b)), (int(c),int(d))]
+    else:
+        # generators for SL_n(Z)
+        gens = get_SL_n_Z_gens(d)
+        # `word` is a random sequence of 0s and 1s of length <= max_iters
+        iters = np.random.randint(1, max_iterations)
+        word = np.random.randint(0,4, size=iters)
+        # generate
+        current = np.identity(d, dtype=int)
+        for i in word:
+            current = np.matmul(current, gens[i])
+
+        rtn = [d*(0,)]
+        for row in current.T:
+            rtn.append(tuple(row))
+        return rtn
+
+
+def random_primitive_dPn(k, max_iterations, d=2):
+    rtn = primitive_triangle_basis(max_iterations, d=d) 
+    # # translate if not in quadrant I
+    # xs, ys = list(zip(*rtn))
+    # # vertically first
+    # if np.min(ys) < 0:
+    #     ymin_arg = np.argmin(ys)
+    #     yoffset = - rtn[ymin_arg][1]
+    #     rtn = [(e[0], e[1] + yoffset) for e in rtn]
+    # #  then horizontally
+    # if np.min(xs) < 0:
+    #     xmin_arg = np.argmin(xs)
+    #     xoffset = - rtn[xmin_arg][0]
+    #     rtn = [(e[0] + xoffset, e[1]) for e in rtn]
 
     basis = rtn.copy()
     translations = []
     max_element_range = 10
-    for _ in range(n-1):
-        x = tuple(np.random.randint(0, max_element_range, size=2))
+    for _ in range(k-1):
+        x = tuple(np.random.randint(-max_element_range // 2, max_element_range // 2, size=d))
         while x in rtn:
-            x = tuple(np.random.randint(0, max_element_range, size=2))
+            x = tuple(np.random.randint(-max_element_range // 2, max_element_range // 2, size=d))
         translations.append(x)
         rtn.append(x)
     return rtn, basis, translations
 
 
-def random_primitive_dPn_exps(n, maxx, maxk, iters):
+def random_primitive_dPn_exps(k, maxx, maxk, iters):
     results = set()
     j=0
-    for _, basis, translations in [random_primitive_dPn(n, maxx) for _ in range(iters)]:
+    for _, basis, translations in [random_primitive_dPn(k, maxx) for _ in range(iters)]:
         print(j)
         j += 1
         m, mm, b, c, k, _, _, _ =  run_exps(basis + translations, maxk)
@@ -336,7 +381,7 @@ def get_khovanskii_binomial(A, d):
     actual_poly = sympify(actual_poly_str)
     expr = binomial_expr(both_heights, d+k-1)
     last = 0
-    while(simplify(actual_poly - expr) != 0):
+    while(simplify(actual_poly - expr).replace(lambda x: x.is_Number and abs(x) < 1e-8, lambda x: 0) != 0):
         for i in range(last, len(lengths_arry)):
             diff = lengths_arry[i] - expr.evalf(subs={h:i+1})
             if diff > 0:
@@ -439,12 +484,6 @@ def view_plots_from_csv(fname, min_sets, max_sets=None):
         # )
 
 
-def magnitue_grows_with_linear_term_dP2():
-    for i in range(20):
-        A, _ = primitive_triangle_basis(6)
-        print(f"\ni = {i}")
-        for j in range(8):
-            print(single_sumset(A + [(j+3, j+3)]))
 
 
 def get_cones(A, iters):
@@ -551,48 +590,52 @@ def get_minimal_elements(A, iters):
     return minimal_elements, inverse_minimal_elements
 
 
-"""------------------------Conjectures----------------------------"""
 
-# Conj1: For every d+3 elements set A, p(x) = BinExp(c1,c2) for some c1,c2 >= 2 where
-# BinExp(c1,c2) = choose(h+4,4)-choose(h-c1+4,4)-choose(h-c2+4,4)+choose(h-c1-c2+4,4) 
-# iff A has exactly 2 minimal elements iff the heights of the first two minimal elements
-# product to the normalized volume of the convex hull of A
+def fix_d_vary_k(max_basis_iters=5, d=2, k_range=(2,20), no_samples=50):
+    if d != 2:
+        assert False
 
-# Conj2: Every set can be written as p(x) = choose(x+d+2, d+2) + sum_{i \in I} choose(x-i+d+2,d+2) + sum_{j>max(I)} a_j choose(x-j+d+2,d+2) 
-# where each I is the set of heights of the generalized minimal elements of A
-
-# Conj3: The coefficients on the binomial expansion of the khovanski polynomial are tuples (a_i,b_i) s.t.
-# p(x) = choose(x+4,4) + \sum_i a_i choose(x-b_i+4,4) where \sum_i a_i*b_i = 0. This is the case where we
-# have d+3 element sets but this should generalize to any n-element set just like con2.
-
-# TODO: how does this generalize past sets of size d+3?
-# Fact: 100% of sets with d+2 elements have exactly 1 minimal element
-# Conj3: 25% of sets with d+3 elements have exactly 2 minimal elements (i.e. satisfy BinExp form)
-# Conj4: In d dimensions if A has exactly d minimal elements then there is a generalized BinExp (continue the
-# inclusion exclusion) that describes the size of hA for sufficiently large h
-
-# Conj5: d-simplices have exactly d minimal elements.
-# FALSE. Counterexample: [(0, 0), (2, 1), (1, 1), (1, 3), (3, 0)]
-
-
-"""------------------------Tasks----------------------------"""
-# it seems like the original definition of minimal elements matches with 0th degree minimal elements but misses
-# the minimal elements that arise in further degree intersections. the original definition is sometimes not enough
-# to find the first two (any degree) minimal elements that produce BinExp in the case of a nice set (i.e there are nice
-# sets with the second minimal element not in the 0th degree intersection)
-
-# BIG TODO: PROVE CONJECTURES 1,2, and 3  in the general case. Think of how to do wihtout resorting to simplical case
-
+    res = []
+    for h in range(*k_range):
+        l = []
+        for i in range(no_samples):
+            print(i)
+            A = random_primitive_dPn(h, max_iterations=max_basis_iters, d=d)[0]
+            m, mm, bb, c, k, _, lengths_arry, _ =  run_exps(A, 30)
+            if m != mm:
+                print(f'the set A={A} does not compute correctly in run_exps()\n')
+                continue
+            b = get_khovanskii_binomial(A, d=d)
+            max1 = max(b[1][0])
+            max2 = max(b[1][1]) if len(b[1][1]) != 0 else 0
+            if max(max1, max2) < d*m:
+                continue
+            print(A)
+            print(f'p(x) = ({m}) {mm}x^2 + {bb}x + {c}  for all k >= {k}')
+            print(lengths_arry)
+            print(b)
+            print()
+            l.append(b[0])
+        avg = sum(l) / len(l)
+        res.insert(0, avg)
+        res.append(l)
+    return res
 
 """
-O) Write code for finding the khovanski polynomial for a set of arbitrary size in d=2. This should give a good
-idea of what the distribution of 'r', the total number of elementary elements for a given set A looks like.
-2) Try to write down a proof for d+3 case with exactly two minimal element that product to the volume of the
-convex hull.
+
+------------------------TODOS----------------------------
+#TODO: check if the argument that bound the height minimal elements for d-simplices in Michael paper can be adopted to bound
+# the height of elementaries.
+#TODO: look at specific (simple) example of a set that stabilizes before its largest h_i (so, almost all sets)
+#TODO: run_exps() does not calculate the correct khovanskii polynomial for [(0, 0), (1, 1), (1, 0), (-4, 2), (3, 3), (-5, 1), (-2, 3)] 
+# Investigate why and fix it.
+#TODO: implement the ability to run_exps for d=3 and run r-experiments in 3d as well as 2d
+#TODO: PROVE lemma 4.3, Theorem 4.4, and conjecture 4.6. Think of how to do wihtout resorting to simplical case
+
+
+------------------------Workspace----------------------------
+
 """
-
-
-"""------------------------Workspace----------------------------"""
 # nice sets that hve more than 2 minimal elements under our filteration method
 # sets1 = [[(0, 0), (1, 0), (1, 1), (0, 2), (3, 3)],
 #         [(0, 0), (1, 1), (2, 1), (5, 3), (9, 1)],
@@ -601,11 +644,17 @@ convex hull.
 #         [(0, 0), (0, 1), (1, 1), (5, 1), (6, 9)],
 #         [(0, 0), (1, 0), (1, 1), (1, 7), (7, 6)]]
 
-# sets5 = [[(0, 0), (1, 0), (1, 1), (8, 5), (9, 4)]]
+sets5 = [
+    # [(0, 0), (0, 1), (-1, 0), (-5, -5), (-4, -4)], # counterexample to conj 4.6
+    # [(0, 0), (-2, -1), (-1, -1), (-4, 0), (1, 0)], # counterexample to conj 4.6
+    # [(0, 0), (1, 1), (1, 0), (0, 1), (3, 1)], # counterexample to conj 4.6
+    # [(0, 0), (1, 1), (2, 1), (7, 8), (7, 9)],
+    ]
 
 
-# for A in sets1:
+# for A in sets5:
     # print(get_minimal_elements(A, 10))
+    # print(get_khovanskii_binomial(A, 2))
     # single_sumset(
     #     A,
     #     10,
@@ -615,12 +664,13 @@ convex hull.
     #     plot=True,
     #     show_intersections=True,
     # )
-    #TODO: investigate why doesn't work with [(0, 0), (1, 1), (2, 1), (7, 8), (7, 9)]!
-    # print(get_khovanskii_binomial(A, 2))
+
+
+print(fix_d_vary_k(max_basis_iters=7, d=2, no_samples=1000, k_range=(3,5)))
 
 
 # view_plots_from_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000_sorted.csv', 20, 30)
-view_plots_from_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000.csv', 0, 30)
+# view_plots_from_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000.csv', 0, 30)
 # view_plots_from_csv('random_2d_exps/filter_dP3_simple_6_15_1000_sorted.csv', 0, 30)
 # view_plots_from_csv('random_2d_exps/simplex_filter_dp3_not_simple_6_15_1000.csv', 2)
 
