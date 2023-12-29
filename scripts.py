@@ -144,9 +144,10 @@ def single_cone_example(A=None, rand=False):
     # A = [0, 1, 10]
     # A = [0, 1, 10, 18]
     # A = [0, 2, 9, 11, 18]
+    # A = [0,1,7,8]
 
     # max_n_list = [0 for _ in range(16)]
-    if rand:
+    if rand or A==None:
         # setss = [[0,1,j//2 + 1,j] for j in range(34,52, 2)]
         for _ in range(4000):
             m = np.random.randint(5, 25)
@@ -189,6 +190,24 @@ def single_cone_example(A=None, rand=False):
                     # print(f'min elems {min_elems[max_index]}')
                     # print(f'b-1 = {max(A)-1}\n')
         # print(max_n_list)
+    else:
+        b = max(A)
+        cone = cone_of_A(A, show=False, thresh=b)
+        min_elems = get_minimal_elements(max(A), cone)
+        heights = []
+        lengths = []
+        for i, res_class in enumerate(min_elems):
+            print(i, res_class)
+            height = sum(e[1] for e in res_class)
+            heights.append((i, height))
+            lengths.append((i, len(res_class)))
+        print(sum([e[1] for e in lengths]))
+        print(sum([e[1] for e in heights]))
+    
+        # sorted_heights = sorted(heights, key=lambda x: x[1], reverse=True)
+        # sorted_lengths = sorted(lengths, key=lambda x: x[1], reverse=True)
+        # print(sorted_heights)
+        # print(sorted_lengths)
 
 
 
@@ -227,7 +246,10 @@ def plot_moment_data(m, moment):
 
 
 
-single_cone_example(rand=True)
+# single_cone_example(rand=True)
+# single_cone_example(A=[0,1,7,8])
+# single_cone_example(A=[0,1,10])
+print(single_sumset(A=[0,3,5]))
 
 
 # new example of set to look into: [0,n,n+1,n+2,...,n+k] where n gets large

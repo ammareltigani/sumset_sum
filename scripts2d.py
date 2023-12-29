@@ -1,8 +1,10 @@
 from scipy.spatial import ConvexHull
+from itertools import combinations_with_replacement
 from sympy import *
 
 import ast
 import csv
+import itertools
 import re
 import numpy as np
 import matplotlib.pyplot as plt
@@ -44,76 +46,93 @@ def sum_set_n_times_and_save(set1, n):
     return res
 
 
-def mult_tuple(e, times):
-    return tuple(e[i] * times for i in range(len(e)))
+# def intersections(basis, translations, iters):
+#     rtn = []
+#     # get all dilations
+#     basis_dilations = [[(0,0)], basis]
+#     curr_basis = basis.copy()
+#     for _ in range(iters):
+#         curr_basis = sum_sets(curr_basis, basis)
+#         basis_dilations.append(curr_basis)
+# 
+#     for h in range(iters):
+#         points_list = []
+#         # i'th dilation
+#         for i in range(h+1,-1,-1):
+#             dilation = basis_dilations[i]
+#             # want all partitions of i. So j*1st trans, and (i-j)*2nd trans
+#             if len(translations) == 2:
+#                 for j in range(h+1-i, -1, -1):
+#                     tdilation = [(e[0] + j * translations[0][0], e[1] + j * translations[0][1]) for e in dilation]
+#                     tdilation = [(e[0] + (h+1-i-j) * translations[1][0], e[1] + (h+1-i-j) * translations[1][1]) for e in tdilation]
+#                     points_list.extend(tdilation)
+#             elif len(translations) == 1:
+#                 tdilation = [(e[0] + (h+1-i) * translations[0][0], e[1] + (h+1-i) * translations[0][1]) for e in dilation]
+#                 points_list.extend(tdilation)
+#             else:
+#                 # Not implemented yet for d+4
+#                 assert False
+# 
+#         unique, counts = np.unique(np.array(points_list), axis=0, return_counts=True)
+#         l = max(iters, max(counts))
+#         all_intersections = [[] for _ in range(l)]
+#         for j in range(l):
+#             all_intersections[j] = unique[counts > j]
+#         
+#         rtn.append(all_intersections)
+# 
+#     return rtn
 
-def intersections(basis, translations, iters):
+def sum_list(B):
     rtn = []
-    # get all dilations
-    basis_dilations = [[(0,0)], basis]
-    curr_basis = basis.copy()
-    for _ in range(iters):
-        curr_basis = sum_sets(curr_basis, basis)
-        basis_dilations.append(curr_basis)
+    for e in B:
+        e_transpose = list(zip(*e))
+        e_transpose_summed = tuple([sum(x) for x in e_transpose])
+        rtn.append(e_transpose_summed)
+    return rtn
 
-    for h in range(iters):
-        points_list = []
-        # i'th dilation
-        for i in range(h+1,-1,-1):
-            dilation = basis_dilations[i]
-            # want all partitions of i. So j*1st trans, and (i-j)*2nd trans
-            if len(translations) == 2:
-                for j in range(h+1-i, -1, -1):
-                    tdilation = [(e[0] + j * translations[0][0], e[1] + j * translations[0][1]) for e in dilation]
-                    tdilation = [(e[0] + (h+1-i-j) * translations[1][0], e[1] + (h+1-i-j) * translations[1][1]) for e in tdilation]
-                    points_list.extend(tdilation)
-            elif len(translations) == 1:
-                tdilation = [(e[0] + (h+1-i) * translations[0][0], e[1] + (h+1-i) * translations[0][1]) for e in dilation]
-                points_list.extend(tdilation)
-            else:
-                # Not implemented yet for d+4
-                assert False
-
+def intersections(A, iters):
+    rtn = []
+    for i in range(1, iters+1):
+        combs = list(combinations_with_replacement(A, i))
+        points_list = np.array(sum_list(combs))
         unique, counts = np.unique(np.array(points_list), axis=0, return_counts=True)
         l = max(iters, max(counts))
         all_intersections = [[] for _ in range(l)]
         for j in range(l):
             all_intersections[j] = unique[counts > j]
-        
         rtn.append(all_intersections)
-
     return rtn
 
 
-def single_sumset(A, iterations, slice=None, plot=False, show_intersections=False, basis=None, translations=None):
-    if show_intersections is not False:
-        assert basis is not None
-        assert translations is not None
-        assert iterations is not None
+def single_sumset(A, iterations, slice=None, plot=False, print_info=False):
 
-    # print(f'A = {A}')
     A = process(A) if type(A) == list else A
-    m, mm, b, c, k, _, lenghts_arry, points_arry =  run_exps(A, iterations)
-    # print(f'p(x) = ({m}) {mm}x^2 + {b}x + {c}  for all k >= {k}')
-    # print(f'Lengths Array: {lenghts_arry}\n')
+    status, k, poly, lenghts_arry, _ =  run_exps_nd(A, iterations)
+    if status == False:
+        return False
+
+    if len(poly) == 3:
+        poly_str = f'{poly[0]}*h^2 + {poly[1]}*h + {poly[2]}'
+    elif len(poly) == 4:
+        poly_str = f'{poly[0]}*h^3 + {poly[1]}*h^2 + {poly[2]}*h + {poly[3]}'
+    else:
+        assert False
+
+    if print_info:
+        print(f'p(h) = {poly_str}  for all k >= {k}')
+        print(f'Lengths Array: {lenghts_arry}')
 
     if plot:
         assert slice is not None
-        if show_intersections:
-            inters = intersections(basis, translations, iterations)
-            plot_sumset(
-                iterations,
-                slice,
-                inters=inters,
-            )
-        else:
-            plot_sumset(
-                iterations,
-                slice,
-                points_arry=points_arry,
-            )
+        inters = intersections(A, iterations)
+        plot_sumset(
+            iterations,
+            slice,
+            inters=inters,
+        )
     
-    return f'{mm}*h^2 + {b}*h + {c}', lenghts_arry
+    return poly_str, lenghts_arry
             
 
 
@@ -190,7 +209,6 @@ def run_exps(curr_set, min_iterations):
     points_list = [np.copy(n_set)]
     lengths_arry = [len(n_set)]
     k = None
-    real_m = None
     i = 0
     once = False
     while k is None or i  < min_iterations:
@@ -202,10 +220,8 @@ def run_exps(curr_set, min_iterations):
             d21, d22 = d12 - d11, d13 - d12
             d31 = d22 - d21
 
-            if d31 == 0:
+            if d31 == 0 and d21 == 2*m:
                 if once:
-                    if d21 != 2*m:
-                        real_m = d21 / 2
                     k = i-3
                 else:
                     once = True
@@ -214,20 +230,40 @@ def run_exps(curr_set, min_iterations):
         points_list.append(n_set)
         lengths_arry.append(len(n_set))
         i+=1
-
     assert k is not None
-    mm = m if real_m is None else real_m 
-    # if mm != m:
-    #     print(mm, m)
-    #     assert False
-
+    # Temp fix. TODO: make this better later.
+    mm = m
     # Calculate b and c
     b = (lengths_arry[k] - lengths_arry[k-1]) - (mm*((2*(k))+1))
     c = lengths_arry[k-1] - (mm*((k)**2)) - (b*(k))
-
-                
     return  m, mm, b, c, k, deprocess(points_list[-3]), lengths_arry, points_list 
 
+def run_exps_nd(curr_set, iters):
+    n = len(curr_set[0])
+    m = volume_of_convex_hull(curr_set)
+    n_set = np.copy(curr_set)
+    lengths_array = [len(curr_set)]
+    poly = None
+    k = -1
+
+    for i in range(1, max(n,iters)+1):
+        n_set = sum_sets(n_set, curr_set)
+        lengths_array.append(len(n_set))
+        if i >= n and k == -1:
+            xs = np.arange(i-n+1,i+2)
+            ys = lengths_array[-(n+1):]
+            new_poly = np.polyfit(xs, ys, n)
+            if poly is not None and np.allclose(new_poly,poly) and np.isclose(m,poly[0]):
+                k = i-n
+            else:
+                poly = new_poly
+    
+    if k != -1:
+        # stabilized (bool), stabilized index (int), khovanskii poly (int list), length array (int list), normalized volume (int)
+        return True, k, np.round(poly,7), lengths_array, np.round(poly[0]*np.math.factorial(n), 5)
+    else:
+        return False, float('inf'), [], [], 0
+    
 
 def same_line(points):
     x0,y0  = points[0]
@@ -332,7 +368,7 @@ def random_primitive_dPn(k, max_iterations, d=2):
 
     basis = rtn.copy()
     translations = []
-    max_element_range = 10
+    max_element_range = 20
     for _ in range(k-1):
         x = tuple(np.random.randint(-max_element_range // 2, max_element_range // 2, size=d))
         while x in rtn:
@@ -373,15 +409,15 @@ def binomial_expr(both_heights, alpha):
     return expr.evalf()
 
 
-def get_khovanskii_binomial(A, d):
+def get_khovanskii_binomial(A, d, actual_poly_str, lengths_arry):
     h = symbols('h')
     k = len(A) - d
     both_heights = [[], []]
-    actual_poly_str, lengths_arry = single_sumset(A, 30)
+
     actual_poly = sympify(actual_poly_str)
     expr = binomial_expr(both_heights, d+k-1)
     last = 0
-    while(simplify(actual_poly - expr).replace(lambda x: x.is_Number and abs(x) < 1e-8, lambda x: 0) != 0):
+    while(simplify(actual_poly - expr).replace(lambda x: x.is_Number and abs(x) < 1e-6, lambda x: 0) != 0):
         for i in range(last, len(lengths_arry)):
             diff = lengths_arry[i] - expr.evalf(subs={h:i+1})
             if diff > 0:
@@ -464,51 +500,58 @@ def view_plots_from_csv(fname, min_sets, max_sets=None):
         Astr = re.search('"(.*)"', rowstr[0]).group(1)
         A = ast.literal_eval(Astr)
         print(f'A = {A}')
-        print(get_khovanskii_binomial(A, 2))
-        # print(satisfy_simple(A[:3], A[3:], 12))
+        # print(get_khovanskii_binomial(A, 2))
 
     #     if len(get_hull_points(A)) == 3:
     #         filtered.append(rowstr)
-    # write_to_csv('random_2d_exps/simplex_filter_dp3_not_simple_6_15_1000.csv', filtered,('Actual P(h)','Expected P(h)','c_1','c_2','A'))
-        # minimal_elements, inverse_minimal_elements = get_minimal_elements(A, 12)
-        # print(f'deep minimal elements: {minimal_elements}')
-        # print(f'inverse minimal elements: {inverse_minimal_elements}')
-        # single_sumset(
-        #     A,
-        #     10,
-        #     basis=A[:3],
-        #     translations=A[3:],
-        #     slice=(0,10),
-        #     plot=True,
-        #     show_intersections=True,
-        # )
+    # write_to_csv('random_2d_exps/simplex_filter_dp3_simple_6_15_1000.csv', filtered,('Actual P(h)','Expected P(h)','c_1','c_2','A'))
 
-
+        minimal_elements, inverse_minimal_elements = get_minimal_elements(A, 12)
+        print(f'negative elementaries: {minimal_elements}')
+        print(f'positive elementaries: {inverse_minimal_elements}')
+        print(f'minimal elements: {get_michael_min_elements(A, 12)}')
+        single_sumset(
+            A,
+            10,
+            basis=A[:3],
+            translations=A[3:],
+            slice=(0,10),
+            plot=True,
+            show_intersections=True,
+        )
 
 
 def get_cones(A, iters):
     cones = []
-    inters = intersections(A[:3], A[3:], iters)
+    inters = intersections(A, iters)
     max_color = max(len(iteration) for iteration in inters)
-
     for h in range(max_color):
         cone = set()
         points = []
-
         # some heights might have darker colors than the height
         for iteration in inters:
             if h < len(iteration):
                 points.append(iteration[h])
             else:
                 points.append([])
-
         # add heights
         for i, iteration in enumerate(points):
             for j in range(len(iteration)):
-                cone.add((iteration[j][0], iteration[j][1], i+1))
+                if len(iteration[j]) == 2:
+                    cone.add((iteration[j][0], iteration[j][1], i+1))
+                elif len(iteration[j]) == 3:
+                    cone.add((iteration[j][0], iteration[j][1], iteration[j][2],i+1))
+                else:
+                    assert False
         cones.append(cone)
-
     return cones
+
+
+def get_cone(A, iters):
+    _, _, _, _, _, _, _, points_list = run_exps(A,iters)
+    lifted_points_list = set([(e[0], e[1], i+1) for i in range(len(points_list)) for e in points_list[i]])
+    lifted_points_list.add((0,0,0))
+    return lifted_points_list
 
 
 def separate_iters_in_cone(cone):
@@ -517,6 +560,7 @@ def separate_iters_in_cone(cone):
     for e in cone:
         res[e[2]].append(e)
     return res
+
 
 def get_hull_points(A):
     hull = ConvexHull(np.array(A))
@@ -528,7 +572,6 @@ def get_hull_points(A):
 
 
 def get_colors(cones):
-
     # computes the largest i for which cones[i] contains e
     def color(e):
         for i, cone in enumerate(cones):
@@ -541,9 +584,24 @@ def get_colors(cones):
     for e in cones[0]:
         colors_dict[e] = color(e)
     return colors_dict
-    
 
-#TODO: Is there any geometry for the deep minimal elements or the inverse minimal elements?
+
+def get_michael_min_elements(A, iters, hull_points=None):
+    coneA = get_cone(A, iters)
+    if hull_points == None:
+        hull_points = get_hull_points(A)
+        cone_larger = coneA
+    else:
+        projected_hull_points = [(e[0], e[1]) for e in hull_points]
+        larger = list(set(A).union(set(projected_hull_points)))
+        cone_larger = get_cone(larger, iters)
+    minimal_elements = []
+    for element in coneA:
+        if all(tuple(np.subtract(element, hull_point)) not in coneA for hull_point in hull_points):
+                minimal_elements.append(element)
+    return sorted(minimal_elements, key=lambda x: x[2])
+
+
 def get_minimal_elements(A, iters):
     """
     Refactor this method in the following way to find deep minimal elements.
@@ -569,7 +627,8 @@ def get_minimal_elements(A, iters):
     for k, iteration in enumerate(sums_of_A):
         for e in iteration:
             e = tuple(e)
-            color_e = colors[e]
+            # if e == (2,2,2):
+            #     print(colors[e])
             N = 0
             for minimal_element in minimal_elements:
                 for vertex in sums_of_A[k-minimal_element[2]]:
@@ -581,7 +640,7 @@ def get_minimal_elements(A, iters):
                     vertex = tuple(vertex)
                     if tuple(np.subtract(e, vertex)) == inverse_minimal_element:
                         N -= colors[vertex] + 1
-            difference = N - color_e
+            difference = N - colors[e]
             if difference < 0:
                 minimal_elements += ([e] * (-1 * difference))
             elif difference > 0:
@@ -590,8 +649,43 @@ def get_minimal_elements(A, iters):
     return minimal_elements, inverse_minimal_elements
 
 
+def get_negative_elementaries_quick(A, iters):
+    rtn = []
+    cones = get_cones(A,iters)
+    elements = cones[0]
+    duplicates = cones[1]
+    duplicates_prefix_by_height = [[] for _ in range(iters+1)]
 
-def fix_d_vary_k(max_basis_iters=5, d=2, k_range=(2,20), no_samples=50):
+    for e in duplicates:
+        height = e[-1]
+        for i in range(height, iters+1):
+            duplicates_prefix_by_height[i].append(e)
+
+    for e1 in duplicates: 
+        height = e1[-1]
+        if all(tuple(np.subtract(e1, e2)) not in elements for e2 in duplicates_prefix_by_height[height-1]):
+            rtn.append(e1)
+    return rtn
+
+
+def exps_get_r_fixed_d_k(max_basis_iters=15, d=2, k=3, no_samples=100):
+    res = []
+    for i in range(no_samples):
+        A = random_primitive_dPn(k, max_iterations=max_basis_iters, d=d)[0]
+        m, mm, _, _, _, _, _, _ =  run_exps(A, 10)
+        assert m == mm
+        b = get_khovanskii_binomial(A, d=d)
+        entry = (m, b[0], b[0]/m)
+        res.append((entry, A))
+        print(i)
+        print(A)
+        print(entry)
+        print()
+    print(list(zip(*res))[0])
+    print(max(res, key=lambda x: x[0][2]))
+ 
+
+def fix_d_vary_k(max_basis_iters=8, d=2, k_range=(3,4), no_samples=100):
     if d != 2:
         assert False
 
@@ -602,12 +696,11 @@ def fix_d_vary_k(max_basis_iters=5, d=2, k_range=(2,20), no_samples=50):
             print(i)
             A = random_primitive_dPn(h, max_iterations=max_basis_iters, d=d)[0]
             m, mm, bb, c, k, _, lengths_arry, _ =  run_exps(A, 30)
-            if m != mm:
-                print(f'the set A={A} does not compute correctly in run_exps()\n')
-                continue
             b = get_khovanskii_binomial(A, d=d)
             max1 = max(b[1][0])
             max2 = max(b[1][1]) if len(b[1][1]) != 0 else 0
+
+
             if max(max1, max2) < d*m:
                 continue
             print(A)
@@ -616,66 +709,158 @@ def fix_d_vary_k(max_basis_iters=5, d=2, k_range=(2,20), no_samples=50):
             print(b)
             print()
             l.append(b[0])
-        avg = sum(l) / len(l)
-        res.insert(0, avg)
+        if len(l) != 0:
+            avg = sum(l) / len(l)
+            res.insert(0, avg)
         res.append(l)
     return res
 
+
+def min_height(B, elems, iters):
+    maxx = 10 
+    heights = set([e[-1] for e in elems])
+    for i in range(1, maxx+1):
+        for a in range(i+1):
+            for b in range(i+1):
+                for c in range(i+1):
+                    for d in range(i+1):
+                        for e in range(i+1):
+                            A = [(B[0][0], B[0][1], a), (B[1][0], B[1][1], b),
+                                 (B[2][0], B[2][1], c), (B[3][0], B[3][1], d),
+                                 (B[4][0], B[4][1], e)]
+                            try:
+                                vol = volume_of_convex_hull(A)
+                            except:
+                                continue
+
+                            for value in heights:
+                                norm_vol = vol*6
+                                if np.isclose(norm_vol, value):
+                                    status, _, _, _, m = run_exps_nd(A, iters)
+                                    if status and np.isclose(norm_vol,m): 
+                                        heights.remove(value)
+                                        break
+
+                            if len(heights) == 0:
+                                return i
+                            
+
+def lifting_conj(rounds=1000, max_iter=40):
+    counts_number_elems = dict()
+    counts_min_height = dict()
+
+    for i in range(rounds):
+        print(f'iteration {i}')
+
+        # get random 3-element basis in 2D
+        basis = primitive_triangle_basis(10,d=2)
+        # generate points in the positive quadrant that are not the basis
+        k_temp = [max(e) for e in basis]
+        k = min(k_temp)+1
+        x1,x2,y1,y2 = np.random.randint(k,k+22,size=4)
+        A = basis+[(x1,x2),(y1,y2)]
+
+        status, k, _, _, _ = run_exps_nd(A, max_iter)
+        if not status:
+            print(f'set: {A}')
+            print(f"did not stabilize under {max_iter}")
+            print()
+            continue
+
+        if len(set(A)) != len(A):
+            print(f'set: {A}')
+            print(f"has a duplicate in construction")
+            print()
+            continue
+
+        elems = get_negative_elementaries_quick(A, k+3)
+        if len(elems) == 1:
+            continue
+        if len(elems) in counts_number_elems:
+            counts_number_elems[len(elems)] += 1
+        else:
+            counts_number_elems[len(elems)] = 1
+
+        minh = min_height(A, elems, k+3)
+        if minh == None:
+            print(f'set: {A}')
+            print(f"needs more than 8 lifts")
+            minh = -1
+
+        if minh in counts_min_height:
+            counts_min_height[minh] += 1
+        else:
+            counts_min_height[minh] = 1
+
+        if (minh > 3 or len(elems) > 4) and minh != -1:
+            print(f'A: {A}')
+            print(f'number of min duplicates: {len(elems)}')
+            print(f'min lift height required: {minh}')
+
+        print()
+        
+    print(f'number of min elems counts: {counts_number_elems}')
+    print(f'min lift height needed counts: {counts_min_height}')
+        
+
+
+# lifting_conj()
+
+#TODO: bug? following set allegedly has one min element at h=2 but an elementary at h=27
+# A = [(0, 0), (3, 2), (-5, -3), (8, 2), (-2, 2)]
+
+
+# max_iters = 15 
+# dimension = 2
+# temp_set = [
+#     [(0, 0), (-1, 0), (0, -1), (12, 13), (1, 3)],
+#     ]
+
+# for new_A in temp_set:
+#     print(new_A)
+#     rtn = single_sumset(new_A, max_iters, print_info=True)
+#     if rtn == False:
+#         continue
+#     actual_poly_str, lengths_arry = rtn
+#     print(get_khovanskii_binomial(new_A, dimension, actual_poly_str, lengths_arry))
+#     elems = get_negative_elementaries_quick(new_A, max_iters)
+#     print(elems)
+#     print(min_height(new_A, elems, max_iters))
+#     print()
+
+
 """
+TODO: Q0: Why are there some lifts with unique minimal elements that do not correspond to minimal duplicates
+in the projected set? We know that every duplicate in the lift is a duplicate in the projection. But not
+necessarily a minimal duplicate from the examples we've seen. Is there a way to guarantee is is minimal in
+the projection?
 
-------------------------TODOS----------------------------
-#TODO: check if the argument that bound the height minimal elements for d-simplices in Michael paper can be adopted to bound
-# the height of elementaries.
-#TODO: look at specific (simple) example of a set that stabilizes before its largest h_i (so, almost all sets)
-#TODO: run_exps() does not calculate the correct khovanskii polynomial for [(0, 0), (1, 1), (1, 0), (-4, 2), (3, 3), (-5, 1), (-2, 3)] 
-# Investigate why and fix it.
-#TODO: implement the ability to run_exps for d=3 and run r-experiments in 3d as well as 2d
-#TODO: PROVE lemma 4.3, Theorem 4.4, and conjecture 4.6. Think of how to do wihtout resorting to simplical case
+TODO: Q1: how large does the volume of the lift have to be? How far up must we lift the points?
+Conjecture: Let r denote the number of minimal duplicates. Is there a bound on the max height of any lifted
+point based on the parameter r?
+-> Yes for case of r=2 since can show direclty that h_1*h_2 = vol*d! / (|A|-d-1), which is stronger
+-> Not obvious from using explicit formular for any r > 2. Need to do more experiements on the max height
+of lifted point while varying r. 
 
+Granville et. al are able to get a universal boujd using just the language of linear algebra and nothing else.
 
-------------------------Workspace----------------------------
+TODO: Q2: If can understand the maximal height needed for a lift based on parameter r, then next question to ask is:
+does there exists a bound on r based on the size of the set A, or maybe the polyhedral complexity (number of facets)
+i.e. how far it is from being a simplex?
 
+TODO: Q3: is there a bound on the magnitude of the Khovanskii polynomial coefficients based on the number or
+ max height of the minmal duplicates? Maybe try equating coefficients of explicit formula for the non-leading term
+
+TODO: Q4: any connection with resolution of singulartities for Veronese varieties? Going up dimensions removes duplicates
+i.e. resolves singularities in the algebraic space. Is there work that says how far have to go up in magnitude or dimension
+to resolve a singularity. Can obtain bound like that.
+
+#TODO: see if number of minimal duplicates is bounded if simplex
+
+Conjecture :  max height needed for any lift is |A|*(d+1) So in this case it is 10. Which bounds the max height of minimal
+duplicate to vol(A)*(d+1)!*|A|
+TODO: run systematic exps written on phone to support or disprove this
+
+TODO: proof incorrect as what if there are multiple minimal duplicates at the same height? change wording of theorem to say
+"one of each height"
 """
-# nice sets that hve more than 2 minimal elements under our filteration method
-# sets1 = [[(0, 0), (1, 0), (1, 1), (0, 2), (3, 3)],
-#         [(0, 0), (1, 1), (2, 1), (5, 3), (9, 1)],
-#         [(0, 0), (1, 0), (1, 1), (1, 9), (7, 4)],
-#         [(0, 0), (1, 0), (1, 1), (1, 4), (9, 1)],
-#         [(0, 0), (0, 1), (1, 1), (5, 1), (6, 9)],
-#         [(0, 0), (1, 0), (1, 1), (1, 7), (7, 6)]]
-
-sets5 = [
-    # [(0, 0), (0, 1), (-1, 0), (-5, -5), (-4, -4)], # counterexample to conj 4.6
-    # [(0, 0), (-2, -1), (-1, -1), (-4, 0), (1, 0)], # counterexample to conj 4.6
-    # [(0, 0), (1, 1), (1, 0), (0, 1), (3, 1)], # counterexample to conj 4.6
-    # [(0, 0), (1, 1), (2, 1), (7, 8), (7, 9)],
-    ]
-
-
-# for A in sets5:
-    # print(get_minimal_elements(A, 10))
-    # print(get_khovanskii_binomial(A, 2))
-    # single_sumset(
-    #     A,
-    #     10,
-    #     basis=A[:3],
-    #     translations=A[3:],
-    #     slice=(0,8),
-    #     plot=True,
-    #     show_intersections=True,
-    # )
-
-
-print(fix_d_vary_k(max_basis_iters=7, d=2, no_samples=1000, k_range=(3,5)))
-
-
-# view_plots_from_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000_sorted.csv', 20, 30)
-# view_plots_from_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000.csv', 0, 30)
-# view_plots_from_csv('random_2d_exps/filter_dP3_simple_6_15_1000_sorted.csv', 0, 30)
-# view_plots_from_csv('random_2d_exps/simplex_filter_dp3_not_simple_6_15_1000.csv', 2)
-
-# write_to_csv(f'random_2d_exps/privimite_{2+n}gons_{maxx}_{iters}.csv', random_primitive_dPn_exps(n,maxx,iters))
-# res, not_res = filter_dP3_satisfy_simple(6, 20, 1000)
-# write_to_csv('random_2d_exps/filter_dP3_not_simple_6_15_1000.csv', not_res, legend=('Actual P(h)', 'Expected P(h)', 'c_1', 'c_2', 'A'))
-# write_to_csv('random_2d_exps/filter_dP3_simple_6_15_1000.csv', res, legend=('P(h)', 'c_1', 'c_2', 'A'))
-# write_to_csv('random_2d_exps/all_comb_binexp_30.csv', all_combinations_binexp(30), legend=('P(x)', 'c1', 'c2'))
