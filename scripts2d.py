@@ -745,7 +745,7 @@ def min_height(B, elems, iters):
                                 return i
                             
 
-def lifting_conj(rounds=1000, max_iter=40):
+def lifting_conj(rounds=1000, max_iter=38):
     counts_number_elems = dict()
     counts_min_height = dict()
 
@@ -757,34 +757,42 @@ def lifting_conj(rounds=1000, max_iter=40):
         # generate points in the positive quadrant that are not the basis
         k_temp = [max(e) for e in basis]
         k = min(k_temp)+1
-        x1,x2,y1,y2 = np.random.randint(k,k+22,size=4)
+        x1,x2,y1,y2 = np.random.randint(k,k+18,size=4)
         A = basis+[(x1,x2),(y1,y2)]
 
-        status, k, _, _, _ = run_exps_nd(A, max_iter)
+        status, thresh, _, _, m = run_exps_nd(A, max_iter)
         if not status:
-            print(f'set: {A}')
             print(f"did not stabilize under {max_iter}")
             print()
             continue
+        print(f'A: {A}, k: {thresh}, vol: {m}')
 
         if len(set(A)) != len(A):
-            print(f'set: {A}')
             print(f"has a duplicate in construction")
             print()
             continue
 
-        elems = get_negative_elementaries_quick(A, k+3)
+        elems = get_negative_elementaries_quick(A, thresh+3)
+
         if len(elems) == 1:
+            print(f"bug of only one minimal duplicate")
+            print()
             continue
+
         if len(elems) in counts_number_elems:
             counts_number_elems[len(elems)] += 1
         else:
             counts_number_elems[len(elems)] = 1
 
-        minh = min_height(A, elems, k+3)
+        max_height_min_dup = max(elems, key= lambda x: x[-1])
+        max_height = max_height_min_dup[-1]
+        print(f'max height min dup: {max_height}')
+        if max_height >= m:
+            print("broke conj 1")
+
+        minh = min_height(A, elems, thresh+3)
         if minh == None:
-            print(f'set: {A}')
-            print(f"needs more than 8 lifts")
+            print(f"broke conj 2")
             minh = -1
 
         if minh in counts_min_height:
@@ -793,7 +801,6 @@ def lifting_conj(rounds=1000, max_iter=40):
             counts_min_height[minh] = 1
 
         if (minh > 3 or len(elems) > 4) and minh != -1:
-            print(f'A: {A}')
             print(f'number of min duplicates: {len(elems)}')
             print(f'min lift height required: {minh}')
 
@@ -804,16 +811,15 @@ def lifting_conj(rounds=1000, max_iter=40):
         
 
 
-# lifting_conj()
+lifting_conj()
 
 #TODO: bug? following set allegedly has one min element at h=2 but an elementary at h=27
 # A = [(0, 0), (3, 2), (-5, -3), (8, 2), (-2, 2)]
 
 
-# max_iters = 15 
+# max_iters = 38 
 # dimension = 2
 # temp_set = [
-#     [(0, 0), (-1, 0), (0, -1), (12, 13), (1, 3)],
 #     ]
 
 # for new_A in temp_set:
@@ -857,7 +863,9 @@ to resolve a singularity. Can obtain bound like that.
 
 #TODO: see if number of minimal duplicates is bounded if simplex
 
-Conjecture :  max height needed for any lift is |A|*(d+1) So in this case it is 10. Which bounds the max height of minimal
+Conjecture 1: if h_1,...,h_m are the distinct heights of minimal duplicates, then h_1 <= vol(A)*d!
+
+Conjecture 2:  max height needed for any lift is |A|*(d+1) So in this case it is 10. Which bounds the max height of minimal
 duplicate to vol(A)*(d+1)!*|A|
 TODO: run systematic exps written on phone to support or disprove this
 
