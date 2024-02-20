@@ -1,0 +1,2256 @@
+iteration 0
+A: [(0, 0), (1, 0), (0, 1), (9, 7), (17, 5)], k: 21, vol: 88.0
+max height min dup: 22
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 1
+A: [(0, 0), (1, 1), (1, 0), (7, 14), (17, 12)], k: 21, vol: 166.0
+max height min dup: 17
+
+iteration 2
+A: [(0, 0), (1, 0), (0, 1), (14, 16), (7, 4)], k: 13, vol: 74.0
+max height min dup: 11
+
+iteration 3
+did not stabilize under 38
+
+iteration 4
+did not stabilize under 38
+
+iteration 5
+A: [(0, 0), (-2, -1), (3, 2), (14, 11), (13, 12)], k: 11, vol: 41.0
+max height min dup: 13
+
+iteration 6
+A: [(0, 0), (0, -1), (1, 0), (16, 11), (1, 15)], k: 27, vol: 245.0
+max height min dup: 20
+
+iteration 7
+A: [(0, 0), (-2, 3), (-1, 2), (5, 10), (18, 10)], k: 35, vol: 165.0
+max height min dup: 35
+number of min duplicates: 6
+min lift height required: 7
+
+iteration 8
+did not stabilize under 38
+
+iteration 9
+A: [(0, 0), (-1, -1), (-1, 0), (2, 11), (14, 3)], k: 20, vol: 171.0
+max height min dup: 21
+
+iteration 10
+A: [(0, 0), (0, -1), (1, 0), (11, 7), (1, 15)], k: 22, vol: 169.0
+max height min dup: 19
+
+iteration 11
+A: [(0, 0), (5, 3), (3, 2), (13, 15), (11, 8)], k: 12, vol: 68.0
+max height min dup: 14
+number of min duplicates: 3
+min lift height required: 4
+
+iteration 12
+A: [(0, 0), (1, 1), (1, 0), (8, 13), (5, 18)], k: 13, vol: 92.0
+max height min dup: 13
+
+iteration 13
+A: [(0, 0), (0, -1), (1, 0), (17, 17), (1, 10)], k: 24, vol: 171.0
+max height min dup: 20
+
+iteration 14
+A: [(0, 0), (1, 1), (-2, -1), (15, 2), (9, 14)], k: 30, vol: 222.0
+max height min dup: 27
+
+iteration 15
+A: [(0, 0), (-1, 0), (0, -1), (2, 3), (2, 9)], k: 6, vol: 24.0
+max height min dup: 6
+
+iteration 16
+A: [(0, 0), (0, 1), (-1, 0), (16, 15), (3, 10)], k: 17, vol: 125.0
+max height min dup: 16
+
+iteration 17
+A: [(0, 0), (0, 1), (-1, 0), (15, 17), (11, 17)], k: 18, vol: 85.0
+bug of only one minimal duplicate
+
+iteration 18
+A: [(0, 0), (-2, -1), (-1, -1), (14, 10), (0, 5)], k: 12, vol: 85.0
+max height min dup: 11
+
+iteration 19
+A: [(0, 0), (-1, 1), (0, 1), (6, 3), (11, 16)], k: 15, vol: 90.0
+max height min dup: 10
+
+iteration 20
+A: [(0, 0), (1, 0), (-1, -1), (4, 15), (16, 16)], k: 25, vol: 204.0
+max height min dup: 17
+
+iteration 21
+A: [(0, 0), (1, 0), (0, 1), (15, 9), (6, 13)], k: 25, vol: 156.0
+max height min dup: 24
+
+iteration 22
+A: [(0, 0), (3, 2), (-5, -3), (12, 7), (13, 0)], k: 27, vol: 134.0
+max height min dup: 30
+number of min duplicates: 3
+min lift height required: 4
+
+iteration 23
+A: [(0, 0), (-3, -2), (-2, -1), (14, 0), (2, 12)], k: 35, vol: 228.0
+max height min dup: 32
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 24
+A: [(0, 0), (-8, -5), (13, 8), (11, 10), (5, 4)], k: 20, vol: 68.0
+max height min dup: 20
+number of min duplicates: 4
+min lift height required: 4
+
+iteration 25
+A: [(0, 0), (-1, 1), (0, 1), (3, 2), (16, 3)], k: 6, vol: 28.0
+max height min dup: 8
+
+iteration 26
+A: [(0, 0), (0, 1), (1, -1), (12, 10), (1, 15)], k: 25, vol: 193.0
+max height min dup: 27
+
+iteration 27
+A: [(0, 0), (-3, 5), (-2, 3), (4, 10), (1, 6)], k: 23, vol: 51.0
+max height min dup: 24
+number of min duplicates: 8
+min lift height required: 5
+
+iteration 28
+A: [(0, 0), (1, 1), (-2, -1), (15, 7), (3, 10)], k: 20, vol: 147.0
+max height min dup: 21
+number of min duplicates: 3
+min lift height required: 4
+
+iteration 29
+A: [(0, 0), (2, 1), (1, 1), (17, 8), (9, 5)], k: 7, vol: 17.0
+max height min dup: 9
+
+iteration 30
+A: [(0, 0), (-1, 1), (1, -2), (7, 5), (14, 8)], k: 30, vol: 63.0
+max height min dup: 32
+number of min duplicates: 9
+min lift height required: 5
+
+iteration 31
+A: [(0, 0), (-1, 1), (0, 1), (9, 14), (5, 2)], k: 13, vol: 75.0
+max height min dup: 15
+number of min duplicates: 3
+min lift height required: 4
+
+iteration 32
+A: [(0, 0), (-1, 0), (0, -1), (12, 10), (14, 14)], k: 21, vol: 55.0
+max height min dup: 23
+number of min duplicates: 6
+min lift height required: 4
+
+iteration 33
+A: [(0, 0), (-2, -1), (3, 2), (5, 16), (8, 8)], k: 22, vol: 123.0
+max height min dup: 20
+number of min duplicates: 5
+min lift height required: 4
+
+iteration 34
+A: [(0, 0), (0, -1), (-1, 1), (18, 11), (16, 4)], k: 35, vol: 150.0
+max height min dup: 37
+number of min duplicates: 6
+min lift height required: 5
+
+iteration 35
+A: [(0, 0), (0, 1), (-1, 0), (15, 1), (6, 9)], k: 20, vol: 138.0
+max height min dup: 18
+
+iteration 36
+A: [(0, 0), (1, 1), (1, 0), (12, 9), (18, 15)], k: 10, vol: 30.0
+max height min dup: 12
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 37
+A: [(0, 0), (0, 1), (1, -1), (7, 7), (15, 18)], k: 33, vol: 50.0
+max height min dup: 35
+number of min duplicates: 9
+min lift height required: 3
+
+iteration 38
+A: [(0, 0), (-1, -1), (-1, 0), (7, 15), (6, 1)], k: 17, vol: 104.0
+max height min dup: 20
+
+iteration 39
+A: [(0, 0), (0, 1), (-1, 0), (9, 16), (8, 8)], k: 14, vol: 72.0
+max height min dup: 16
+
+iteration 40
+A: [(0, 0), (1, 1), (-2, -1), (2, 12), (5, 7)], k: 14, vol: 70.0
+max height min dup: 15
+number of min duplicates: 4
+min lift height required: 4
+
+iteration 41
+A: [(0, 0), (-1, 0), (1, 1), (12, 5), (9, 18)], k: 29, vol: 189.0
+max height min dup: 28
+
+iteration 42
+did not stabilize under 38
+
+iteration 43
+A: [(0, 0), (-1, 1), (0, 1), (18, 12), (7, 10)], k: 19, vol: 113.0
+max height min dup: 17
+
+iteration 44
+A: [(0, 0), (-2, 3), (-1, 2), (5, 7), (12, 2)], k: 27, vol: 103.0
+max height min dup: 29
+number of min duplicates: 5
+min lift height required: 4
+
+iteration 45
+A: [(0, 0), (1, 1), (1, 0), (17, 17), (16, 12)], k: 18, vol: 80.0
+max height min dup: 19
+number of min duplicates: 6
+min lift height required: 4
+
+iteration 46
+A: [(0, 0), (0, 1), (-1, 0), (14, 16), (13, 6)], k: 21, vol: 140.0
+max height min dup: 18
+
+iteration 47
+A: [(0, 0), (-1, -1), (2, 1), (6, 4), (2, 7)], k: 17, vol: 42.0
+max height min dup: 18
+number of min duplicates: 8
+min lift height required: 1
+
+iteration 48
+A: [(0, 0), (1, 0), (0, 1), (15, 3), (13, 9)], k: 21, vol: 112.0
+max height min dup: 22
+
+iteration 49
+did not stabilize under 38
+
+iteration 50
+A: [(0, 0), (2, 1), (1, 1), (8, 6), (16, 16)], k: 15, vol: 36.0
+max height min dup: 16
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 51
+A: [(0, 0), (1, 1), (1, 0), (17, 4), (11, 18)], k: 27, vol: 266.0
+max height min dup: 21
+
+iteration 52
+A: [(0, 0), (2, 1), (1, 1), (1, 1), (3, 6)], k: 6, vol: 9.0
+has a duplicate in construction
+
+iteration 53
+A: [(0, 0), (3, 2), (2, 1), (13, 17), (5, 3)], k: 24, vol: 47.0
+max height min dup: 26
+number of min duplicates: 7
+min lift height required: 1
+
+iteration 54
+did not stabilize under 38
+
+iteration 55
+A: [(0, 0), (1, 0), (-1, -1), (1, 17), (11, 0)], k: 26, vol: 214.0
+max height min dup: 24
+
+iteration 56
+A: [(0, 0), (-2, -1), (-1, -1), (12, 9), (9, 2)], k: 11, vol: 71.0
+max height min dup: 12
+
+iteration 57
+A: [(0, 0), (1, 1), (1, 0), (8, 9), (17, 13)], k: 11, vol: 62.0
+max height min dup: 10
+
+iteration 58
+A: [(0, 0), (1, -1), (0, -1), (1, 17), (10, 13)], k: 25, vol: 181.0
+max height min dup: 24
+
+iteration 59
+A: [(0, 0), (-1, -1), (-1, 0), (3, 9), (15, 9)], k: 18, vol: 124.0
+max height min dup: 16
+
+iteration 60
+A: [(0, 0), (1, 1), (1, 0), (5, 15), (8, 11)], k: 12, vol: 76.0
+max height min dup: 12
+
+iteration 61
+A: [(0, 0), (5, 3), (3, 2), (2, 4), (10, 2)], k: 13, vol: 36.0
+max height min dup: 14
+number of min duplicates: 5
+min lift height required: 5
+
+iteration 62
+A: [(0, 0), (0, 1), (1, -1), (4, 15), (11, 5)], k: 27, vol: 165.0
+max height min dup: 27
+
+iteration 63
+A: [(0, 0), (2, 1), (1, 1), (4, 1), (2, 3)], k: 2, vol: 10.0
+max height min dup: 4
+
+iteration 64
+A: [(0, 0), (1, 0), (0, 1), (8, 15), (5, 12)], k: 15, vol: 41.0
+max height min dup: 17
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 65
+A: [(0, 0), (1, 1), (1, 0), (3, 7), (3, 8)], k: 5, vol: 10.0
+max height min dup: 7
+number of min duplicates: 6
+min lift height required: 1
+
+iteration 66
+A: [(0, 0), (2, 1), (-3, -2), (4, 7), (6, 10)], k: 22, vol: 33.0
+max height min dup: 24
+number of min duplicates: 7
+min lift height required: 3
+
+iteration 67
+A: [(0, 0), (-1, 2), (-1, 1), (12, 11), (1, 2)], k: 10, vol: 36.0
+max height min dup: 12
+number of min duplicates: 4
+min lift height required: 5
+
+iteration 68
+A: [(0, 0), (1, 1), (1, 0), (6, 12), (1, 4)], k: 6, vol: 24.0
+bug of only one minimal duplicate
+
+iteration 69
+did not stabilize under 38
+
+iteration 70
+A: [(0, 0), (1, -2), (1, -1), (2, 10), (1, 5)], k: 5, vol: 14.0
+max height min dup: 7
+
+iteration 71
+A: [(0, 0), (1, 0), (-1, -1), (12, 3), (7, 13)], k: 20, vol: 150.0
+max height min dup: 20
+
+iteration 72
+A: [(0, 0), (0, 1), (-1, 0), (17, 3), (14, 12)], k: 24, vol: 177.0
+max height min dup: 22
+
+iteration 73
+A: [(0, 0), (-2, 3), (-1, 2), (12, 7), (3, 7)], k: 22, vol: 86.0
+max height min dup: 23
+number of min duplicates: 5
+min lift height required: 5
+
+iteration 74
+A: [(0, 0), (1, 1), (1, 0), (9, 16), (11, 3)], k: 20, vol: 152.0
+max height min dup: 16
+
+iteration 75
+A: [(0, 0), (0, 1), (1, -1), (2, 9), (5, 16)], k: 13, vol: 36.0
+max height min dup: 15
+number of min duplicates: 5
+min lift height required: 2
+
+iteration 76
+A: [(0, 0), (-1, 0), (0, -1), (14, 5), (14, 14)], k: 21, vol: 155.0
+max height min dup: 20
+
+iteration 77
+A: [(0, 0), (-1, 1), (0, 1), (9, 5), (11, 4)], k: 13, vol: 33.0
+max height min dup: 15
+number of min duplicates: 7
+min lift height required: 1
+
+iteration 78
+A: [(0, 0), (1, 0), (-1, -1), (6, 12), (2, 13)], k: 17, vol: 78.0
+max height min dup: 19
+number of min duplicates: 6
+min lift height required: 5
+
+iteration 79
+A: [(0, 0), (2, 1), (1, 1), (9, 15), (12, 7)], k: 23, vol: 119.0
+max height min dup: 22
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 80
+A: [(0, 0), (0, 1), (-1, 0), (6, 7), (16, 2)], k: 18, vol: 107.0
+max height min dup: 17
+
+iteration 81
+A: [(0, 0), (1, 1), (1, 0), (8, 18), (17, 10)], k: 24, vol: 236.0
+max height min dup: 18
+
+iteration 82
+A: [(0, 0), (-1, 1), (0, 1), (4, 10), (10, 14)], k: 14, vol: 58.0
+max height min dup: 14
+
+iteration 83
+A: [(0, 0), (0, 1), (-1, 0), (12, 12), (13, 15)], k: 13, vol: 39.0
+max height min dup: 15
+number of min duplicates: 7
+min lift height required: 1
+
+iteration 84
+did not stabilize under 38
+
+iteration 85
+A: [(0, 0), (1, 0), (0, 1), (11, 17), (6, 2)], k: 19, vol: 93.0
+max height min dup: 21
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 86
+A: [(0, 0), (1, 0), (0, 1), (2, 5), (17, 4)], k: 19, vol: 83.0
+max height min dup: 21
+number of min duplicates: 6
+min lift height required: 4
+
+iteration 87
+A: [(0, 0), (0, 1), (-1, 0), (18, 16), (6, 9)], k: 12, vol: 75.0
+max height min dup: 13
+
+iteration 88
+A: [(0, 0), (-2, -1), (-1, -1), (11, 14), (8, 16)], k: 18, vol: 89.0
+max height min dup: 18
+number of min duplicates: 5
+min lift height required: 4
+
+iteration 89
+A: [(0, 0), (-1, -1), (-1, 0), (15, 10), (16, 15)], k: 18, vol: 86.0
+max height min dup: 16
+
+iteration 90
+did not stabilize under 38
+
+iteration 91
+did not stabilize under 38
+
+iteration 92
+A: [(0, 0), (1, -1), (0, -1), (1, 13), (8, 17)], k: 19, vol: 113.0
+max height min dup: 16
+
+iteration 93
+A: [(0, 0), (1, 0), (0, 1), (7, 13), (5, 14)], k: 18, vol: 51.0
+max height min dup: 20
+number of min duplicates: 6
+min lift height required: 1
+
+iteration 94
+A: [(0, 0), (3, 2), (2, 1), (13, 10), (16, 17)], k: 11, vol: 68.0
+max height min dup: 12
+
+iteration 95
+A: [(0, 0), (1, 1), (1, 0), (6, 17), (17, 13)], k: 25, vol: 224.0
+max height min dup: 17
+
+iteration 96
+A: [(0, 0), (-1, -1), (2, 1), (12, 16), (12, 8)], k: 26, vol: 105.0
+max height min dup: 25
+number of min duplicates: 7
+min lift height required: 1
+
+iteration 97
+A: [(0, 0), (-1, 1), (0, 1), (1, 1), (11, 5)], k: 6, vol: 16.0
+max height min dup: 8
+
+iteration 98
+A: [(0, 0), (-1, 0), (0, -1), (15, 5), (14, 8)], k: 20, vol: 74.0
+max height min dup: 21
+
+iteration 99
+A: [(0, 0), (0, 1), (-1, 0), (2, 10), (6, 8)], k: 10, vol: 54.0
+max height min dup: 12
+
+iteration 100
+A: [(0, 0), (1, 1), (1, 0), (9, 1), (5, 10)], k: 14, vol: 86.0
+max height min dup: 14
+
+iteration 101
+A: [(0, 0), (-1, 0), (1, 1), (13, 7), (10, 2)], k: 10, vol: 51.0
+max height min dup: 9
+
+iteration 102
+A: [(0, 0), (0, 1), (-1, 0), (18, 9), (3, 8)], k: 19, vol: 125.0
+max height min dup: 20
+
+iteration 103
+did not stabilize under 38
+
+iteration 104
+did not stabilize under 38
+
+iteration 105
+A: [(0, 0), (2, 1), (1, 1), (7, 6), (8, 8)], k: 6, vol: 13.0
+max height min dup: 8
+number of min duplicates: 5
+min lift height required: 2
+
+iteration 106
+A: [(0, 0), (0, 1), (-1, 0), (12, 4), (18, 9)], k: 12, vol: 55.0
+max height min dup: 13
+
+iteration 107
+did not stabilize under 38
+
+iteration 108
+A: [(0, 0), (1, 1), (1, 0), (2, 10), (13, 16)], k: 17, vol: 114.0
+max height min dup: 15
+
+iteration 109
+A: [(0, 0), (0, 1), (-1, 0), (6, 4), (14, 14)], k: 14, vol: 43.0
+max height min dup: 15
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 110
+A: [(0, 0), (-5, -3), (-3, -2), (4, 0), (9, 15)], k: 18, vol: 120.0
+max height min dup: 12
+number of min duplicates: 2
+min lift height required: 5
+
+iteration 111
+A: [(0, 0), (-3, -2), (-2, -1), (-1, 1), (5, 9)], k: 4, vol: 19.0
+max height min dup: 5
+
+iteration 112
+A: [(0, 0), (1, 0), (-1, -1), (4, 7), (17, 9)], k: 15, vol: 96.0
+max height min dup: 12
+
+iteration 113
+A: [(0, 0), (0, -1), (-1, 1), (4, 1), (6, 18)], k: 15, vol: 95.0
+max height min dup: 14
+number of min duplicates: 3
+min lift height required: 4
+
+iteration 114
+A: [(0, 0), (1, 1), (1, 0), (4, 6), (1, 18)], k: 14, vol: 72.0
+max height min dup: 12
+
+iteration 115
+A: [(0, 0), (-1, 0), (1, 1), (13, 7), (5, 14)], k: 26, vol: 161.0
+bug of only one minimal duplicate
+
+iteration 116
+A: [(0, 0), (1, 1), (1, 0), (18, 9), (4, 8)], k: 18, vol: 117.0
+max height min dup: 19
+
+iteration 117
+A: [(0, 0), (1, 0), (-1, -1), (8, 15), (17, 9)], k: 28, vol: 200.0
+max height min dup: 24
+
+iteration 118
+A: [(0, 0), (2, 1), (1, 1), (9, 11), (17, 6)], k: 18, vol: 133.0
+max height min dup: 17
+
+iteration 119
+A: [(0, 0), (-1, 0), (0, -1), (10, 16), (8, 12)], k: 19, vol: 33.0
+max height min dup: 21
+number of min duplicates: 6
+min lift height required: 3
+
+iteration 120
+A: [(0, 0), (1, 0), (-1, -1), (11, 2), (2, 8)], k: 14, vol: 99.0
+max height min dup: 15
+
+iteration 121
+A: [(0, 0), (-3, -2), (-2, -1), (6, 0), (12, 3)], k: 11, vol: 31.0
+max height min dup: 13
+number of min duplicates: 5
+min lift height required: 2
+
+iteration 122
+A: [(0, 0), (-1, 2), (-1, 1), (4, 18), (17, 12)], k: 33, vol: 285.0
+max height min dup: 27
+
+iteration 123
+A: [(0, 0), (2, 1), (1, 1), (15, 6), (1, 9)], k: 19, vol: 129.0
+max height min dup: 17
+
+iteration 124
+A: [(0, 0), (0, 1), (-1, 0), (6, 17), (5, 8)], k: 10, vol: 54.0
+max height min dup: 12
+
+iteration 125
+A: [(0, 0), (1, -1), (0, -1), (4, 9), (16, 17)], k: 20, vol: 110.0
+max height min dup: 21
+
+iteration 126
+did not stabilize under 38
+
+iteration 127
+A: [(0, 0), (1, 1), (1, 0), (5, 10), (1, 17)], k: 13, vol: 85.0
+max height min dup: 12
+
+iteration 128
+did not stabilize under 38
+
+iteration 129
+A: [(0, 0), (0, 1), (-1, 0), (9, 8), (9, 16)], k: 14, vol: 88.0
+max height min dup: 16
+
+iteration 130
+did not stabilize under 38
+
+iteration 131
+A: [(0, 0), (1, 1), (1, 0), (3, 16), (4, 2)], k: 14, vol: 60.0
+max height min dup: 16
+
+iteration 132
+A: [(0, 0), (0, -1), (-1, 1), (6, 2), (3, 16)], k: 15, vol: 116.0
+max height min dup: 15
+
+iteration 133
+A: [(0, 0), (-1, -1), (2, 1), (6, 0), (2, 11)], k: 19, vol: 81.0
+max height min dup: 19
+number of min duplicates: 4
+min lift height required: 4
+
+iteration 134
+A: [(0, 0), (0, 1), (-1, 0), (8, 1), (2, 2)], k: 7, vol: 17.0
+max height min dup: 9
+number of min duplicates: 6
+min lift height required: 1
+
+iteration 135
+A: [(0, 0), (0, 1), (-1, 0), (1, 7), (17, 8)], k: 19, vol: 118.0
+max height min dup: 22
+
+iteration 136
+A: [(0, 0), (3, 2), (2, 1), (11, 5), (1, 11)], k: 19, vol: 116.0
+max height min dup: 20
+number of min duplicates: 3
+min lift height required: 5
+
+iteration 137
+A: [(0, 0), (1, -2), (1, -1), (14, 1), (3, 17)], k: 29, vol: 264.0
+max height min dup: 27
+
+iteration 138
+A: [(0, 0), (1, 0), (0, 1), (14, 13), (7, 10)], k: 15, vol: 69.0
+max height min dup: 17
+
+iteration 139
+A: [(0, 0), (-1, -1), (2, 1), (3, 0), (10, 13)], k: 15, vol: 45.0
+max height min dup: 15
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 140
+A: [(0, 0), (1, 1), (-2, -1), (13, 14), (5, 16)], k: 23, vol: 166.0
+max height min dup: 23
+
+iteration 141
+A: [(0, 0), (-2, -1), (-1, -1), (12, 15), (17, 16)], k: 17, vol: 83.0
+max height min dup: 19
+
+iteration 142
+A: [(0, 0), (-1, -1), (-1, 0), (5, 4), (16, 8)], k: 8, vol: 37.0
+max height min dup: 7
+
+iteration 143
+A: [(0, 0), (0, 1), (-1, 0), (4, 16), (14, 16)], k: 23, vol: 176.0
+bug of only one minimal duplicate
+
+iteration 144
+A: [(0, 0), (1, -2), (-2, 3), (2, 3), (5, 13)], k: 20, vol: 65.0
+max height min dup: 20
+number of min duplicates: 6
+min lift height required: 5
+
+iteration 145
+A: [(0, 0), (-1, 0), (1, 1), (1, 8), (13, 8)], k: 17, vol: 104.0
+max height min dup: 13
+
+iteration 146
+A: [(0, 0), (-1, 1), (1, -2), (2, 5), (8, 11)], k: 16, vol: 53.0
+max height min dup: 17
+number of min duplicates: 6
+min lift height required: 4
+
+iteration 147
+A: [(0, 0), (3, 2), (2, 1), (8, 8), (17, 18)], k: 8, vol: 21.0
+max height min dup: 9
+
+iteration 148
+A: [(0, 0), (1, -2), (1, -1), (18, 9), (4, 9)], k: 24, vol: 171.0
+max height min dup: 21
+number of min duplicates: 4
+min lift height required: 5
+
+iteration 149
+A: [(0, 0), (-13, -8), (-8, -5), (3, 0), (1, 9)], k: 28, vol: 160.0
+max height min dup: 24
+number of min duplicates: 4
+min lift height required: 6
+
+iteration 150
+A: [(0, 0), (1, 1), (1, 0), (6, 7), (15, 9)], k: 11, vol: 60.0
+max height min dup: 10
+
+iteration 151
+A: [(0, 0), (0, 1), (-1, 0), (2, 9), (5, 1)], k: 10, vol: 52.0
+max height min dup: 12
+
+iteration 152
+A: [(0, 0), (-1, -1), (2, 1), (2, 2), (4, 7)], k: 3, vol: 14.0
+max height min dup: 6
+
+iteration 153
+A: [(0, 0), (0, 1), (-1, 0), (3, 2), (15, 12)], k: 9, vol: 22.0
+max height min dup: 10
+number of min duplicates: 5
+min lift height required: 2
+
+iteration 154
+A: [(0, 0), (1, 0), (-1, -1), (9, 6), (4, 5)], k: 6, vol: 29.0
+max height min dup: 7
+
+iteration 155
+A: [(0, 0), (-1, 0), (1, 1), (1, 6), (17, 8)], k: 15, vol: 100.0
+max height min dup: 14
+
+iteration 156
+A: [(0, 0), (2, 1), (-3, -2), (5, 4), (15, 1)], k: 15, vol: 84.0
+max height min dup: 16
+number of min duplicates: 3
+min lift height required: 8
+
+iteration 157
+A: [(0, 0), (-1, -1), (2, 1), (12, 16), (12, 13)], k: 16, vol: 55.0
+max height min dup: 16
+
+iteration 158
+A: [(0, 0), (-1, 0), (0, -1), (6, 8), (10, 2)], k: 14, vol: 87.0
+max height min dup: 16
+
+iteration 159
+A: [(0, 0), (-1, 1), (1, -2), (15, 15), (6, 9)], k: 36, vol: 106.0
+max height min dup: 37
+number of min duplicates: 9
+min lift height required: 7
+
+iteration 160
+A: [(0, 0), (5, 3), (3, 2), (17, 4), (8, 12)], k: 35, vol: 172.0
+max height min dup: 36
+number of min duplicates: 5
+min lift height required: 5
+
+iteration 161
+A: [(0, 0), (5, 3), (3, 2), (1, 7), (3, 1)], k: 8, vol: 36.0
+max height min dup: 8
+
+iteration 162
+A: [(0, 0), (1, 1), (1, 0), (9, 9), (15, 15)], k: 7, vol: 15.0
+max height min dup: 9
+number of min duplicates: 5
+min lift height required: 5
+
+iteration 163
+A: [(0, 0), (-1, 1), (0, 1), (9, 14), (18, 3)], k: 27, vol: 248.0
+max height min dup: 29
+
+iteration 164
+A: [(0, 0), (1, 0), (-1, -1), (8, 0), (14, 4)], k: 9, vol: 40.0
+max height min dup: 8
+
+iteration 165
+A: [(0, 0), (0, -1), (1, 0), (17, 5), (15, 12)], k: 19, vol: 146.0
+max height min dup: 21
+
+iteration 166
+A: [(0, 0), (-1, 2), (-1, 1), (14, 2), (15, 10)], k: 29, vol: 151.0
+max height min dup: 31
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 167
+A: [(0, 0), (-2, -1), (-1, -1), (6, 15), (9, 3)], k: 26, vol: 148.0
+max height min dup: 25
+
+iteration 168
+did not stabilize under 38
+
+iteration 169
+A: [(0, 0), (-3, -2), (-2, -1), (16, 10), (16, 2)], k: 25, vol: 159.0
+max height min dup: 27
+
+iteration 170
+A: [(0, 0), (-1, 1), (0, 1), (4, 16), (12, 1)], k: 25, vol: 208.0
+max height min dup: 16
+
+iteration 171
+A: [(0, 0), (0, 1), (-1, 0), (5, 5), (6, 4)], k: 5, vol: 16.0
+max height min dup: 7
+
+iteration 172
+A: [(0, 0), (-1, 0), (0, -1), (11, 17), (7, 16)], k: 22, vol: 85.0
+max height min dup: 24
+number of min duplicates: 7
+min lift height required: 5
+
+iteration 173
+A: [(0, 0), (2, 1), (1, 1), (11, 17), (9, 17)], k: 21, vol: 57.0
+max height min dup: 23
+number of min duplicates: 5
+min lift height required: 4
+
+iteration 174
+A: [(0, 0), (-1, -1), (-1, 0), (6, 0), (11, 2)], k: 7, vol: 21.0
+max height min dup: 7
+
+iteration 175
+A: [(0, 0), (0, 1), (-1, 0), (1, 15), (17, 13)], k: 28, vol: 257.0
+max height min dup: 19
+
+iteration 176
+A: [(0, 0), (3, 2), (2, 1), (16, 2), (8, 4)], k: 13, vol: 52.0
+bug of only one minimal duplicate
+
+iteration 177
+A: [(0, 0), (-1, 0), (0, -1), (7, 17), (3, 11)], k: 14, vol: 45.0
+max height min dup: 15
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 178
+did not stabilize under 38
+
+iteration 179
+A: [(0, 0), (1, 1), (1, 0), (5, 12), (8, 3)], k: 13, vol: 84.0
+max height min dup: 13
+
+iteration 180
+A: [(0, 0), (2, 1), (1, 1), (8, 1), (2, 8)], k: 11, vol: 62.0
+max height min dup: 14
+
+iteration 181
+A: [(0, 0), (-1, 0), (1, 1), (13, 18), (10, 18)], k: 21, vol: 77.0
+max height min dup: 23
+
+iteration 182
+A: [(0, 0), (0, 1), (-1, 0), (3, 14), (2, 13)], k: 11, vol: 24.0
+max height min dup: 13
+
+iteration 183
+A: [(0, 0), (1, 0), (-1, -1), (6, 4), (0, 15)], k: 30, vol: 110.0
+max height min dup: 31
+number of min duplicates: 6
+min lift height required: 4
+
+iteration 184
+A: [(0, 0), (1, 1), (1, 0), (16, 3), (9, 2)], k: 11, vol: 16.0
+max height min dup: 13
+number of min duplicates: 9
+min lift height required: 3
+
+iteration 185
+A: [(0, 0), (1, 0), (0, 1), (14, 14), (11, 9)], k: 18, vol: 51.0
+max height min dup: 20
+number of min duplicates: 5
+min lift height required: 4
+
+iteration 186
+A: [(0, 0), (1, -2), (1, -1), (10, 10), (4, 11)], k: 20, vol: 100.0
+max height min dup: 19
+
+iteration 187
+A: [(0, 0), (1, 1), (1, 0), (11, 11), (17, 7)], k: 17, vol: 117.0
+max height min dup: 17
+
+iteration 188
+A: [(0, 0), (0, 1), (-1, 0), (5, 7), (4, 8)], k: 5, vol: 20.0
+max height min dup: 8
+
+iteration 189
+A: [(0, 0), (-1, 1), (0, 1), (5, 10), (1, 9)], k: 11, vol: 45.0
+max height min dup: 10
+
+iteration 190
+A: [(0, 0), (3, 2), (-5, -3), (9, 3), (5, 5)], k: 13, vol: 52.0
+max height min dup: 14
+
+iteration 191
+A: [(0, 0), (1, 0), (0, 1), (5, 15), (3, 4)], k: 12, vol: 34.0
+max height min dup: 14
+number of min duplicates: 6
+min lift height required: 3
+
+iteration 192
+A: [(0, 0), (1, 1), (1, 0), (17, 2), (2, 1)], k: 13, vol: 17.0
+max height min dup: 15
+number of min duplicates: 15
+min lift height required: 1
+
+iteration 193
+A: [(0, 0), (3, 2), (2, 1), (14, 15), (12, 4)], k: 16, vol: 124.0
+max height min dup: 15
+
+iteration 194
+A: [(0, 0), (1, 1), (1, 0), (11, 8), (8, 2)], k: 11, vol: 47.0
+max height min dup: 11
+
+iteration 195
+A: [(0, 0), (1, 1), (1, 0), (11, 12), (9, 8)], k: 10, vol: 28.0
+max height min dup: 12
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 196
+A: [(0, 0), (-1, 1), (0, 1), (10, 3), (17, 3)], k: 11, vol: 34.0
+max height min dup: 13
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 197
+did not stabilize under 38
+
+iteration 198
+A: [(0, 0), (1, 0), (-1, -1), (1, 9), (2, 14)], k: 16, vol: 27.0
+max height min dup: 18
+
+iteration 199
+did not stabilize under 38
+
+iteration 200
+A: [(0, 0), (0, 1), (-1, 0), (13, 3), (18, 15)], k: 23, vol: 160.0
+max height min dup: 19
+
+iteration 201
+A: [(0, 0), (2, 1), (-3, -2), (9, 9), (0, 0)], k: 16, vol: 19.0
+has a duplicate in construction
+
+iteration 202
+A: [(0, 0), (-2, -1), (-1, -1), (0, 0), (13, 14)], k: 13, vol: 16.0
+has a duplicate in construction
+
+iteration 203
+did not stabilize under 38
+
+iteration 204
+A: [(0, 0), (1, 0), (-1, -1), (17, 7), (3, 17)], k: 34, vol: 292.0
+max height min dup: 34
+
+iteration 205
+A: [(0, 0), (0, 1), (-1, 0), (2, 13), (2, 5)], k: 6, vol: 29.0
+max height min dup: 7
+
+iteration 206
+A: [(0, 0), (1, 0), (0, 1), (16, 15), (10, 10)], k: 18, vol: 35.0
+max height min dup: 20
+number of min duplicates: 6
+min lift height required: 3
+
+iteration 207
+A: [(0, 0), (-1, 0), (1, 1), (18, 2), (15, 10)], k: 21, vol: 160.0
+max height min dup: 20
+
+iteration 208
+A: [(0, 0), (-1, 0), (0, -1), (4, 7), (10, 5)], k: 11, vol: 68.0
+max height min dup: 12
+
+iteration 209
+A: [(0, 0), (1, 1), (1, 0), (3, 1), (18, 10)], k: 9, vol: 21.0
+max height min dup: 11
+number of min duplicates: 7
+min lift height required: 1
+
+iteration 210
+A: [(0, 0), (1, 1), (1, 0), (6, 7), (16, 5)], k: 14, vol: 87.0
+max height min dup: 16
+
+iteration 211
+A: [(0, 0), (0, 1), (-1, 0), (11, 9), (18, 17)], k: 17, vol: 44.0
+max height min dup: 19
+number of min duplicates: 6
+min lift height required: 2
+
+iteration 212
+A: [(0, 0), (0, -1), (1, 0), (6, 15), (3, 4)], k: 8, vol: 26.0
+max height min dup: 8
+
+iteration 213
+A: [(0, 0), (0, -1), (1, 0), (18, 6), (16, 6)], k: 14, vol: 30.0
+max height min dup: 16
+number of min duplicates: 7
+min lift height required: 2
+
+iteration 214
+A: [(0, 0), (-1, 2), (-1, 1), (15, 15), (1, 7)], k: 18, vol: 100.0
+max height min dup: 19
+number of min duplicates: 4
+min lift height required: 5
+
+iteration 215
+A: [(0, 0), (1, -1), (0, -1), (11, 5), (10, 7)], k: 16, vol: 44.0
+max height min dup: 18
+number of min duplicates: 6
+min lift height required: 1
+
+iteration 216
+A: [(0, 0), (1, 1), (-2, -1), (13, 6), (17, 1)], k: 17, vol: 112.0
+max height min dup: 16
+
+iteration 217
+A: [(0, 0), (-1, 1), (1, -2), (18, 6), (1, 8)], k: 22, vol: 190.0
+max height min dup: 20
+number of min duplicates: 3
+min lift height required: 4
+
+iteration 218
+A: [(0, 0), (-1, 2), (-1, 1), (11, 9), (16, 2)], k: 34, vol: 154.0
+max height min dup: 35
+number of min duplicates: 6
+min lift height required: 4
+
+iteration 219
+A: [(0, 0), (-1, 0), (0, -1), (5, 2), (1, 9)], k: 10, vol: 58.0
+max height min dup: 11
+
+iteration 220
+A: [(0, 0), (1, 1), (-2, -1), (6, 0), (9, 8)], k: 11, vol: 61.0
+max height min dup: 13
+
+iteration 221
+A: [(0, 0), (-2, -1), (-1, -1), (10, 11), (8, 15)], k: 16, vol: 85.0
+max height min dup: 14
+
+iteration 222
+A: [(0, 0), (2, 1), (1, 1), (2, 16), (4, 7)], k: 12, vol: 60.0
+max height min dup: 10
+
+iteration 223
+A: [(0, 0), (0, -1), (1, 0), (5, 18), (16, 5)], k: 26, vol: 279.0
+max height min dup: 25
+
+iteration 224
+A: [(0, 0), (-1, 0), (1, 1), (5, 16), (8, 6)], k: 20, vol: 114.0
+max height min dup: 21
+
+iteration 225
+did not stabilize under 38
+
+iteration 226
+did not stabilize under 38
+
+iteration 227
+A: [(0, 0), (1, 0), (-1, -1), (11, 4), (1, 9)], k: 18, vol: 110.0
+max height min dup: 20
+
+iteration 228
+A: [(0, 0), (-1, -1), (-1, 0), (4, 17), (12, 11)], k: 22, vol: 179.0
+max height min dup: 18
+
+iteration 229
+A: [(0, 0), (2, 1), (1, 1), (6, 7), (3, 12)], k: 11, vol: 59.0
+max height min dup: 10
+
+iteration 230
+A: [(0, 0), (-5, -3), (-3, -2), (5, 5), (14, 11)], k: 9, vol: 26.0
+max height min dup: 11
+
+iteration 231
+did not stabilize under 38
+
+iteration 232
+A: [(0, 0), (-1, -1), (2, 1), (14, 17), (7, 2)], k: 23, vol: 99.0
+max height min dup: 24
+number of min duplicates: 6
+min lift height required: 4
+
+iteration 233
+A: [(0, 0), (-1, 0), (0, -1), (12, 8), (16, 15)], k: 19, vol: 80.0
+max height min dup: 21
+number of min duplicates: 5
+min lift height required: 5
+
+iteration 234
+A: [(0, 0), (-2, -1), (3, 2), (10, 0), (1, 0)], k: 7, vol: 31.0
+max height min dup: 10
+
+iteration 235
+A: [(0, 0), (1, 1), (1, 0), (5, 3), (18, 14)], k: 10, vol: 23.0
+max height min dup: 12
+number of min duplicates: 6
+min lift height required: 2
+
+iteration 236
+A: [(0, 0), (1, 1), (1, 0), (9, 17), (3, 12)], k: 13, vol: 74.0
+max height min dup: 12
+
+iteration 237
+A: [(0, 0), (2, 1), (-3, -2), (12, 8), (15, 10)], k: 3, vol: 6.0
+max height min dup: 5
+number of min duplicates: 6
+min lift height required: 1
+
+iteration 238
+A: [(0, 0), (-1, -1), (2, 1), (16, 8), (13, 2)], k: 14, vol: 83.0
+max height min dup: 13
+
+iteration 239
+A: [(0, 0), (0, 1), (-1, 0), (2, 10), (5, 4)], k: 10, vol: 52.0
+max height min dup: 10
+
+iteration 240
+did not stabilize under 38
+
+iteration 241
+A: [(0, 0), (1, 1), (1, 0), (14, 6), (14, 5)], k: 11, vol: 27.0
+max height min dup: 14
+
+iteration 242
+A: [(0, 0), (0, 1), (-1, 0), (16, 17), (2, 1)], k: 16, vol: 35.0
+max height min dup: 17
+number of min duplicates: 10
+min lift height required: 1
+
+iteration 243
+A: [(0, 0), (-1, -1), (-1, 0), (2, 14), (8, 6)], k: 17, vol: 117.0
+max height min dup: 15
+
+iteration 244
+A: [(0, 0), (0, -1), (1, 0), (2, 7), (8, 10)], k: 11, vol: 47.0
+max height min dup: 11
+
+iteration 245
+A: [(0, 0), (1, 0), (-1, -1), (0, 1), (1, 6)], k: 3, vol: 12.0
+max height min dup: 4
+
+iteration 246
+A: [(0, 0), (0, 1), (1, -1), (15, 17), (11, 12)], k: 32, vol: 47.0
+max height min dup: 34
+number of min duplicates: 10
+min lift height required: 6
+
+iteration 247
+A: [(0, 0), (-3, -2), (-2, -1), (13, 7), (14, 9)], k: 6, vol: 29.0
+max height min dup: 9
+
+iteration 248
+A: [(0, 0), (-3, -2), (-2, -1), (13, 0), (1, 10)], k: 31, vol: 184.0
+max height min dup: 32
+number of min duplicates: 6
+min lift height required: 7
+
+iteration 249
+A: [(0, 0), (-1, 0), (0, -1), (15, 11), (14, 2)], k: 22, vol: 150.0
+max height min dup: 18
+
+iteration 250
+A: [(0, 0), (1, 1), (1, 0), (18, 12), (17, 18)], k: 20, vol: 132.0
+max height min dup: 18
+
+iteration 251
+A: [(0, 0), (-2, -1), (-1, -1), (8, 14), (3, 6)], k: 9, vol: 21.0
+max height min dup: 11
+number of min duplicates: 7
+min lift height required: 2
+
+iteration 252
+A: [(0, 0), (-1, 0), (1, 1), (15, 15), (11, 16)], k: 18, vol: 91.0
+max height min dup: 19
+number of min duplicates: 5
+min lift height required: 4
+
+iteration 253
+A: [(0, 0), (0, 1), (-1, 0), (9, 7), (5, 5)], k: 5, vol: 16.0
+max height min dup: 6
+
+iteration 254
+A: [(0, 0), (0, -1), (1, 0), (17, 16), (4, 16)], k: 26, vol: 225.0
+max height min dup: 17
+
+iteration 255
+A: [(0, 0), (0, 1), (-1, 0), (16, 17), (9, 14)], k: 16, vol: 85.0
+max height min dup: 15
+
+iteration 256
+A: [(0, 0), (1, -1), (0, -1), (12, 11), (9, 2)], k: 16, vol: 87.0
+max height min dup: 16
+
+iteration 257
+A: [(0, 0), (-1, 0), (0, -1), (3, 14), (13, 8)], k: 22, vol: 186.0
+max height min dup: 22
+
+iteration 258
+A: [(0, 0), (-2, -1), (-1, -1), (0, 9), (12, 14)], k: 21, vol: 127.0
+max height min dup: 21
+
+iteration 259
+A: [(0, 0), (1, -2), (1, -1), (18, 18), (2, 15)], k: 32, vol: 288.0
+max height min dup: 31
+number of min duplicates: 4
+min lift height required: 5
+
+iteration 260
+A: [(0, 0), (-2, -1), (-1, -1), (16, 16), (5, 13)], k: 21, vol: 150.0
+max height min dup: 22
+
+iteration 261
+A: [(0, 0), (0, -1), (-1, 1), (4, 5), (2, 13)], k: 14, vol: 62.0
+max height min dup: 14
+
+iteration 262
+A: [(0, 0), (1, 0), (-1, -1), (9, 1), (2, 13)], k: 20, vol: 134.0
+max height min dup: 19
+
+iteration 263
+A: [(0, 0), (3, 2), (2, 1), (4, 18), (12, 13)], k: 24, vol: 180.0
+max height min dup: 25
+number of min duplicates: 4
+min lift height required: 4
+
+iteration 264
+A: [(0, 0), (-3, -2), (-2, -1), (13, 3), (9, 2)], k: 11, vol: 18.0
+max height min dup: 13
+number of min duplicates: 6
+min lift height required: 2
+
+iteration 265
+A: [(0, 0), (1, 1), (1, 0), (1, 2), (9, 4)], k: 7, vol: 18.0
+bug of only one minimal duplicate
+
+iteration 266
+A: [(0, 0), (-1, 1), (1, -2), (9, 3), (12, 4)], k: 32, vol: 45.0
+max height min dup: 34
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 267
+A: [(0, 0), (-1, -1), (-1, 0), (16, 8), (3, 2)], k: 4, vol: 19.0
+max height min dup: 7
+number of min duplicates: 3
+min lift height required: 4
+
+iteration 268
+A: [(0, 0), (-3, -2), (-2, -1), (13, 3), (5, 2)], k: 8, vol: 29.0
+max height min dup: 10
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 269
+A: [(0, 0), (1, 0), (0, 1), (18, 16), (14, 3)], k: 25, vol: 191.0
+max height min dup: 25
+
+iteration 270
+A: [(0, 0), (-1, -1), (-1, 0), (12, 4), (8, 16)], k: 22, vol: 185.0
+max height min dup: 17
+
+iteration 271
+did not stabilize under 38
+
+iteration 272
+A: [(0, 0), (-3, -2), (-2, -1), (5, 5), (-1, 0)], k: 1, vol: 7.0
+max height min dup: 4
+
+iteration 273
+A: [(0, 0), (-1, 0), (0, -1), (7, 2), (2, 7)], k: 12, vol: 60.0
+bug of only one minimal duplicate
+
+iteration 274
+A: [(0, 0), (1, 1), (-2, -1), (4, 12), (0, 12)], k: 26, vol: 80.0
+max height min dup: 28
+number of min duplicates: 6
+min lift height required: 5
+
+iteration 275
+did not stabilize under 38
+
+iteration 276
+A: [(0, 0), (1, 0), (-1, -1), (6, 2), (11, 6)], k: 4, vol: 18.0
+max height min dup: 6
+
+iteration 277
+A: [(0, 0), (0, -1), (-1, 1), (8, 1), (9, 15)], k: 22, vol: 144.0
+max height min dup: 23
+
+iteration 278
+A: [(0, 0), (-1, -1), (-1, 0), (4, 4), (7, 14)], k: 9, vol: 43.0
+max height min dup: 11
+
+iteration 279
+A: [(0, 0), (-2, -1), (-1, -1), (13, 10), (6, 3)], k: 8, vol: 32.0
+bug of only one minimal duplicate
+
+iteration 280
+A: [(0, 0), (0, 1), (-1, 0), (14, 7), (18, 2)], k: 21, vol: 113.0
+max height min dup: 19
+
+iteration 281
+A: [(0, 0), (-2, -1), (-1, -1), (12, 7), (15, 12)], k: 10, vol: 54.0
+max height min dup: 9
+
+iteration 282
+A: [(0, 0), (1, 1), (1, 0), (9, 6), (9, 15)], k: 14, vol: 87.0
+max height min dup: 15
+
+iteration 283
+A: [(0, 0), (-2, -1), (-1, -1), (6, 9), (17, 8)], k: 18, vol: 127.0
+max height min dup: 19
+
+iteration 284
+A: [(0, 0), (0, 1), (1, -1), (7, 18), (2, 3)], k: 12, vol: 32.0
+max height min dup: 14
+
+iteration 285
+A: [(0, 0), (5, 3), (3, 2), (17, 8), (4, 1)], k: 10, vol: 27.0
+max height min dup: 12
+
+iteration 286
+did not stabilize under 38
+
+iteration 287
+A: [(0, 0), (1, 1), (1, 0), (9, 15), (10, 3)], k: 18, vol: 126.0
+max height min dup: 15
+
+iteration 288
+did not stabilize under 38
+
+iteration 289
+A: [(0, 0), (-1, 1), (0, 1), (16, 6), (7, 18)], k: 28, vol: 271.0
+max height min dup: 27
+
+iteration 290
+A: [(0, 0), (1, 0), (-1, -1), (5, 16), (2, 9)], k: 15, vol: 37.0
+max height min dup: 17
+number of min duplicates: 6
+min lift height required: 3
+
+iteration 291
+A: [(0, 0), (1, -2), (1, -1), (13, 13), (2, 6)], k: 18, vol: 91.0
+max height min dup: 19
+number of min duplicates: 4
+min lift height required: 5
+
+iteration 292
+did not stabilize under 38
+
+iteration 293
+A: [(0, 0), (1, 0), (-1, -1), (17, 17), (0, 15)], k: 30, vol: 288.0
+max height min dup: 18
+
+iteration 294
+A: [(0, 0), (-2, 3), (-1, 2), (5, 8), (3, 11)], k: 29, vol: 62.0
+bug of only one minimal duplicate
+
+iteration 295
+A: [(0, 0), (-1, 2), (-1, 1), (4, 2), (10, 14)], k: 16, vol: 71.0
+max height min dup: 15
+number of min duplicates: 4
+min lift height required: 4
+
+iteration 296
+A: [(0, 0), (2, 1), (1, 1), (5, 1), (17, 13)], k: 13, vol: 52.0
+bug of only one minimal duplicate
+
+iteration 297
+A: [(0, 0), (0, 1), (-1, 0), (9, 12), (12, 6)], k: 15, vol: 102.0
+max height min dup: 13
+
+iteration 298
+A: [(0, 0), (-1, 0), (0, -1), (3, 12), (16, 1)], k: 24, vol: 218.0
+max height min dup: 25
+
+iteration 299
+A: [(0, 0), (1, -1), (0, -1), (12, 9), (13, 13)], k: 20, vol: 61.0
+max height min dup: 22
+number of min duplicates: 7
+min lift height required: 6
+
+iteration 300
+A: [(0, 0), (0, -1), (1, 0), (13, 8), (18, 7)], k: 12, vol: 71.0
+max height min dup: 13
+
+iteration 301
+A: [(0, 0), (0, 1), (-1, 0), (15, 13), (4, 15)], k: 23, vol: 188.0
+max height min dup: 16
+
+iteration 302
+A: [(0, 0), (1, 0), (-1, -1), (2, 3), (10, 1)], k: 8, vol: 38.0
+max height min dup: 10
+
+iteration 303
+A: [(0, 0), (-1, 2), (-1, 1), (14, 3), (3, 10)], k: 22, vol: 148.0
+max height min dup: 21
+
+iteration 304
+A: [(0, 0), (0, -1), (1, 0), (11, 5), (15, 6)], k: 9, vol: 24.0
+max height min dup: 11
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 305
+A: [(0, 0), (1, -1), (0, -1), (16, 6), (15, 4)], k: 18, vol: 46.0
+max height min dup: 20
+number of min duplicates: 9
+min lift height required: 3
+
+iteration 306
+A: [(0, 0), (0, -1), (1, 0), (3, 8), (10, 4)], k: 12, vol: 78.0
+max height min dup: 12
+
+iteration 307
+A: [(0, 0), (1, 1), (1, 0), (3, 8), (9, 18)], k: 7, vol: 36.0
+max height min dup: 9
+
+iteration 308
+A: [(0, 0), (-1, 0), (1, 1), (16, 18), (13, 16)], k: 18, vol: 40.0
+max height min dup: 20
+number of min duplicates: 11
+min lift height required: 1
+
+iteration 309
+A: [(0, 0), (-1, -1), (-1, 0), (5, 15), (8, 0)], k: 21, vol: 144.0
+max height min dup: 16
+
+iteration 310
+A: [(0, 0), (1, 0), (0, 1), (15, 10), (17, 1)], k: 24, vol: 171.0
+max height min dup: 25
+
+iteration 311
+A: [(0, 0), (2, 1), (1, 1), (8, 10), (13, 17)], k: 10, vol: 21.0
+max height min dup: 12
+number of min duplicates: 6
+min lift height required: 3
+
+iteration 312
+A: [(0, 0), (1, 1), (1, 0), (12, 6), (17, 1)], k: 19, vol: 97.0
+max height min dup: 17
+
+iteration 313
+A: [(0, 0), (1, 1), (1, 0), (7, 16), (10, 3)], k: 19, vol: 142.0
+max height min dup: 17
+
+iteration 314
+A: [(0, 0), (-1, 0), (1, 1), (7, 17), (16, 14)], k: 23, vol: 191.0
+max height min dup: 16
+
+iteration 315
+A: [(0, 0), (0, 1), (-1, 0), (6, 3), (12, 11)], k: 12, vol: 43.0
+max height min dup: 13
+
+iteration 316
+A: [(0, 0), (0, 1), (1, -1), (5, 3), (15, 11)], k: 13, vol: 41.0
+max height min dup: 13
+number of min duplicates: 5
+min lift height required: 5
+
+iteration 317
+A: [(0, 0), (-1, -1), (2, 1), (3, 16), (7, 0)], k: 28, vol: 132.0
+max height min dup: 30
+number of min duplicates: 5
+min lift height required: 5
+
+iteration 318
+did not stabilize under 38
+
+iteration 319
+A: [(0, 0), (0, 1), (-1, 0), (15, 5), (2, 13)], k: 23, vol: 198.0
+max height min dup: 22
+
+iteration 320
+A: [(0, 0), (-1, -1), (2, 1), (8, 17), (1, 9)], k: 24, vol: 90.0
+max height min dup: 26
+number of min duplicates: 5
+min lift height required: 4
+
+iteration 321
+A: [(0, 0), (-1, 0), (0, -1), (13, 12), (14, 10)], k: 24, vol: 65.0
+max height min dup: 25
+number of min duplicates: 7
+min lift height required: 1
+
+iteration 322
+A: [(0, 0), (-1, 0), (0, -1), (5, 10), (2, 18)], k: 17, vol: 94.0
+max height min dup: 16
+
+iteration 323
+A: [(0, 0), (5, 3), (-8, -5), (9, 7), (2, 6)], k: 20, vol: 87.0
+max height min dup: 20
+number of min duplicates: 5
+min lift height required: 5
+
+iteration 324
+A: [(0, 0), (-3, -2), (-2, -1), (3, 11), (8, 8)], k: 25, vol: 91.0
+max height min dup: 27
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 325
+A: [(0, 0), (5, 3), (3, 2), (5, 3), (10, 2)], k: 18, vol: 21.0
+has a duplicate in construction
+
+iteration 326
+did not stabilize under 38
+
+iteration 327
+A: [(0, 0), (-1, 1), (0, 1), (6, 6), (5, 9)], k: 11, vol: 38.0
+max height min dup: 12
+
+iteration 328
+A: [(0, 0), (0, -1), (1, 0), (11, 14), (2, 9)], k: 16, vol: 86.0
+max height min dup: 15
+
+iteration 329
+A: [(0, 0), (0, -1), (1, 0), (4, 17), (2, 16)], k: 16, vol: 48.0
+max height min dup: 18
+
+iteration 330
+A: [(0, 0), (0, -1), (1, 0), (9, 18), (7, 2)], k: 18, vol: 115.0
+max height min dup: 20
+
+iteration 331
+A: [(0, 0), (0, -1), (1, 0), (1, 5), (15, 7)], k: 17, vol: 83.0
+max height min dup: 18
+
+iteration 332
+A: [(0, 0), (-2, 3), (-1, 2), (11, 7), (2, 10)], k: 25, vol: 122.0
+max height min dup: 26
+number of min duplicates: 5
+min lift height required: 5
+
+iteration 333
+A: [(0, 0), (-1, 2), (-1, 1), (4, 9), (5, 2)], k: 16, vol: 55.0
+max height min dup: 18
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 334
+did not stabilize under 38
+
+iteration 335
+A: [(0, 0), (0, 1), (1, -1), (13, 7), (11, 6)], k: 26, vol: 33.0
+max height min dup: 28
+number of min duplicates: 9
+min lift height required: 3
+
+iteration 336
+A: [(0, 0), (0, 1), (-1, 0), (4, 12), (5, 5)], k: 10, vol: 52.0
+max height min dup: 12
+
+iteration 337
+A: [(0, 0), (-2, -1), (-1, -1), (8, 13), (10, 9)], k: 13, vol: 78.0
+max height min dup: 11
+
+iteration 338
+A: [(0, 0), (2, 1), (1, 1), (3, 16), (8, 4)], k: 29, vol: 116.0
+bug of only one minimal duplicate
+
+iteration 339
+A: [(0, 0), (-2, -1), (-1, -1), (6, 13), (2, 8)], k: 13, vol: 37.0
+max height min dup: 15
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 340
+A: [(0, 0), (3, 2), (2, 1), (18, 14), (5, 10)], k: 16, vol: 120.0
+max height min dup: 15
+
+iteration 341
+did not stabilize under 38
+
+iteration 342
+A: [(0, 0), (1, 1), (-2, -1), (1, 7), (6, 11)], k: 19, vol: 49.0
+max height min dup: 21
+number of min duplicates: 8
+min lift height required: 3
+
+iteration 343
+A: [(0, 0), (-1, 2), (-1, 1), (3, 12), (3, 8)], k: 13, vol: 31.0
+max height min dup: 15
+number of min duplicates: 5
+min lift height required: 2
+
+iteration 344
+A: [(0, 0), (-1, -1), (2, 1), (0, 17), (4, 15)], k: 36, vol: 112.0
+max height min dup: 38
+number of min duplicates: 5
+min lift height required: 4
+
+iteration 345
+A: [(0, 0), (-2, -1), (-1, -1), (14, 13), (16, 12)], k: 14, vol: 57.0
+max height min dup: 13
+
+iteration 346
+A: [(0, 0), (-1, 2), (-1, 1), (18, 4), (9, 11)], k: 28, vol: 192.0
+max height min dup: 30
+number of min duplicates: 5
+min lift height required: 4
+
+iteration 347
+A: [(0, 0), (2, 1), (1, 1), (4, 3), (4, 2)], k: 1, vol: 5.0
+max height min dup: 3
+
+iteration 348
+A: [(0, 0), (-1, 0), (0, -1), (2, 5), (16, 6)], k: 15, vol: 90.0
+max height min dup: 13
+
+iteration 349
+A: [(0, 0), (1, 1), (-2, -1), (5, 16), (6, 17)], k: 36, vol: 49.0
+max height min dup: 38
+number of min duplicates: 29
+min lift height required: 1
+
+iteration 350
+A: [(0, 0), (1, 1), (1, 0), (9, 18), (16, 3)], k: 27, vol: 264.0
+max height min dup: 23
+
+iteration 351
+A: [(0, 0), (-5, -3), (-3, -2), (7, 3), (-1, 0)], k: 5, vol: 12.0
+max height min dup: 6
+
+iteration 352
+A: [(0, 0), (-1, -1), (-1, 0), (13, 9), (3, 15)], k: 22, vol: 188.0
+max height min dup: 17
+
+iteration 353
+did not stabilize under 38
+
+iteration 354
+A: [(0, 0), (-2, -1), (-1, -1), (6, 16), (5, 5)], k: 14, vol: 77.0
+max height min dup: 17
+
+iteration 355
+A: [(0, 0), (0, 1), (-1, 0), (16, 12), (16, 11)], k: 14, vol: 33.0
+max height min dup: 17
+
+iteration 356
+A: [(0, 0), (2, 1), (1, 1), (1, 6), (12, 14)], k: 11, vol: 74.0
+max height min dup: 11
+
+iteration 357
+A: [(0, 0), (-2, -1), (-1, -1), (14, 11), (4, 15)], k: 23, vol: 196.0
+max height min dup: 19
+
+iteration 358
+A: [(0, 0), (1, 1), (1, 0), (12, 14), (2, 5)], k: 10, vol: 46.0
+max height min dup: 10
+
+iteration 359
+A: [(0, 0), (1, 1), (-2, -1), (17, 11), (17, 17)], k: 20, vol: 119.0
+max height min dup: 17
+
+iteration 360
+A: [(0, 0), (1, 1), (1, 0), (12, 15), (4, 13)], k: 16, vol: 111.0
+max height min dup: 17
+
+iteration 361
+A: [(0, 0), (0, -1), (-1, 1), (3, 17), (13, 11)], k: 29, vol: 222.0
+max height min dup: 24
+
+iteration 362
+did not stabilize under 38
+
+iteration 363
+did not stabilize under 38
+
+iteration 364
+A: [(0, 0), (0, -1), (1, 0), (3, 2), (12, 9)], k: 3, vol: 12.0
+max height min dup: 4
+
+iteration 365
+A: [(0, 0), (1, 0), (0, 1), (15, 12), (6, 6)], k: 11, vol: 36.0
+max height min dup: 12
+
+iteration 366
+A: [(0, 0), (2, 1), (-3, -2), (6, 0), (16, 6)], k: 16, vol: 52.0
+max height min dup: 18
+
+iteration 367
+A: [(0, 0), (1, -2), (1, -1), (15, 6), (6, 12)], k: 26, vol: 180.0
+max height min dup: 24
+
+iteration 368
+did not stabilize under 38
+
+iteration 369
+A: [(0, 0), (1, -2), (1, -1), (7, 4), (14, 6)], k: 17, vol: 48.0
+max height min dup: 18
+number of min duplicates: 8
+min lift height required: 2
+
+iteration 370
+A: [(0, 0), (1, 1), (1, 0), (8, 2), (16, 8)], k: 10, vol: 42.0
+max height min dup: 11
+
+iteration 371
+A: [(0, 0), (0, 1), (-1, 0), (1, 5), (2, 17)], k: 5, vol: 24.0
+max height min dup: 6
+
+iteration 372
+A: [(0, 0), (0, -1), (1, 0), (1, 18), (18, 1)], k: 32, vol: 341.0
+max height min dup: 35
+
+iteration 373
+A: [(0, 0), (1, 1), (1, 0), (10, 15), (6, 12)], k: 11, vol: 45.0
+max height min dup: 12
+
+iteration 374
+A: [(0, 0), (-1, -1), (2, 1), (11, 14), (8, 4)], k: 18, vol: 75.0
+max height min dup: 21
+
+iteration 375
+A: [(0, 0), (-1, 1), (0, 1), (7, 5), (2, 3)], k: 3, vol: 16.0
+max height min dup: 5
+
+iteration 376
+A: [(0, 0), (1, 1), (1, 0), (4, 7), (6, 1)], k: 8, vol: 39.0
+max height min dup: 9
+
+iteration 377
+A: [(0, 0), (0, 1), (-1, 0), (17, 3), (7, 3)], k: 11, vol: 38.0
+max height min dup: 11
+
+iteration 378
+A: [(0, 0), (1, 0), (0, 1), (7, 16), (17, 17)], k: 24, vol: 177.0
+max height min dup: 23
+
+iteration 379
+A: [(0, 0), (-2, -1), (-1, -1), (11, 11), (14, 9)], k: 12, vol: 72.0
+max height min dup: 12
+
+iteration 380
+A: [(0, 0), (1, 1), (1, 0), (15, 2), (18, 14)], k: 24, vol: 180.0
+max height min dup: 23
+
+iteration 381
+A: [(0, 0), (1, -1), (0, -1), (2, 18), (15, 3)], k: 31, vol: 283.0
+max height min dup: 29
+
+iteration 382
+A: [(0, 0), (-1, 0), (0, -1), (18, 12), (3, 18)], k: 31, vol: 325.0
+max height min dup: 26
+
+iteration 383
+did not stabilize under 38
+
+iteration 384
+A: [(0, 0), (1, -1), (0, -1), (14, 16), (2, 16)], k: 26, vol: 223.0
+max height min dup: 19
+
+iteration 385
+A: [(0, 0), (-1, -1), (-1, 0), (3, 0), (14, 10)], k: 11, vol: 44.0
+bug of only one minimal duplicate
+
+iteration 386
+A: [(0, 0), (0, 1), (-1, 0), (9, 17), (7, 1)], k: 21, vol: 127.0
+max height min dup: 22
+
+iteration 387
+A: [(0, 0), (-1, -1), (2, 1), (10, 14), (12, 5)], k: 23, vol: 129.0
+max height min dup: 23
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 388
+A: [(0, 0), (1, 1), (-2, -1), (8, 15), (4, 15)], k: 27, vol: 93.0
+max height min dup: 29
+number of min duplicates: 6
+min lift height required: 5
+
+iteration 389
+A: [(0, 0), (3, 2), (2, 1), (15, 1), (7, 17)], k: 27, vol: 248.0
+max height min dup: 27
+
+iteration 390
+A: [(0, 0), (-2, -1), (-1, -1), (17, 3), (4, 16)], k: 29, vol: 303.0
+max height min dup: 29
+
+iteration 391
+A: [(0, 0), (8, 5), (5, 3), (12, 3), (9, 16)], k: 25, vol: 165.0
+max height min dup: 25
+number of min duplicates: 5
+min lift height required: 6
+
+iteration 392
+A: [(0, 0), (1, -2), (1, -1), (8, 17), (13, 5)], k: 34, vol: 212.0
+max height min dup: 31
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 393
+A: [(0, 0), (-1, 2), (-1, 1), (10, 3), (2, 3)], k: 10, vol: 32.0
+max height min dup: 11
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 394
+A: [(0, 0), (0, 1), (-1, 0), (18, 8), (11, 2)], k: 14, vol: 71.0
+max height min dup: 13
+
+iteration 395
+A: [(0, 0), (-1, -1), (-1, 0), (1, 16), (8, 0)], k: 22, vol: 153.0
+max height min dup: 17
+
+iteration 396
+A: [(0, 0), (1, 0), (0, 1), (15, 18), (11, 3)], k: 24, vol: 171.0
+max height min dup: 20
+
+iteration 397
+A: [(0, 0), (-2, -1), (-1, -1), (9, 11), (2, 6)], k: 13, vol: 43.0
+max height min dup: 14
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 398
+A: [(0, 0), (1, 0), (-1, -1), (5, 6), (12, 15)], k: 7, vol: 19.0
+max height min dup: 8
+
+iteration 399
+A: [(0, 0), (0, 1), (-1, 0), (2, 14), (14, 4)], k: 23, vol: 202.0
+max height min dup: 23
+
+iteration 400
+did not stabilize under 38
+
+iteration 401
+A: [(0, 0), (-1, 0), (1, 1), (6, 18), (6, 2)], k: 29, vol: 114.0
+max height min dup: 30
+number of min duplicates: 5
+min lift height required: 4
+
+iteration 402
+A: [(0, 0), (0, -1), (1, 0), (10, 14), (16, 15)], k: 18, vol: 90.0
+max height min dup: 17
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 403
+A: [(0, 0), (1, -1), (-1, 2), (1, 16), (8, 14)], k: 33, vol: 154.0
+max height min dup: 35
+
+iteration 404
+A: [(0, 0), (-1, 2), (-1, 1), (1, 3), (17, 18)], k: 10, vol: 53.0
+max height min dup: 13
+number of min duplicates: 3
+min lift height required: 9
+
+iteration 405
+A: [(0, 0), (1, -2), (1, -1), (6, 9), (15, 9)], k: 23, vol: 120.0
+max height min dup: 21
+number of min duplicates: 5
+min lift height required: 5
+
+iteration 406
+A: [(0, 0), (-2, -1), (3, 2), (1, 3), (14, 4)], k: 19, vol: 49.0
+max height min dup: 21
+number of min duplicates: 7
+min lift height required: 4
+
+iteration 407
+A: [(0, 0), (0, -1), (1, 0), (18, 9), (2, 8)], k: 22, vol: 144.0
+max height min dup: 23
+
+iteration 408
+A: [(0, 0), (-1, -1), (-1, 0), (17, 14), (12, 17)], k: 19, vol: 142.0
+max height min dup: 18
+
+iteration 409
+A: [(0, 0), (5, 3), (-8, -5), (8, -4), (-3, 12)], k: 29, vol: 296.0
+max height min dup: 28
+number of min duplicates: 3
+min lift height required: 8
+
+iteration 410
+A: [(0, 0), (1, -1), (0, -1), (10, 16), (8, 12)], k: 19, vol: 29.0
+max height min dup: 21
+number of min duplicates: 8
+min lift height required: 4
+
+iteration 411
+A: [(0, 0), (-1, -1), (-1, 0), (7, 14), (12, 6)], k: 18, vol: 147.0
+max height min dup: 15
+
+iteration 412
+A: [(0, 0), (1, 0), (0, 1), (11, 16), (16, 16)], k: 25, vol: 107.0
+max height min dup: 27
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 413
+did not stabilize under 38
+
+iteration 414
+A: [(0, 0), (-1, -1), (-1, 0), (4, 10), (7, 3)], k: 12, vol: 73.0
+max height min dup: 11
+
+iteration 415
+A: [(0, 0), (-1, -1), (2, 1), (4, 12), (8, 8)], k: 14, vol: 81.0
+max height min dup: 9
+
+iteration 416
+A: [(0, 0), (3, 2), (2, 1), (16, 14), (13, 4)], k: 17, vol: 118.0
+max height min dup: 14
+
+iteration 417
+did not stabilize under 38
+
+iteration 418
+did not stabilize under 38
+
+iteration 419
+A: [(0, 0), (5, 3), (3, 2), (16, 17), (1, 9)], k: 36, vol: 164.0
+max height min dup: 37
+number of min duplicates: 6
+min lift height required: 5
+
+iteration 420
+A: [(0, 0), (0, 1), (-1, 0), (2, 18), (13, 18)], k: 26, vol: 216.0
+bug of only one minimal duplicate
+
+iteration 421
+A: [(0, 0), (1, 1), (-2, -1), (6, 3), (8, 11)], k: 14, vol: 56.0
+bug of only one minimal duplicate
+
+iteration 422
+A: [(0, 0), (-1, -1), (-1, 0), (11, 15), (3, 12)], k: 18, vol: 100.0
+max height min dup: 16
+
+iteration 423
+A: [(0, 0), (0, -1), (1, 0), (14, 18), (5, 3)], k: 11, vol: 53.0
+max height min dup: 13
+
+iteration 424
+A: [(0, 0), (-1, -1), (2, 1), (9, 3), (9, 16)], k: 25, vol: 130.0
+max height min dup: 23
+number of min duplicates: 5
+min lift height required: 5
+
+iteration 425
+did not stabilize under 38
+
+iteration 426
+A: [(0, 0), (1, -1), (0, -1), (8, 10), (5, 4)], k: 8, vol: 28.0
+max height min dup: 10
+
+iteration 427
+A: [(0, 0), (1, 1), (1, 0), (18, 12), (16, 18)], k: 20, vol: 144.0
+max height min dup: 18
+
+iteration 428
+A: [(0, 0), (2, -3), (1, -2), (5, 7), (7, 18)], k: 28, vol: 71.0
+max height min dup: 30
+number of min duplicates: 11
+min lift height required: 2
+
+iteration 429
+A: [(0, 0), (0, -1), (1, 0), (15, 17), (15, 18)], k: 16, vol: 33.0
+max height min dup: 18
+number of min duplicates: 5
+min lift height required: 1
+
+iteration 430
+A: [(0, 0), (-2, -1), (-1, -1), (12, 10), (5, 4)], k: 4, vol: 12.0
+max height min dup: 6
+
+iteration 431
+A: [(0, 0), (-1, 1), (0, 1), (1, 13), (15, 12)], k: 24, vol: 197.0
+max height min dup: 15
+
+iteration 432
+A: [(0, 0), (2, 1), (1, 1), (14, 12), (3, 16)], k: 28, vol: 198.0
+max height min dup: 29
+
+iteration 433
+A: [(0, 0), (-1, -1), (2, 1), (9, 14), (4, 0)], k: 18, vol: 65.0
+max height min dup: 18
+number of min duplicates: 5
+min lift height required: 4
+
+iteration 434
+A: [(0, 0), (1, 1), (1, 0), (16, 8), (11, 9)], k: 14, vol: 66.0
+max height min dup: 16
+
+iteration 435
+A: [(0, 0), (1, -1), (0, -1), (4, 3), (14, 14)], k: 7, vol: 29.0
+max height min dup: 8
+number of min duplicates: 3
+min lift height required: 4
+
+iteration 436
+A: [(0, 0), (-1, -1), (-1, 0), (13, 7), (10, 17)], k: 21, vol: 175.0
+max height min dup: 18
+
+iteration 437
+A: [(0, 0), (8, 5), (5, 3), (17, 8), (6, 14)], k: 29, vol: 190.0
+max height min dup: 27
+number of min duplicates: 4
+min lift height required: 8
+
+iteration 438
+A: [(0, 0), (-1, 0), (1, 1), (5, 18), (2, 10)], k: 16, vol: 37.0
+max height min dup: 18
+number of min duplicates: 7
+min lift height required: 3
+
+iteration 439
+A: [(0, 0), (0, 1), (-1, 0), (8, 4), (12, 6)], k: 7, vol: 13.0
+max height min dup: 9
+
+iteration 440
+A: [(0, 0), (3, 2), (2, 1), (18, 4), (12, 1)], k: 19, vol: 54.0
+max height min dup: 21
+number of min duplicates: 6
+min lift height required: 4
+
+iteration 441
+A: [(0, 0), (0, -1), (1, 0), (12, 1), (12, 13)], k: 21, vol: 156.0
+max height min dup: 13
+
+iteration 442
+A: [(0, 0), (0, -1), (-1, 1), (10, 15), (15, 17)], k: 34, vol: 96.0
+max height min dup: 36
+number of min duplicates: 5
+min lift height required: 4
+
+iteration 443
+A: [(0, 0), (0, 1), (-1, 0), (3, 9), (9, 17)], k: 10, vol: 39.0
+max height min dup: 11
+
+iteration 444
+A: [(0, 0), (0, -1), (1, 0), (2, 3), (17, 12)], k: 16, vol: 44.0
+max height min dup: 17
+number of min duplicates: 6
+min lift height required: 3
+
+iteration 445
+A: [(0, 0), (0, 1), (-1, 0), (6, 7), (17, 16)], k: 8, vol: 30.0
+max height min dup: 9
+number of min duplicates: 4
+min lift height required: 4
+
+iteration 446
+A: [(0, 0), (-1, -1), (2, 1), (16, 5), (1, 6)], k: 21, vol: 107.0
+max height min dup: 23
+number of min duplicates: 5
+min lift height required: 5
+
+iteration 447
+A: [(0, 0), (1, -1), (0, -1), (14, 5), (6, 3)], k: 12, vol: 32.0
+max height min dup: 13
+number of min duplicates: 6
+min lift height required: 2
+
+iteration 448
+A: [(0, 0), (-2, -1), (3, 2), (2, 5), (17, 9)], k: 17, vol: 75.0
+max height min dup: 19
+
+iteration 449
+A: [(0, 0), (-1, 1), (0, 1), (9, 8), (17, 10)], k: 15, vol: 63.0
+max height min dup: 17
+number of min duplicates: 5
+min lift height required: 4
+
+iteration 450
+A: [(0, 0), (1, 1), (1, 0), (14, 5), (2, 12)], k: 21, vol: 163.0
+max height min dup: 20
+
+iteration 451
+A: [(0, 0), (-1, 1), (0, 1), (5, 3), (3, 5)], k: 7, vol: 24.0
+bug of only one minimal duplicate
+
+iteration 452
+A: [(0, 0), (0, -1), (-1, 1), (18, 11), (15, 7)], k: 36, vol: 84.0
+max height min dup: 38
+number of min duplicates: 7
+min lift height required: 5
+
+iteration 453
+did not stabilize under 38
+
+iteration 454
+A: [(0, 0), (1, 1), (1, 0), (7, 14), (14, 13)], k: 18, vol: 118.0
+max height min dup: 14
+
+iteration 455
+A: [(0, 0), (-1, 0), (0, -1), (12, 4), (15, 15)], k: 22, vol: 148.0
+max height min dup: 20
+
+iteration 456
+A: [(0, 0), (-2, -1), (3, 2), (2, 9), (15, 5)], k: 25, vol: 146.0
+max height min dup: 23
+number of min duplicates: 5
+min lift height required: 8
+
+iteration 457
+A: [(0, 0), (1, 1), (1, 0), (7, 16), (3, 18)], k: 18, vol: 94.0
+max height min dup: 17
+
+iteration 458
+A: [(0, 0), (-1, 2), (-1, 1), (13, 9), (8, 14)], k: 29, vol: 141.0
+max height min dup: 31
+
+iteration 459
+A: [(0, 0), (0, 1), (-1, 0), (1, 13), (13, 1)], k: 22, vol: 181.0
+max height min dup: 25
+
+iteration 460
+did not stabilize under 38
+
+iteration 461
+A: [(0, 0), (2, 1), (-3, -2), (15, 8), (11, 9)], k: 11, vol: 58.0
+max height min dup: 13
+
+iteration 462
+A: [(0, 0), (0, 1), (-1, 0), (12, 3), (13, 2)], k: 12, vol: 28.0
+max height min dup: 14
+number of min duplicates: 8
+min lift height required: 1
+
+iteration 463
+A: [(0, 0), (0, 1), (1, -1), (7, 3), (8, 3)], k: 15, vol: 21.0
+max height min dup: 17
+number of min duplicates: 10
+min lift height required: 3
+
+iteration 464
+A: [(0, 0), (-1, 0), (1, 1), (10, 3), (15, 1)], k: 14, vol: 43.0
+max height min dup: 15
+
+iteration 465
+A: [(0, 0), (-1, 0), (0, -1), (3, 15), (1, 17)], k: 18, vol: 57.0
+bug of only one minimal duplicate
+
+iteration 466
+did not stabilize under 38
+
+iteration 467
+did not stabilize under 38
+
+iteration 468
+A: [(0, 0), (1, -1), (0, -1), (4, 9), (2, 11)], k: 12, vol: 40.0
+max height min dup: 14
+
+iteration 469
+A: [(0, 0), (0, 1), (-1, 0), (5, 1), (1, 5)], k: 6, vol: 29.0
+max height min dup: 9
+
+iteration 470
+did not stabilize under 38
+
+iteration 471
+A: [(0, 0), (-1, 0), (1, 1), (14, 10), (13, 9)], k: 7, vol: 14.0
+max height min dup: 9
+number of min duplicates: 6
+min lift height required: 1
+
+iteration 472
+A: [(0, 0), (2, 1), (1, 1), (5, 18), (15, 1)], k: 28, vol: 265.0
+max height min dup: 31
+
+iteration 473
+A: [(0, 0), (0, 1), (-1, 0), (11, 15), (17, 1)], k: 28, vol: 259.0
+max height min dup: 21
+
+iteration 474
+A: [(0, 0), (-1, 2), (-1, 1), (7, 2), (18, 9)], k: 16, vol: 73.0
+max height min dup: 17
+
+iteration 475
+A: [(0, 0), (-1, 1), (0, 1), (14, 10), (1, 1)], k: 10, vol: 24.0
+max height min dup: 12
+
+iteration 476
+A: [(0, 0), (1, 1), (-2, -1), (10, 0), (6, 13)], k: 22, vol: 160.0
+max height min dup: 16
+
+iteration 477
+A: [(0, 0), (0, -1), (1, 0), (10, 4), (5, 2)], k: 3, vol: 10.0
+max height min dup: 5
+
+iteration 478
+A: [(0, 0), (1, 0), (0, 1), (6, 15), (16, 8)], k: 28, vol: 206.0
+max height min dup: 24
+
+iteration 479
+did not stabilize under 38
+
+iteration 480
+A: [(0, 0), (2, -3), (1, -2), (8, 13), (5, 10)], k: 34, vol: 66.0
+max height min dup: 36
+number of min duplicates: 7
+min lift height required: 4
+
+iteration 481
+A: [(0, 0), (-2, 3), (-1, 2), (2, 1), (6, 15)], k: 13, vol: 72.0
+max height min dup: 9
+
+iteration 482
+did not stabilize under 38
+
+iteration 483
+A: [(0, 0), (-1, 0), (1, 1), (2, 16), (18, 3)], k: 29, vol: 298.0
+max height min dup: 30
+
+iteration 484
+A: [(0, 0), (0, -1), (-1, 1), (1, 9), (18, 7)], k: 23, vol: 184.0
+max height min dup: 19
+number of min duplicates: 3
+min lift height required: 4
+
+iteration 485
+A: [(0, 0), (-1, -1), (-1, 0), (17, 12), (10, 9)], k: 12, vol: 48.0
+max height min dup: 11
+
+iteration 486
+A: [(0, 0), (0, 1), (-1, 0), (6, 12), (1, 5)], k: 5, vol: 23.0
+max height min dup: 7
+
+iteration 487
+A: [(0, 0), (2, 1), (-3, -2), (13, 13), (0, 12)], k: 28, vol: 206.0
+max height min dup: 27
+number of min duplicates: 4
+min lift height required: 5
+
+iteration 488
+did not stabilize under 38
+
+iteration 489
+A: [(0, 0), (1, 1), (-2, -1), (0, 0), (15, 4)], k: 16, vol: 19.0
+has a duplicate in construction
+
+iteration 490
+A: [(0, 0), (-1, -1), (2, 1), (8, 0), (16, 8)], k: 13, vol: 72.0
+max height min dup: 9
+
+iteration 491
+A: [(0, 0), (-1, -1), (-1, 0), (12, 8), (5, 5)], k: 7, vol: 30.0
+max height min dup: 6
+
+iteration 492
+A: [(0, 0), (1, 0), (-1, -1), (9, 10), (3, 7)], k: 12, vol: 48.0
+bug of only one minimal duplicate
+
+iteration 493
+did not stabilize under 38
+
+iteration 494
+A: [(0, 0), (1, -1), (0, -1), (7, 4), (15, 16)], k: 13, vol: 64.0
+max height min dup: 14
+number of min duplicates: 4
+min lift height required: 5
+
+iteration 495
+A: [(0, 0), (1, -2), (1, -1), (8, 1), (2, 11)], k: 17, vol: 103.0
+max height min dup: 19
+
+iteration 496
+A: [(0, 0), (-1, 2), (-1, 1), (5, 10), (10, 9)], k: 19, vol: 76.0
+max height min dup: 21
+number of min duplicates: 5
+min lift height required: 3
+
+iteration 497
+A: [(0, 0), (-1, 0), (1, 1), (15, 14), (18, 9)], k: 19, vol: 131.0
+max height min dup: 14
+
+iteration 498
+A: [(0, 0), (8, 5), (5, 3), (16, 9), (9, 2)], k: 10, vol: 57.0
+max height min dup: 9
+
+iteration 499
+did not stabilize under 38
+
+number of min elems counts: {5: 59, 3: 167, 4: 107, 6: 32, 2: 25, 8: 6, 9: 6, 7: 15, 15: 1, 10: 3, 11: 2, 29: 1}
+min lift height needed counts: {3: 105, 1: 123, 7: 3, 4: 39, 2: 114, 5: 31, 6: 4, 8: 4, 9: 1}

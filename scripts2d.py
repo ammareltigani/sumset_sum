@@ -4,7 +4,7 @@ from sympy import *
 
 import ast
 import csv
-import itertools
+# import itertools
 import re
 import numpy as np
 import matplotlib.pyplot as plt
@@ -104,6 +104,13 @@ def intersections(A, iters):
         rtn.append(all_intersections)
     return rtn
 
+def poly_to_poly_str(poly):
+    if len(poly) == 3:
+        return f'{poly[0]}*h^2 + {poly[1]}*h + {poly[2]}'
+    elif len(poly) == 4:
+        return f'{poly[0]}*h^3 + {poly[1]}*h^2 + {poly[2]}*h + {poly[3]}'
+    else:
+        assert False
 
 def single_sumset(A, iterations, slice=None, plot=False, print_info=False):
 
@@ -112,12 +119,7 @@ def single_sumset(A, iterations, slice=None, plot=False, print_info=False):
     if status == False:
         return False
 
-    if len(poly) == 3:
-        poly_str = f'{poly[0]}*h^2 + {poly[1]}*h + {poly[2]}'
-    elif len(poly) == 4:
-        poly_str = f'{poly[0]}*h^3 + {poly[1]}*h^2 + {poly[2]}*h + {poly[3]}'
-    else:
-        assert False
+    poly_str = poly_to_poly_str(poly)
 
     if print_info:
         print(f'p(h) = {poly_str}  for all k >= {k}')
@@ -180,7 +182,7 @@ def plot_sumset(iterations, slice, points_arry=None, inters=None, threeD=False):
 
             for simplex in hull.simplices:
                 axis[n,m].plot(points[simplex, 0], points[simplex, 1], 'k--')
-            axis[n,m].set_title(f'iter = {j+slice[0]+1}')
+            axis[n,m].set_title(f'h = {j+slice[0]+1}')
             axis[n,m].grid(color = 'gray', linestyle = '--', linewidth = 0.5)
             print()
 
@@ -653,19 +655,42 @@ def get_negative_elementaries_quick(A, iters):
     rtn = []
     cones = get_cones(A,iters)
     elements = cones[0]
-    duplicates = cones[1]
-    duplicates_prefix_by_height = [[] for _ in range(iters+1)]
+    elements.add((0,0,0))
 
-    for e in duplicates:
+    duplicates_by_height = [[] for _ in range(iters+1)]
+    for e in cones[1]:
         height = e[-1]
-        for i in range(height, iters+1):
-            duplicates_prefix_by_height[i].append(e)
+        duplicates_by_height[height].append(e)
 
-    for e1 in duplicates: 
-        height = e1[-1]
-        if all(tuple(np.subtract(e1, e2)) not in elements for e2 in duplicates_prefix_by_height[height-1]):
-            rtn.append(e1)
+    for i in range(len(duplicates_by_height)):
+        for e1 in duplicates_by_height[i]:
+            if all(tuple(np.subtract(e1, e2)) not in elements for e2 in rtn):
+                rtn.append(e1)
+
+
+    # for k in range(1, len(cones)):
+    #     k_combs_previous_dups = sum_set_n_times(rtn, k) 
+    #     duplicates = cones[k]
+    #     duplicates_by_height = [[] for _ in range(iters+1)]
+    #     for e in duplicates:
+    #         height = e[-1]
+    #         duplicates_by_height[height].append(e)
+
+    #     for i in range(len(duplicates_by_height)):
+    #         print(rtn)
+    #         print(i)
+    #         for dup in duplicates_by_height[i]:
+    #             # print(k_combs_previous_dups)
+    #             if all(tuple(np.subtract(dup, e2)) not in elements for e2 in k_combs_previous_dups):
+    #                 rtn.append(dup)
+    #                 k_combs_previous_dups = sum_set_n_times(rtn, k)  
+    #                 # print(rtn)
+
     return rtn
+
+# A = [(0, 0), (3, 2), (-5, -3), (8, 2), (-2, 2)]
+# print(get_negative_elementaries_quick(A, 28))
+
 
 
 def exps_get_r_fixed_d_k(max_basis_iters=15, d=2, k=3, no_samples=100):
@@ -716,9 +741,8 @@ def fix_d_vary_k(max_basis_iters=8, d=2, k_range=(3,4), no_samples=100):
     return res
 
 
-def min_height(B, elems, iters):
+def min_height(B, heights, iters):
     maxx = 10 
-    heights = set([e[-1] for e in elems])
     for i in range(1, maxx+1):
         for a in range(i+1):
             for b in range(i+1):
@@ -744,8 +768,17 @@ def min_height(B, elems, iters):
                             if len(heights) == 0:
                                 return i
                             
+def filter_min_useless(bin_list):
+    print(bin_list)
+    pos = bin_list[0]
+    neg = bin_list[1]
+    if len(pos) > 1:
+        pos.pop(0)
+        return [e for e in neg if e <= min(pos)]
+    else:
+        return neg
 
-def lifting_conj(rounds=1000, max_iter=38):
+def lifting_conj(rounds=500, max_iter=40):
     counts_number_elems = dict()
     counts_min_height = dict()
 
@@ -757,82 +790,87 @@ def lifting_conj(rounds=1000, max_iter=38):
         # generate points in the positive quadrant that are not the basis
         k_temp = [max(e) for e in basis]
         k = min(k_temp)+1
-        x1,x2,y1,y2 = np.random.randint(k,k+18,size=4)
+        x1,x2,y1,y2 = np.random.randint(k,k+8,size=4)
         A = basis+[(x1,x2),(y1,y2)]
 
-        status, thresh, _, _, m = run_exps_nd(A, max_iter)
-        if not status:
-            print(f"did not stabilize under {max_iter}")
+        status, thresh, poly_list, lengths_arry, m = run_exps_nd(A, max_iter)
+        if not status or thresh >= max_iter-3:
+            print(f"did not stabilize under {max_iter-3}")
             print()
             continue
-        print(f'A: {A}, k: {thresh}, vol: {m}')
+        print(f'A: {A}, k: {thresh}, vol*d!: {m}')
 
         if len(set(A)) != len(A):
             print(f"has a duplicate in construction")
             print()
             continue
 
-        elems = get_negative_elementaries_quick(A, thresh+3)
-
+        # poly_str = poly_to_poly_str(poly_list)
+        # elems = filter_min_useless(get_khovanskii_binomial(A, 2, poly_str, lengths_arry)[1])
+        elems = get_negative_elementaries_quick(A, iters=thresh+3)
         if len(elems) == 1:
-            print(f"bug of only one minimal duplicate")
-            print()
-            continue
+            print(f'example of min dup not min useless')
+            print(elems)
+
+        print()
+        continue
 
         if len(elems) in counts_number_elems:
             counts_number_elems[len(elems)] += 1
         else:
             counts_number_elems[len(elems)] = 1
 
-        max_height_min_dup = max(elems, key= lambda x: x[-1])
-        max_height = max_height_min_dup[-1]
-        print(f'max height min dup: {max_height}')
+        max_height = max(elems)
+        print(f'max neg height min useless: {max_height}')
         if max_height >= m:
-            print("broke conj 1")
+            print("min useless height not bounded by vol d!")
 
-        minh = min_height(A, elems, thresh+3)
-        if minh == None:
-            print(f"broke conj 2")
-            minh = -1
+        # minh = min_height(A, elems, thresh+3)
+        # if minh == None:
+        #     print(f"takes lift with more than 10")
+        #     minh = -1
 
-        if minh in counts_min_height:
-            counts_min_height[minh] += 1
-        else:
-            counts_min_height[minh] = 1
+        # if minh in counts_min_height:
+        #     counts_min_height[minh] += 1
+        # else:
+        #     counts_min_height[minh] = 1
 
-        if (minh > 3 or len(elems) > 4) and minh != -1:
-            print(f'number of min duplicates: {len(elems)}')
-            print(f'min lift height required: {minh}')
+        # print(f'min lift height required: {minh}')
 
         print()
         
-    print(f'number of min elems counts: {counts_number_elems}')
+    print(f'number of minimally useless counts: {counts_number_elems}')
     print(f'min lift height needed counts: {counts_min_height}')
         
 
+# lifting_conj()
 
-lifting_conj()
+max_iters = 10 
+dimension = 2
+temp_set = [
+    # [(0, 0), (0, 1), (-1, 0), (1, 18), (5, 2),(6,6)],
+    #  [(0, 0), (3, 2), (-5, -3), (8, 2), (-2, 2), (6,6)],
+    # [(0, 0), (0, 1), (1, 0), (0, 4), (1, 1), (6,6)],
+    # [(0, 1), (0, 2), (1, 0), (0, 3), (1, 5), (6,6)],
+    # [(0, 0), (-1, 1), (1, -2), (15, 15), (6, 9)],
+    # [(0, 0), (3, 2), (-5, -3), (9, 0), (10, 7)],
+    
+    # [(0, 1), (0, 2), (1, 0), (1, 1), (1, 2)],
+    [(0, 0), (1, 1), (2, 1), (0, 1), (2, 3)],
+    ]
 
-#TODO: bug? following set allegedly has one min element at h=2 but an elementary at h=27
-# A = [(0, 0), (3, 2), (-5, -3), (8, 2), (-2, 2)]
-
-
-# max_iters = 38 
-# dimension = 2
-# temp_set = [
-#     ]
-
-# for new_A in temp_set:
-#     print(new_A)
-#     rtn = single_sumset(new_A, max_iters, print_info=True)
-#     if rtn == False:
-#         continue
-#     actual_poly_str, lengths_arry = rtn
-#     print(get_khovanskii_binomial(new_A, dimension, actual_poly_str, lengths_arry))
-#     elems = get_negative_elementaries_quick(new_A, max_iters)
-#     print(elems)
-#     print(min_height(new_A, elems, max_iters))
-#     print()
+for new_A in temp_set:
+    print(new_A)
+    rtn = single_sumset(new_A, max_iters, print_info=True, plot=True, slice=(0,4))
+    if rtn == False:
+        continue
+    actual_poly_str, lengths_arry = rtn
+    print(get_khovanskii_binomial(new_A, dimension, actual_poly_str, lengths_arry))
+    elems = get_negative_elementaries_quick(new_A, max_iters)
+    print(elems)
+    print(get_minimal_elements(new_A, max_iters))
+    # print(min_height(new_A, elems, max_iters))
+    print()
 
 
 """
@@ -848,27 +886,20 @@ point based on the parameter r?
 -> Not obvious from using explicit formular for any r > 2. Need to do more experiements on the max height
 of lifted point while varying r. 
 
-Granville et. al are able to get a universal boujd using just the language of linear algebra and nothing else.
-
 TODO: Q2: If can understand the maximal height needed for a lift based on parameter r, then next question to ask is:
 does there exists a bound on r based on the size of the set A, or maybe the polyhedral complexity (number of facets)
 i.e. how far it is from being a simplex?
 
-TODO: Q3: is there a bound on the magnitude of the Khovanskii polynomial coefficients based on the number or
- max height of the minmal duplicates? Maybe try equating coefficients of explicit formula for the non-leading term
-
-TODO: Q4: any connection with resolution of singulartities for Veronese varieties? Going up dimensions removes duplicates
-i.e. resolves singularities in the algebraic space. Is there work that says how far have to go up in magnitude or dimension
-to resolve a singularity. Can obtain bound like that.
-
-#TODO: see if number of minimal duplicates is bounded if simplex
-
-Conjecture 1: if h_1,...,h_m are the distinct heights of minimal duplicates, then h_1 <= vol(A)*d!
-
-Conjecture 2:  max height needed for any lift is |A|*(d+1) So in this case it is 10. Which bounds the max height of minimal
+Conjecture:  max height needed for any lift is |A|*(d+1) So in this case it is 10. Which bounds the max height of minimal
 duplicate to vol(A)*(d+1)!*|A|
-TODO: run systematic exps written on phone to support or disprove this
 
-TODO: proof incorrect as what if there are multiple minimal duplicates at the same height? change wording of theorem to say
-"one of each height"
+Conjecture: if x is a minimally useless element, then ht(x) <= vol(conv(A))d! = M:
+    - pick any d+1 affinely independent subset D_j and some extra v \in A. then there is a duplicate of height M_j
+    consisting of reduced \sum n_i v_i = sum m_i v_i + m v
+    - these might not be minimally useless, but they are contained in the cone of some minimally useless. Can conclude
+    that there are the # of such affinitely independent subsets and extra v's (combinations) of minimally useless under M?
+    What conditions are needed? if can bound the number of minimally useless in another way and get too many in this way
+    then done by pigeonhole
+    - another way: prove that every minimally useless must have a support of at most d+2 vectors. then it is one of the
+    ones mentioned above.
 """

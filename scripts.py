@@ -57,6 +57,7 @@ def run_exps(sets, show_steps=False):
             curr_diff = len(n_set) - prev_size
             if show_steps:
                 print(n_set)
+                print(len(n_set))
                 print(f'difference: {m - curr_diff}')
             if curr_diff == m:
                 if double_flag:
@@ -249,7 +250,7 @@ def plot_moment_data(m, moment):
 # single_cone_example(rand=True)
 # single_cone_example(A=[0,1,7,8])
 # single_cone_example(A=[0,1,10])
-print(single_sumset(A=[0,3,5]))
+print(single_sumset(A=[0,3,5,7,8], show_steps=True))
 
 
 # new example of set to look into: [0,n,n+1,n+2,...,n+k] where n gets large
